@@ -1,7 +1,7 @@
 (ns happygapi.adsensehost.adclients
   "AdSense Host API: adclients.
   Generates performance reports, generates ad codes, and provides publisher management capabilities for AdSense Hosts.
-  See: https://developers.google.com/adsense/host/api/reference/rest/v4.1/adclients"
+  See: https://developers.google.com/adsense/host/docs/reference/rest/v4.1/adclients"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

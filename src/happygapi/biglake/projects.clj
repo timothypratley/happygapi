@@ -1,7 +1,7 @@
 (ns happygapi.biglake.projects
   "BigLake API: projects.
   The BigLake API provides access to BigLake Metastore, a serverless, fully managed, and highly available metastore for open-source data that can be used for querying Apache Iceberg tables in BigQuery.
-  See: https://cloud.google.com/bigquery/api/reference/rest/v1/projects"
+  See: https://cloud.google.com/bigquery/docs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

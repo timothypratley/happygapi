@@ -1,7 +1,7 @@
 (ns happygapi.vpcaccess.projects
   "Serverless VPC Access API: projects.
   API for managing VPC access connectors.
-  See: https://cloud.google.com/vpc/docs/configure-serverless-vpc-accessapi/reference/rest/v1/projects"
+  See: https://cloud.google.com/vpc/docs/configure-serverless-vpc-accessdocs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

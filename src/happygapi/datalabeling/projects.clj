@@ -1,7 +1,7 @@
 (ns happygapi.datalabeling.projects
   "Data Labeling API: projects.
   Public API for Google Cloud AI Data Labeling Service.
-  See: https://cloud.google.com/data-labeling/docs/api/reference/rest/v1beta1/projects"
+  See: https://cloud.google.com/data-labeling/docs/docs/reference/rest/v1beta1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

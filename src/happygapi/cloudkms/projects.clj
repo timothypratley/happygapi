@@ -1,10 +1,37 @@
 (ns happygapi.cloudkms.projects
   "Cloud Key Management Service (KMS) API: projects.
   Manages keys and performs cryptographic operations in a central cloud service, for direct use by other cloud resources and applications. 
-  See: https://cloud.google.com/kms/api/reference/rest/v1/projects"
+  See: https://cloud.google.com/kms/docs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
+
+(defn showEffectiveAutokeyConfig$
+  "https://cloud.google.com/kms/api/reference/rest/v1/projects/showEffectiveAutokeyConfig
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Returns the effective Cloud KMS Autokey configuration for a given project."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloudkms"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://cloudkms.googleapis.com/"
+     "v1/{+parent}:showEffectiveAutokeyConfig"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
 
 (defn locations-getEkmConfig$
   "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/getEkmConfig
@@ -144,6 +171,120 @@
      "https://cloudkms.googleapis.com/"
      "v1/{+name}"
      #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-operations-get$
+  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/operations/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloudkms"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://cloudkms.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-keyHandles-create$
+  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyHandles/create
+  
+  Required parameters: parent
+  
+  Optional parameters: keyHandleId
+  
+  Body: 
+  
+  {:name string, :kmsKey string, :resourceTypeSelector string}
+  
+  Creates a new KeyHandle, triggering the provisioning of a new CryptoKey for CMEK use with the given resource type in the configured key project and the same location. GetOperation should be used to resolve the resulting long-running operation and get the resulting KeyHandle and CryptoKey."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloudkms"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://cloudkms.googleapis.com/"
+     "v1/{+parent}/keyHandles"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-keyHandles-get$
+  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyHandles/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Returns the KeyHandle."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloudkms"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://cloudkms.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-keyHandles-list$
+  "https://cloud.google.com/kms/api/reference/rest/v1/projects/locations/keyHandles/list
+  
+  Required parameters: parent
+  
+  Optional parameters: filter
+  
+  Lists KeyHandles."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloudkms"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://cloudkms.googleapis.com/"
+     "v1/{+parent}/keyHandles"
+     #{:parent}
      parameters)
     (merge-with
      merge

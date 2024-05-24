@@ -1,7 +1,7 @@
 (ns happygapi.gamesManagement.scores
   "Google Play Game Management: scores.
   The Google Play Game Management API allows developers to manage resources from the Google Play Game service.
-  See: https://developers.google.com/games/api/reference/rest/v1management/scores"
+  See: https://developers.google.com/games/docs/reference/rest/v1management/scores"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

@@ -1,7 +1,7 @@
 (ns happygapi.reseller.resellernotify
   "Google Workspace Reseller API: resellernotify.
   Perform common functions that are available on the Channel Services console at scale, like placing orders and viewing customer information
-  See: https://developers.google.com/google-apps/reseller/api/reference/rest/v1/resellernotify"
+  See: https://developers.google.com/google-apps/reseller/docs/reference/rest/v1/resellernotify"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

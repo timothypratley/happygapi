@@ -1,7 +1,7 @@
 (ns happygapi.verifiedaccess.challenge
   "Chrome Verified Access API: challenge.
   API for Verified Access chrome extension to provide credential verification for chrome devices connecting to an enterprise network
-  See: https://developers.google.com/chrome/verified-accessapi/reference/rest/v2/challenge"
+  See: https://developers.google.com/chrome/verified-accessdocs/reference/rest/v2/challenge"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

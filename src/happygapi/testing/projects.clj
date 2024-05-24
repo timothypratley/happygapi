@@ -1,7 +1,7 @@
 (ns happygapi.testing.projects
   "Cloud Testing API: projects.
   Allows developers to run automated tests for their mobile applications on Google infrastructure.
-  See: https://firebase.google.com/docs/test-lab/api/reference/rest/v1/projects"
+  See: https://firebase.google.com/docs/test-lab/docs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

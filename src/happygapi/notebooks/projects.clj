@@ -1,7 +1,7 @@
 (ns happygapi.notebooks.projects
   "Notebooks API: projects.
   Notebooks API is used to manage notebook resources in Google Cloud.
-  See: https://cloud.google.com/notebooks/docs/api/reference/rest/v2/projects"
+  See: https://cloud.google.com/notebooks/docs/docs/reference/rest/v2/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

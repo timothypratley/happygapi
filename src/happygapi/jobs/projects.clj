@@ -1,7 +1,7 @@
 (ns happygapi.jobs.projects
   "Cloud Talent Solution API: projects.
   Cloud Talent Solution provides the capability to create, read, update, and delete job postings, as well as search jobs based on keywords and filters. 
-  See: https://cloud.google.com/talent-solution/job-search/docs/api/reference/rest/v4/projects"
+  See: https://cloud.google.com/talent-solution/job-search/docs/docs/reference/rest/v4/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

@@ -1,7 +1,7 @@
 (ns happygapi.file.projects
   "Cloud Filestore API: projects.
   The Cloud Filestore API is used for creating and managing cloud file servers.
-  See: https://cloud.google.com/filestore/api/reference/rest/v1/projects"
+  See: https://cloud.google.com/filestore/docs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -249,6 +249,7 @@
                :ipAddresses [string],
                :connectMode string}],
    :satisfiesPzs boolean,
+   :replication {:role string, :replicas [ReplicaConfig]},
    :kmsKeyName string}
   
   Creates an instance. When creating from a backup, the capacity of the new instance needs to be equal to or larger than the capacity of the backup (and also equal to or larger than the minimum capacity of the tier)."
@@ -301,6 +302,7 @@
                :ipAddresses [string],
                :connectMode string}],
    :satisfiesPzs boolean,
+   :replication {:role string, :replicas [ReplicaConfig]},
    :kmsKeyName string}
   
   Updates the settings of a specific instance."

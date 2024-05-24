@@ -152,7 +152,7 @@
                                                     :type "string"},
                                        :targetProject {:description "Required. Reference to the TargetProject resource that represents the target project in which the imported image will be created.",
                                                        :type "string"},
-                                       :encryption {:description "Optional. Immutable. The encryption to apply to the image.",
+                                       :encryption {:description "Immutable. The encryption to apply to the image.",
                                                     :$ref "Encryption"},
                                        :imageName {:description "Required. The name of the image to be created.",
                                                    :type "string"},

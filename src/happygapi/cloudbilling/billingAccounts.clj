@@ -1,7 +1,7 @@
 (ns happygapi.cloudbilling.billingAccounts
   "Cloud Billing API: billingAccounts.
   Allows developers to manage billing for their Google Cloud Platform projects programmatically.
-  See: https://cloud.google.com/billing/docs/apisapi/reference/rest/v1/billingAccounts"
+  See: https://cloud.google.com/billing/docs/apisdocs/reference/rest/v1/billingAccounts"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

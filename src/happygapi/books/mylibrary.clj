@@ -1,7 +1,7 @@
 (ns happygapi.books.mylibrary
   "Books API: mylibrary.
   The Google Books API allows clients to access the Google Books repository.
-  See: https://code.google.com/apis/books/docs/v1/getting_started.htmlapi/reference/rest/v1/mylibrary"
+  See: https://code.google.com/apis/books/docs/v1/getting_started.htmldocs/reference/rest/v1/mylibrary"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

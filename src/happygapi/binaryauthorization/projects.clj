@@ -1,7 +1,7 @@
 (ns happygapi.binaryauthorization.projects
   "Binary Authorization API: projects.
   The management interface for Binary Authorization, a service that provides policy-based deployment validation and control for images deployed to Google Kubernetes Engine (GKE), Anthos Service Mesh, Anthos Clusters, and Cloud Run. 
-  See: https://cloud.google.com/binary-authorization/api/reference/rest/v1/projects"
+  See: https://cloud.google.com/binary-authorization/docs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

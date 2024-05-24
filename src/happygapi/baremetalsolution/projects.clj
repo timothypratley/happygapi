@@ -1,7 +1,7 @@
 (ns happygapi.baremetalsolution.projects
   "Bare Metal Solution API: projects.
   Provides ways to manage Bare Metal Solution hardware installed in a regional extension located near a Google Cloud data center.
-  See: https://cloud.google.com/bare-metalapi/reference/rest/v2/projects"
+  See: https://cloud.google.com/bare-metaldocs/reference/rest/v2/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -997,6 +997,38 @@
       :as :json}
      auth))))
 
+(defn locations-instances-disableHyperthreading$
+  "https://cloud.google.com/bare-metalapi/reference/rest/v2/projects/locations/instances/disableHyperthreading
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {}
+  
+  Perform disable hyperthreading operation on a single server."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://baremetalsolution.googleapis.com/"
+     "v2/{+name}:disableHyperthreading"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn locations-instances-detachLun$
   "https://cloud.google.com/bare-metalapi/reference/rest/v2/projects/locations/instances/detachLun
   
@@ -1049,6 +1081,38 @@
     (util/get-url
      "https://baremetalsolution.googleapis.com/"
      "v2/{+name}:rename"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-instances-reimage$
+  "https://cloud.google.com/bare-metalapi/reference/rest/v2/projects/locations/instances/reimage
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:osImage string, :kmsKeyVersion string, :sshKeys [string]}
+  
+  Perform reimage operation on a single server."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://baremetalsolution.googleapis.com/"
+     "v2/{+name}:reimage"
      #{:name}
      parameters)
     (merge-with
@@ -1139,6 +1203,38 @@
     (util/get-url
      "https://baremetalsolution.googleapis.com/"
      "v2/{+name}:disableInteractiveSerialConsole"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-instances-enableHyperthreading$
+  "https://cloud.google.com/bare-metalapi/reference/rest/v2/projects/locations/instances/enableHyperthreading
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {}
+  
+  Perform enable hyperthreading operation on a single server."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://baremetalsolution.googleapis.com/"
+     "v2/{+name}:enableHyperthreading"
      #{:name}
      parameters)
     (merge-with

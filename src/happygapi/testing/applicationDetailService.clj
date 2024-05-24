@@ -1,7 +1,7 @@
 (ns happygapi.testing.applicationDetailService
   "Cloud Testing API: applicationDetailService.
   Allows developers to run automated tests for their mobile applications on Google infrastructure.
-  See: https://firebase.google.com/docs/test-lab/api/reference/rest/v1/applicationDetailService"
+  See: https://firebase.google.com/docs/test-lab/docs/reference/rest/v1/applicationDetailService"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

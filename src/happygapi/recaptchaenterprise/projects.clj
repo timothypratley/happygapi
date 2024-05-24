@@ -1,192 +1,35 @@
 (ns happygapi.recaptchaenterprise.projects
   "reCAPTCHA Enterprise API: projects.
   Help protect your website from fraudulent activity, spam, and abuse without creating friction.
-  See: https://cloud.google.com/recaptcha-enterprise/api/reference/rest/v1/projects"
+  See: https://cloud.google.com/recaptcha-enterprise/docs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn firewallpolicies-patch$
-  "https://cloud.google.com/recaptcha-enterprise/api/reference/rest/v1/projects/firewallpolicies/patch
+(defn relatedaccountgroupmemberships-search$
+  "https://cloud.google.com/recaptcha-enterprise/api/reference/rest/v1/projects/relatedaccountgroupmemberships/search
   
-  Required parameters: name
-  
-  Optional parameters: updateMask
-  
-  Body: 
-  
-  {:actions [{:block GoogleCloudRecaptchaenterpriseV1FirewallActionBlockAction,
-              :setHeader GoogleCloudRecaptchaenterpriseV1FirewallActionSetHeaderAction,
-              :allow GoogleCloudRecaptchaenterpriseV1FirewallActionAllowAction,
-              :substitute GoogleCloudRecaptchaenterpriseV1FirewallActionSubstituteAction,
-              :includeRecaptchaScript GoogleCloudRecaptchaenterpriseV1FirewallActionIncludeRecaptchaScriptAction,
-              :redirect GoogleCloudRecaptchaenterpriseV1FirewallActionRedirectAction}],
-   :condition string,
-   :description string,
-   :path string,
-   :name string}
-  
-  Updates the specified firewall policy."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://recaptchaenterprise.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn firewallpolicies-get$
-  "https://cloud.google.com/recaptcha-enterprise/api/reference/rest/v1/projects/firewallpolicies/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Returns the specified firewall policy."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://recaptchaenterprise.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn firewallpolicies-delete$
-  "https://cloud.google.com/recaptcha-enterprise/api/reference/rest/v1/projects/firewallpolicies/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes the specified firewall policy."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://recaptchaenterprise.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn firewallpolicies-list$
-  "https://cloud.google.com/recaptcha-enterprise/api/reference/rest/v1/projects/firewallpolicies/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageSize, pageToken
-  
-  Returns the list of all firewall policies that belong to a project."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://recaptchaenterprise.googleapis.com/"
-     "v1/{+parent}/firewallpolicies"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn firewallpolicies-reorder$
-  "https://cloud.google.com/recaptcha-enterprise/api/reference/rest/v1/projects/firewallpolicies/reorder
-  
-  Required parameters: parent
+  Required parameters: project
   
   Optional parameters: none
   
   Body: 
   
-  {:names [string]}
+  {:hashedAccountId string,
+   :pageToken string,
+   :accountId string,
+   :pageSize integer}
   
-  Reorders all firewall policies."
+  Search group memberships related to a given account."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
+  {:pre [(util/has-keys? parameters #{:project})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://recaptchaenterprise.googleapis.com/"
-     "v1/{+parent}/firewallpolicies:reorder"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn firewallpolicies-create$
-  "https://cloud.google.com/recaptcha-enterprise/api/reference/rest/v1/projects/firewallpolicies/create
-  
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:actions [{:block GoogleCloudRecaptchaenterpriseV1FirewallActionBlockAction,
-              :setHeader GoogleCloudRecaptchaenterpriseV1FirewallActionSetHeaderAction,
-              :allow GoogleCloudRecaptchaenterpriseV1FirewallActionAllowAction,
-              :substitute GoogleCloudRecaptchaenterpriseV1FirewallActionSubstituteAction,
-              :includeRecaptchaScript GoogleCloudRecaptchaenterpriseV1FirewallActionIncludeRecaptchaScriptAction,
-              :redirect GoogleCloudRecaptchaenterpriseV1FirewallActionRedirectAction}],
-   :condition string,
-   :description string,
-   :path string,
-   :name string}
-  
-  Creates a new FirewallPolicy, specifying conditions at which reCAPTCHA Enterprise actions can be executed. A project may have a maximum of 1000 policies."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://recaptchaenterprise.googleapis.com/"
-     "v1/{+parent}/firewallpolicies"
-     #{:parent}
+     "v1/{+project}/relatedaccountgroupmemberships:search"
+     #{:project}
      parameters)
     (merge-with
      merge
@@ -260,13 +103,13 @@
   Body: 
   
   {:transactionEvent {:eventType string,
-                      :reason string,
                       :eventTime string,
+                      :reason string,
                       :value number},
-   :reasons [string],
    :hashedAccountId string,
+   :accountId string,
    :annotation string,
-   :accountId string}
+   :reasons [string]}
   
   Annotates a previously created Assessment to provide additional information on whether the event turned out to be authentic or fraudulent."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -298,14 +141,15 @@
   
   Body: 
   
-  {:accountVerification {:endpoints [GoogleCloudRecaptchaenterpriseV1EndpointVerificationInfo],
+  {:accountVerification {:languageCode string,
                          :username string,
-                         :latestVerificationResult string,
-                         :languageCode string},
-   :riskAnalysis {:extendedVerdictReasons [string],
+                         :endpoints [GoogleCloudRecaptchaenterpriseV1EndpointVerificationInfo],
+                         :latestVerificationResult string},
+   :riskAnalysis {:score number,
                   :reasons [string],
-                  :score number},
+                  :extendedVerdictReasons [string]},
    :accountDefenderAssessment {:labels [string]},
+   :phoneFraudAssessment {:smsTollFraudVerdict GoogleCloudRecaptchaenterpriseV1SmsTollFraudVerdict},
    :name string,
    :fraudSignals {:userSignals GoogleCloudRecaptchaenterpriseV1FraudSignalsUserSignals,
                   :cardSignals GoogleCloudRecaptchaenterpriseV1FraudSignalsCardSignals},
@@ -313,6 +157,7 @@
            :wafTokenAssessment boolean,
            :siteKey string,
            :firewallPolicyEvaluation boolean,
+           :fraudPrevention string,
            :headers [string],
            :token string,
            :transactionData GoogleCloudRecaptchaenterpriseV1TransactionData,
@@ -323,23 +168,23 @@
            :expectedAction string,
            :userInfo GoogleCloudRecaptchaenterpriseV1UserInfo,
            :requestedUri string},
-   :fraudPreventionAssessment {:cardTestingVerdict GoogleCloudRecaptchaenterpriseV1FraudPreventionAssessmentCardTestingVerdict,
+   :fraudPreventionAssessment {:behavioralTrustVerdict GoogleCloudRecaptchaenterpriseV1FraudPreventionAssessmentBehavioralTrustVerdict,
                                :transactionRisk number,
-                               :behavioralTrustVerdict GoogleCloudRecaptchaenterpriseV1FraudPreventionAssessmentBehavioralTrustVerdict,
+                               :cardTestingVerdict GoogleCloudRecaptchaenterpriseV1FraudPreventionAssessmentCardTestingVerdict,
                                :stolenInstrumentVerdict GoogleCloudRecaptchaenterpriseV1FraudPreventionAssessmentStolenInstrumentVerdict},
    :firewallPolicyAssessment {:firewallPolicy GoogleCloudRecaptchaenterpriseV1FirewallPolicy,
                               :error GoogleRpcStatus},
-   :privatePasswordLeakVerification {:encryptedUserCredentialsHash string,
-                                     :lookupHashPrefix string,
-                                     :encryptedLeakMatchPrefixes [string],
-                                     :reencryptedUserCredentialsHash string},
-   :tokenProperties {:createTime string,
-                     :action string,
-                     :iosBundleId string,
+   :privatePasswordLeakVerification {:encryptedLeakMatchPrefixes [string],
+                                     :encryptedUserCredentialsHash string,
+                                     :reencryptedUserCredentialsHash string,
+                                     :lookupHashPrefix string},
+   :tokenProperties {:androidPackageName string,
                      :valid boolean,
+                     :iosBundleId string,
+                     :createTime string,
                      :invalidReason string,
-                     :androidPackageName string,
-                     :hostname string}}
+                     :hostname string,
+                     :action string}}
   
   Creates an Assessment of the likelihood an event is legitimate."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -362,136 +207,14 @@
       :as :json}
      auth))))
 
-(defn keys-create$
-  "https://cloud.google.com/recaptcha-enterprise/api/reference/rest/v1/projects/keys/create
-  
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:labels {},
-   :wafSettings {:wafFeature string, :wafService string},
-   :displayName string,
-   :name string,
-   :webSettings {:allowAllDomains boolean,
-                 :integrationType string,
-                 :challengeSecurityPreference string,
-                 :allowAmpTraffic boolean,
-                 :allowedDomains [string]},
-   :createTime string,
-   :androidSettings {:allowedPackageNames [string],
-                     :allowAllPackageNames boolean,
-                     :supportNonGoogleAppStoreDistribution boolean},
-   :testingOptions {:testingChallenge string, :testingScore number},
-   :iosSettings {:allowAllBundleIds boolean,
-                 :appleDeveloperId GoogleCloudRecaptchaenterpriseV1AppleDeveloperId,
-                 :allowedBundleIds [string]}}
-  
-  Creates a new reCAPTCHA Enterprise key."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://recaptchaenterprise.googleapis.com/"
-     "v1/{+parent}/keys"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn keys-patch$
-  "https://cloud.google.com/recaptcha-enterprise/api/reference/rest/v1/projects/keys/patch
-  
-  Required parameters: name
-  
-  Optional parameters: updateMask
-  
-  Body: 
-  
-  {:labels {},
-   :wafSettings {:wafFeature string, :wafService string},
-   :displayName string,
-   :name string,
-   :webSettings {:allowAllDomains boolean,
-                 :integrationType string,
-                 :challengeSecurityPreference string,
-                 :allowAmpTraffic boolean,
-                 :allowedDomains [string]},
-   :createTime string,
-   :androidSettings {:allowedPackageNames [string],
-                     :allowAllPackageNames boolean,
-                     :supportNonGoogleAppStoreDistribution boolean},
-   :testingOptions {:testingChallenge string, :testingScore number},
-   :iosSettings {:allowAllBundleIds boolean,
-                 :appleDeveloperId GoogleCloudRecaptchaenterpriseV1AppleDeveloperId,
-                 :allowedBundleIds [string]}}
-  
-  Updates the specified key."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://recaptchaenterprise.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn keys-retrieveLegacySecretKey$
-  "https://cloud.google.com/recaptcha-enterprise/api/reference/rest/v1/projects/keys/retrieveLegacySecretKey
-  
-  Required parameters: key
-  
-  Optional parameters: none
-  
-  Returns the secret key related to the specified public key. You must use the legacy secret key only in a 3rd party integration with legacy reCAPTCHA."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:key})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://recaptchaenterprise.googleapis.com/"
-     "v1/{+key}:retrieveLegacySecretKey"
-     #{:key}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn keys-get$
-  "https://cloud.google.com/recaptcha-enterprise/api/reference/rest/v1/projects/keys/get
+(defn keys-getMetrics$
+  "https://cloud.google.com/recaptcha-enterprise/api/reference/rest/v1/projects/keys/getMetrics
   
   Required parameters: name
   
   Optional parameters: none
   
-  Returns the specified key."
+  Get some aggregated metrics for a Key. This data can be used to build dashboards."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -536,14 +259,88 @@
       :as :json}
      auth))))
 
-(defn keys-getMetrics$
-  "https://cloud.google.com/recaptcha-enterprise/api/reference/rest/v1/projects/keys/getMetrics
+(defn keys-retrieveLegacySecretKey$
+  "https://cloud.google.com/recaptcha-enterprise/api/reference/rest/v1/projects/keys/retrieveLegacySecretKey
+  
+  Required parameters: key
+  
+  Optional parameters: none
+  
+  Returns the secret key related to the specified public key. You must use the legacy secret key only in a 3rd party integration with legacy reCAPTCHA."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:key})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://recaptchaenterprise.googleapis.com/"
+     "v1/{+key}:retrieveLegacySecretKey"
+     #{:key}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn keys-create$
+  "https://cloud.google.com/recaptcha-enterprise/api/reference/rest/v1/projects/keys/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:labels {},
+   :wafSettings {:wafService string, :wafFeature string},
+   :displayName string,
+   :name string,
+   :webSettings {:challengeSecurityPreference string,
+                 :allowAmpTraffic boolean,
+                 :integrationType string,
+                 :allowedDomains [string],
+                 :allowAllDomains boolean},
+   :createTime string,
+   :androidSettings {:allowAllPackageNames boolean,
+                     :allowedPackageNames [string],
+                     :supportNonGoogleAppStoreDistribution boolean},
+   :testingOptions {:testingChallenge string, :testingScore number},
+   :iosSettings {:allowAllBundleIds boolean,
+                 :allowedBundleIds [string],
+                 :appleDeveloperId GoogleCloudRecaptchaenterpriseV1AppleDeveloperId}}
+  
+  Creates a new reCAPTCHA Enterprise key."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://recaptchaenterprise.googleapis.com/"
+     "v1/{+parent}/keys"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn keys-get$
+  "https://cloud.google.com/recaptcha-enterprise/api/reference/rest/v1/projects/keys/get
   
   Required parameters: name
   
   Optional parameters: none
   
-  Get some aggregated metrics for a Key. This data can be used to build dashboards."
+  Returns the specified key."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -557,6 +354,54 @@
     (merge-with
      merge
      {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn keys-patch$
+  "https://cloud.google.com/recaptcha-enterprise/api/reference/rest/v1/projects/keys/patch
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:labels {},
+   :wafSettings {:wafService string, :wafFeature string},
+   :displayName string,
+   :name string,
+   :webSettings {:challengeSecurityPreference string,
+                 :allowAmpTraffic boolean,
+                 :integrationType string,
+                 :allowedDomains [string],
+                 :allowAllDomains boolean},
+   :createTime string,
+   :androidSettings {:allowAllPackageNames boolean,
+                     :allowedPackageNames [string],
+                     :supportNonGoogleAppStoreDistribution boolean},
+   :testingOptions {:testingChallenge string, :testingScore number},
+   :iosSettings {:allowAllBundleIds boolean,
+                 :allowedBundleIds [string],
+                 :appleDeveloperId GoogleCloudRecaptchaenterpriseV1AppleDeveloperId}}
+  
+  Updates the specified key."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://recaptchaenterprise.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -620,36 +465,193 @@
       :as :json}
      auth))))
 
-(defn relatedaccountgroupmemberships-search$
-  "https://cloud.google.com/recaptcha-enterprise/api/reference/rest/v1/projects/relatedaccountgroupmemberships/search
+(defn firewallpolicies-list$
+  "https://cloud.google.com/recaptcha-enterprise/api/reference/rest/v1/projects/firewallpolicies/list
   
-  Required parameters: project
+  Required parameters: parent
+  
+  Optional parameters: pageSize, pageToken
+  
+  Returns the list of all firewall policies that belong to a project."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://recaptchaenterprise.googleapis.com/"
+     "v1/{+parent}/firewallpolicies"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn firewallpolicies-delete$
+  "https://cloud.google.com/recaptcha-enterprise/api/reference/rest/v1/projects/firewallpolicies/delete
+  
+  Required parameters: name
   
   Optional parameters: none
   
-  Body: 
-  
-  {:hashedAccountId string,
-   :pageSize integer,
-   :accountId string,
-   :pageToken string}
-  
-  Search group memberships related to a given account."
+  Deletes the specified firewall policy."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:project})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/post
+   (http/delete
     (util/get-url
      "https://recaptchaenterprise.googleapis.com/"
-     "v1/{+project}/relatedaccountgroupmemberships:search"
-     #{:project}
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn firewallpolicies-patch$
+  "https://cloud.google.com/recaptcha-enterprise/api/reference/rest/v1/projects/firewallpolicies/patch
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:condition string,
+   :actions [{:redirect GoogleCloudRecaptchaenterpriseV1FirewallActionRedirectAction,
+              :allow GoogleCloudRecaptchaenterpriseV1FirewallActionAllowAction,
+              :setHeader GoogleCloudRecaptchaenterpriseV1FirewallActionSetHeaderAction,
+              :block GoogleCloudRecaptchaenterpriseV1FirewallActionBlockAction,
+              :includeRecaptchaScript GoogleCloudRecaptchaenterpriseV1FirewallActionIncludeRecaptchaScriptAction,
+              :substitute GoogleCloudRecaptchaenterpriseV1FirewallActionSubstituteAction}],
+   :name string,
+   :description string,
+   :path string}
+  
+  Updates the specified firewall policy."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://recaptchaenterprise.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
      parameters)
     (merge-with
      merge
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn firewallpolicies-reorder$
+  "https://cloud.google.com/recaptcha-enterprise/api/reference/rest/v1/projects/firewallpolicies/reorder
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:names [string]}
+  
+  Reorders all firewall policies."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://recaptchaenterprise.googleapis.com/"
+     "v1/{+parent}/firewallpolicies:reorder"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn firewallpolicies-create$
+  "https://cloud.google.com/recaptcha-enterprise/api/reference/rest/v1/projects/firewallpolicies/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:condition string,
+   :actions [{:redirect GoogleCloudRecaptchaenterpriseV1FirewallActionRedirectAction,
+              :allow GoogleCloudRecaptchaenterpriseV1FirewallActionAllowAction,
+              :setHeader GoogleCloudRecaptchaenterpriseV1FirewallActionSetHeaderAction,
+              :block GoogleCloudRecaptchaenterpriseV1FirewallActionBlockAction,
+              :includeRecaptchaScript GoogleCloudRecaptchaenterpriseV1FirewallActionIncludeRecaptchaScriptAction,
+              :substitute GoogleCloudRecaptchaenterpriseV1FirewallActionSubstituteAction}],
+   :name string,
+   :description string,
+   :path string}
+  
+  Creates a new FirewallPolicy, specifying conditions at which reCAPTCHA Enterprise actions can be executed. A project may have a maximum of 1000 policies."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://recaptchaenterprise.googleapis.com/"
+     "v1/{+parent}/firewallpolicies"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn firewallpolicies-get$
+  "https://cloud.google.com/recaptcha-enterprise/api/reference/rest/v1/projects/firewallpolicies/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Returns the specified firewall policy."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://recaptchaenterprise.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

@@ -1,7 +1,7 @@
 (ns happygapi.privateca.projects
   "Certificate Authority API: projects.
   The Certificate Authority Service API is a highly-available, scalable service that enables you to simplify and automate the management of private certificate authorities (CAs) while staying in control of your private keys. 
-  See: https://cloud.google.com/api/reference/rest/v1/projects"
+  See: https://cloud.google.com/docs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -316,7 +316,7 @@
   
   {:requestId string}
   
-  FetchCaCerts returns the current trust anchor for the CaPool. This will include CA certificate chains for all Certificate Authorities in the ENABLED, DISABLED, or STAGED states."
+  FetchCaCerts returns the current trust anchor for the CaPool. This will include CA certificate chains for all certificate authorities in the ENABLED, DISABLED, or STAGED states."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:caPool})]}
@@ -759,6 +759,7 @@
             :x509Config X509Parameters,
             :publicKey PublicKey,
             :subjectKeyId CertificateConfigKeyId},
+   :satisfiesPzi boolean,
    :name string,
    :createTime string,
    :keySpec {:cloudKmsKeyVersion string, :algorithm string},
@@ -768,6 +769,7 @@
                        :pemIssuerChain SubordinateConfigChain},
    :updateTime string,
    :accessUrls {:caCertificateAccessUrl string, :crlAccessUrls [string]},
+   :satisfiesPzs boolean,
    :lifetime string,
    :caCertificateDescriptions [{:subjectDescription SubjectDescription,
                                 :x509Description X509Parameters,
@@ -818,6 +820,7 @@
             :x509Config X509Parameters,
             :publicKey PublicKey,
             :subjectKeyId CertificateConfigKeyId},
+   :satisfiesPzi boolean,
    :name string,
    :createTime string,
    :keySpec {:cloudKmsKeyVersion string, :algorithm string},
@@ -827,6 +830,7 @@
                        :pemIssuerChain SubordinateConfigChain},
    :updateTime string,
    :accessUrls {:caCertificateAccessUrl string, :crlAccessUrls [string]},
+   :satisfiesPzs boolean,
    :lifetime string,
    :caCertificateDescriptions [{:subjectDescription SubjectDescription,
                                 :x509Description X509Parameters,

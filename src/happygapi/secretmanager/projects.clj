@@ -1,7 +1,7 @@
 (ns happygapi.secretmanager.projects
   "Secret Manager API: projects.
   Stores sensitive data such as API keys, passwords, and certificates. Provides convenience while improving security. 
-  See: https://cloud.google.com/secret-manager/api/reference/rest/v1/projects"
+  See: https://cloud.google.com/secret-manager/docs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

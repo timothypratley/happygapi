@@ -1,10 +1,36 @@
 (ns happygapi.contactcenterinsights.projects
   "Contact Center AI Insights API: projects.
   
-  See: https://cloud.google.com/contact-center/insights/docsapi/reference/rest/v1/projects"
+  See: https://cloud.google.com/contact-center/insights/docsdocs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
+
+(defn locations-getSettings$
+  "https://cloud.google.com/contact-center/insights/docsapi/reference/rest/v1/projects/locations/getSettings
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets project-level settings."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://contactcenterinsights.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
 
 (defn locations-updateSettings$
   "https://cloud.google.com/contact-center/insights/docsapi/reference/rest/v1/projects/locations/updateSettings
@@ -44,148 +70,6 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-getSettings$
-  "https://cloud.google.com/contact-center/insights/docsapi/reference/rest/v1/projects/locations/getSettings
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets project-level settings."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://contactcenterinsights.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-insightsdata-export$
-  "https://cloud.google.com/contact-center/insights/docsapi/reference/rest/v1/projects/locations/insightsdata/export
-  
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:kmsKey string,
-   :bigQueryDestination {:table string,
-                         :dataset string,
-                         :projectId string},
-   :writeDisposition string,
-   :filter string,
-   :parent string}
-  
-  Export insights data to a destination defined in the request body."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://contactcenterinsights.googleapis.com/"
-     "v1/{+parent}/insightsdata:export"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-operations-get$
-  "https://cloud.google.com/contact-center/insights/docsapi/reference/rest/v1/projects/locations/operations/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://contactcenterinsights.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-operations-cancel$
-  "https://cloud.google.com/contact-center/insights/docsapi/reference/rest/v1/projects/locations/operations/cancel
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Starts asynchronous cancellation on a long-running operation. The server makes a best effort to cancel the operation, but success is not guaranteed. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`. Clients can use Operations.GetOperation or other methods to check whether the cancellation succeeded or whether the operation completed despite cancellation. On successful cancellation, the operation is not deleted; instead, it becomes an operation with an Operation.error value with a google.rpc.Status.code of 1, corresponding to `Code.CANCELLED`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://contactcenterinsights.googleapis.com/"
-     "v1/{+name}:cancel"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-operations-list$
-  "https://cloud.google.com/contact-center/insights/docsapi/reference/rest/v1/projects/locations/operations/list
-  
-  Required parameters: name
-  
-  Optional parameters: filter, pageSize, pageToken
-  
-  Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns `UNIMPLEMENTED`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://contactcenterinsights.googleapis.com/"
-     "v1/{+name}/operations"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -265,9 +149,9 @@
    :state string,
    :updateTime string,
    :languageCode string,
-   :inputDataConfig {:filter string,
-                     :medium string,
-                     :trainingConversationsCount string},
+   :inputDataConfig {:medium string,
+                     :trainingConversationsCount string,
+                     :filter string},
    :issueCount string,
    :trainingStats {:unclassifiedConversationsCount string,
                    :issueStats {},
@@ -310,9 +194,9 @@
    :state string,
    :updateTime string,
    :languageCode string,
-   :inputDataConfig {:filter string,
-                     :medium string,
-                     :trainingConversationsCount string},
+   :inputDataConfig {:medium string,
+                     :trainingConversationsCount string,
+                     :filter string},
    :issueCount string,
    :trainingStats {:unclassifiedConversationsCount string,
                    :issueStats {},
@@ -400,7 +284,7 @@
   
   Body: 
   
-  {:name string, :gcsDestination {:objectUri string}}
+  {:gcsDestination {:objectUri string}, :name string}
   
   Exports an issue model to the provided destination."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -459,8 +343,8 @@
   Body: 
   
   {:parent string,
-   :createNewModel boolean,
-   :gcsSource {:objectUri string}}
+   :gcsSource {:objectUri string},
+   :createNewModel boolean}
   
   Imports an issue model from a Cloud Storage bucket."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -541,6 +425,42 @@
       :as :json}
      auth))))
 
+(defn locations-issueModels-issues-patch$
+  "https://cloud.google.com/contact-center/insights/docsapi/reference/rest/v1/projects/locations/issueModels/issues/patch
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:displayName string,
+   :sampleUtterances [string],
+   :updateTime string,
+   :createTime string,
+   :name string}
+  
+  Updates an issue."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://contactcenterinsights.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn locations-issueModels-issues-delete$
   "https://cloud.google.com/contact-center/insights/docsapi/reference/rest/v1/projects/locations/issueModels/issues/delete
   
@@ -567,8 +487,34 @@
       :as :json}
      auth))))
 
-(defn locations-issueModels-issues-patch$
-  "https://cloud.google.com/contact-center/insights/docsapi/reference/rest/v1/projects/locations/issueModels/issues/patch
+(defn locations-issueModels-issues-get$
+  "https://cloud.google.com/contact-center/insights/docsapi/reference/rest/v1/projects/locations/issueModels/issues/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets an issue."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://contactcenterinsights.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-views-patch$
+  "https://cloud.google.com/contact-center/insights/docsapi/reference/rest/v1/projects/locations/views/patch
   
   Required parameters: name
   
@@ -576,13 +522,13 @@
   
   Body: 
   
-  {:createTime string,
-   :name string,
-   :sampleUtterances [string],
+  {:value string,
    :updateTime string,
+   :name string,
+   :createTime string,
    :displayName string}
   
-  Updates an issue."
+  Updates a view."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -603,14 +549,206 @@
       :as :json}
      auth))))
 
-(defn locations-issueModels-issues-get$
-  "https://cloud.google.com/contact-center/insights/docsapi/reference/rest/v1/projects/locations/issueModels/issues/get
+(defn locations-views-get$
+  "https://cloud.google.com/contact-center/insights/docsapi/reference/rest/v1/projects/locations/views/get
   
   Required parameters: name
   
   Optional parameters: none
   
-  Gets an issue."
+  Gets a view."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://contactcenterinsights.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-views-delete$
+  "https://cloud.google.com/contact-center/insights/docsapi/reference/rest/v1/projects/locations/views/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes a view."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://contactcenterinsights.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-views-list$
+  "https://cloud.google.com/contact-center/insights/docsapi/reference/rest/v1/projects/locations/views/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageToken, pageSize
+  
+  Lists views."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://contactcenterinsights.googleapis.com/"
+     "v1/{+parent}/views"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-views-create$
+  "https://cloud.google.com/contact-center/insights/docsapi/reference/rest/v1/projects/locations/views/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:value string,
+   :updateTime string,
+   :name string,
+   :createTime string,
+   :displayName string}
+  
+  Creates a view."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://contactcenterinsights.googleapis.com/"
+     "v1/{+parent}/views"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-operations-list$
+  "https://cloud.google.com/contact-center/insights/docsapi/reference/rest/v1/projects/locations/operations/list
+  
+  Required parameters: name
+  
+  Optional parameters: pageSize, filter, pageToken
+  
+  Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns `UNIMPLEMENTED`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://contactcenterinsights.googleapis.com/"
+     "v1/{+name}/operations"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-operations-get$
+  "https://cloud.google.com/contact-center/insights/docsapi/reference/rest/v1/projects/locations/operations/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://contactcenterinsights.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-operations-cancel$
+  "https://cloud.google.com/contact-center/insights/docsapi/reference/rest/v1/projects/locations/operations/cancel
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Starts asynchronous cancellation on a long-running operation. The server makes a best effort to cancel the operation, but success is not guaranteed. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`. Clients can use Operations.GetOperation or other methods to check whether the cancellation succeeded or whether the operation completed despite cancellation. On successful cancellation, the operation is not deleted; instead, it becomes an operation with an Operation.error value with a google.rpc.Status.code of 1, corresponding to `Code.CANCELLED`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://contactcenterinsights.googleapis.com/"
+     "v1/{+name}:cancel"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-phraseMatchers-get$
+  "https://cloud.google.com/contact-center/insights/docsapi/reference/rest/v1/projects/locations/phraseMatchers/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets a phrase matcher."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -741,38 +879,12 @@
       :as :json}
      auth))))
 
-(defn locations-phraseMatchers-get$
-  "https://cloud.google.com/contact-center/insights/docsapi/reference/rest/v1/projects/locations/phraseMatchers/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets a phrase matcher."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://contactcenterinsights.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn locations-phraseMatchers-list$
   "https://cloud.google.com/contact-center/insights/docsapi/reference/rest/v1/projects/locations/phraseMatchers/list
   
   Required parameters: parent
   
-  Optional parameters: pageSize, pageToken, filter
+  Optional parameters: filter, pageToken, pageSize
   
   Lists phrase matchers."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -828,10 +940,10 @@
   
   Body: 
   
-  {:latestAnalysis {:createTime string,
-                    :name string,
-                    :requestTime string,
+  {:latestAnalysis {:name string,
+                    :createTime string,
                     :annotatorSelector GoogleCloudContactcenterinsightsV1AnnotatorSelector,
+                    :requestTime string,
                     :analysisResult GoogleCloudContactcenterinsightsV1AnalysisResult},
    :labels {},
    :obfuscatedUserId string,
@@ -840,6 +952,7 @@
    :medium string,
    :name string,
    :runtimeAnnotations [{:smartComposeSuggestion GoogleCloudContactcenterinsightsV1SmartComposeSuggestionData,
+                         :knowledgeAssistResult GoogleCloudContactcenterinsightsV1GetKnowledgeAssistResponse,
                          :endBoundary GoogleCloudContactcenterinsightsV1AnnotationBoundary,
                          :smartReply GoogleCloudContactcenterinsightsV1SmartReplyData,
                          :answerFeedback GoogleCloudContactcenterinsightsV1AnswerFeedback,
@@ -847,27 +960,29 @@
                          :startBoundary GoogleCloudContactcenterinsightsV1AnnotationBoundary,
                          :annotationId string,
                          :dialogflowInteraction GoogleCloudContactcenterinsightsV1DialogflowInteractionData,
+                         :knowledgeSearchResult GoogleCloudContactcenterinsightsV1SearchKnowledgeAnswer,
                          :conversationSummarizationSuggestion GoogleCloudContactcenterinsightsV1ConversationSummarizationSuggestionData,
                          :faqAnswer GoogleCloudContactcenterinsightsV1FaqAnswerData,
+                         :generatorSuggestionResult GoogleCloudContactcenterinsightsV1GetGeneratorSuggestionResponse,
                          :articleSuggestion GoogleCloudContactcenterinsightsV1ArticleSuggestionData}],
    :createTime string,
    :turnCount integer,
    :duration string,
    :updateTime string,
-   :qualityMetadata {:menuPath string,
+   :qualityMetadata {:customerSatisfactionRating integer,
                      :agentInfo [GoogleCloudContactcenterinsightsV1ConversationQualityMetadataAgentInfo],
-                     :waitDuration string,
-                     :customerSatisfactionRating integer},
-   :latestSummary {:answerRecord string,
-                   :text string,
-                   :textSections {},
-                   :metadata {},
+                     :menuPath string,
+                     :waitDuration string},
+   :latestSummary {:metadata {},
                    :conversationModel string,
-                   :confidence number},
+                   :answerRecord string,
+                   :confidence number,
+                   :textSections {},
+                   :text string},
    :ttl string,
    :languageCode string,
-   :dataSource {:gcsSource GoogleCloudContactcenterinsightsV1GcsSource,
-                :dialogflowSource GoogleCloudContactcenterinsightsV1DialogflowSource},
+   :dataSource {:dialogflowSource GoogleCloudContactcenterinsightsV1DialogflowSource,
+                :gcsSource GoogleCloudContactcenterinsightsV1GcsSource},
    :expireTime string,
    :transcript {:transcriptSegments [GoogleCloudContactcenterinsightsV1ConversationTranscriptTranscriptSegment]},
    :dialogflowIntents {},
@@ -903,10 +1018,10 @@
   
   Body: 
   
-  {:latestAnalysis {:createTime string,
-                    :name string,
-                    :requestTime string,
+  {:latestAnalysis {:name string,
+                    :createTime string,
                     :annotatorSelector GoogleCloudContactcenterinsightsV1AnnotatorSelector,
+                    :requestTime string,
                     :analysisResult GoogleCloudContactcenterinsightsV1AnalysisResult},
    :labels {},
    :obfuscatedUserId string,
@@ -915,6 +1030,7 @@
    :medium string,
    :name string,
    :runtimeAnnotations [{:smartComposeSuggestion GoogleCloudContactcenterinsightsV1SmartComposeSuggestionData,
+                         :knowledgeAssistResult GoogleCloudContactcenterinsightsV1GetKnowledgeAssistResponse,
                          :endBoundary GoogleCloudContactcenterinsightsV1AnnotationBoundary,
                          :smartReply GoogleCloudContactcenterinsightsV1SmartReplyData,
                          :answerFeedback GoogleCloudContactcenterinsightsV1AnswerFeedback,
@@ -922,33 +1038,35 @@
                          :startBoundary GoogleCloudContactcenterinsightsV1AnnotationBoundary,
                          :annotationId string,
                          :dialogflowInteraction GoogleCloudContactcenterinsightsV1DialogflowInteractionData,
+                         :knowledgeSearchResult GoogleCloudContactcenterinsightsV1SearchKnowledgeAnswer,
                          :conversationSummarizationSuggestion GoogleCloudContactcenterinsightsV1ConversationSummarizationSuggestionData,
                          :faqAnswer GoogleCloudContactcenterinsightsV1FaqAnswerData,
+                         :generatorSuggestionResult GoogleCloudContactcenterinsightsV1GetGeneratorSuggestionResponse,
                          :articleSuggestion GoogleCloudContactcenterinsightsV1ArticleSuggestionData}],
    :createTime string,
    :turnCount integer,
    :duration string,
    :updateTime string,
-   :qualityMetadata {:menuPath string,
+   :qualityMetadata {:customerSatisfactionRating integer,
                      :agentInfo [GoogleCloudContactcenterinsightsV1ConversationQualityMetadataAgentInfo],
-                     :waitDuration string,
-                     :customerSatisfactionRating integer},
-   :latestSummary {:answerRecord string,
-                   :text string,
-                   :textSections {},
-                   :metadata {},
+                     :menuPath string,
+                     :waitDuration string},
+   :latestSummary {:metadata {},
                    :conversationModel string,
-                   :confidence number},
+                   :answerRecord string,
+                   :confidence number,
+                   :textSections {},
+                   :text string},
    :ttl string,
    :languageCode string,
-   :dataSource {:gcsSource GoogleCloudContactcenterinsightsV1GcsSource,
-                :dialogflowSource GoogleCloudContactcenterinsightsV1DialogflowSource},
+   :dataSource {:dialogflowSource GoogleCloudContactcenterinsightsV1DialogflowSource,
+                :gcsSource GoogleCloudContactcenterinsightsV1GcsSource},
    :expireTime string,
    :transcript {:transcriptSegments [GoogleCloudContactcenterinsightsV1ConversationTranscriptTranscriptSegment]},
    :dialogflowIntents {},
    :callMetadata {:agentChannel integer, :customerChannel integer}}
   
-  Creates a conversation."
+  Creates a conversation. DEPRECATED: Use UploadConversation instead. CreateConversation does not support audio transcription or DLP redaction."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:parent})]}
@@ -1000,7 +1118,7 @@
   
   Required parameters: parent
   
-  Optional parameters: view, filter, orderBy, pageToken, pageSize
+  Optional parameters: pageToken, view, pageSize, filter, orderBy
   
   Lists conversations."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -1030,18 +1148,19 @@
   
   Body: 
   
-  {:redactionConfig {:inspectTemplate string,
-                     :deidentifyTemplate string},
-   :speechConfig {:speechRecognizer string},
-   :transcriptObjectConfig {:medium string},
-   :conversationConfig {:customerChannel integer,
+  {:conversationConfig {:agentId string,
                         :agentChannel integer,
-                        :agentId string},
+                        :customerChannel integer},
    :parent string,
-   :gcsSource {:bucketObjectType string,
-               :metadataBucketUri string,
+   :gcsSource {:customMetadataKeys [string],
                :bucketUri string,
-               :customMetadataKeys [string]}}
+               :bucketObjectType string,
+               :metadataBucketUri string},
+   :sampleSize integer,
+   :redactionConfig {:inspectTemplate string,
+                     :deidentifyTemplate string},
+   :transcriptObjectConfig {:medium string},
+   :speechConfig {:speechRecognizer string}}
   
   Imports conversations and processes them according to the user's configuration."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -1099,8 +1218,8 @@
   
   Body: 
   
-  {:filter string,
-   :analysisPercentage number,
+  {:parent string,
+   :filter string,
    :annotatorSelector {:runPhraseMatcherAnnotator boolean,
                        :runInterruptionAnnotator boolean,
                        :runIssueModelAnnotator boolean,
@@ -1112,7 +1231,7 @@
                        :runIntentAnnotator boolean,
                        :issueModels [string],
                        :runSummarizationAnnotator boolean},
-   :parent string}
+   :analysisPercentage number}
   
   Analyzes multiple conversations in a single request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -1145,9 +1264,9 @@
   Body: 
   
   {:parent string,
-   :force boolean,
+   :filter string,
    :maxDeleteCount integer,
-   :filter string}
+   :force boolean}
   
   Deletes multiple conversations in a single request."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -1179,10 +1298,10 @@
   
   Body: 
   
-  {:parent string,
-   :redactionConfig {:inspectTemplate string,
+  {:redactionConfig {:inspectTemplate string,
                      :deidentifyTemplate string},
    :speechConfig {:speechRecognizer string},
+   :parent string,
    :conversationId string,
    :conversation {:latestAnalysis GoogleCloudContactcenterinsightsV1Analysis,
                   :labels {},
@@ -1236,9 +1355,8 @@
   
   Body: 
   
-  {:createTime string,
-   :name string,
-   :requestTime string,
+  {:name string,
+   :createTime string,
    :annotatorSelector {:runPhraseMatcherAnnotator boolean,
                        :runInterruptionAnnotator boolean,
                        :runIssueModelAnnotator boolean,
@@ -1250,8 +1368,9 @@
                        :runIntentAnnotator boolean,
                        :issueModels [string],
                        :runSummarizationAnnotator boolean},
-   :analysisResult {:callAnalysisMetadata GoogleCloudContactcenterinsightsV1AnalysisResultCallAnalysisMetadata,
-                    :endTime string}}
+   :requestTime string,
+   :analysisResult {:endTime string,
+                    :callAnalysisMetadata GoogleCloudContactcenterinsightsV1AnalysisResultCallAnalysisMetadata}}
   
   Creates an analysis. The long running operation is done when the analysis has completed."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -1331,7 +1450,7 @@
   
   Required parameters: parent
   
-  Optional parameters: pageSize, filter, pageToken
+  Optional parameters: pageSize, pageToken, filter
   
   Lists analyses."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -1352,96 +1471,8 @@
       :as :json}
      auth))))
 
-(defn locations-views-delete$
-  "https://cloud.google.com/contact-center/insights/docsapi/reference/rest/v1/projects/locations/views/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes a view."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://contactcenterinsights.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-views-list$
-  "https://cloud.google.com/contact-center/insights/docsapi/reference/rest/v1/projects/locations/views/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageSize, pageToken
-  
-  Lists views."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://contactcenterinsights.googleapis.com/"
-     "v1/{+parent}/views"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-views-patch$
-  "https://cloud.google.com/contact-center/insights/docsapi/reference/rest/v1/projects/locations/views/patch
-  
-  Required parameters: name
-  
-  Optional parameters: updateMask
-  
-  Body: 
-  
-  {:updateTime string,
-   :createTime string,
-   :value string,
-   :name string,
-   :displayName string}
-  
-  Updates a view."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://contactcenterinsights.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-views-create$
-  "https://cloud.google.com/contact-center/insights/docsapi/reference/rest/v1/projects/locations/views/create
+(defn locations-insightsdata-export$
+  "https://cloud.google.com/contact-center/insights/docsapi/reference/rest/v1/projects/locations/insightsdata/export
   
   Required parameters: parent
   
@@ -1449,13 +1480,15 @@
   
   Body: 
   
-  {:updateTime string,
-   :createTime string,
-   :value string,
-   :name string,
-   :displayName string}
+  {:filter string,
+   :writeDisposition string,
+   :bigQueryDestination {:dataset string,
+                         :table string,
+                         :projectId string},
+   :parent string,
+   :kmsKey string}
   
-  Creates a view."
+  Export insights data to a destination defined in the request body."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:parent})]}
@@ -1463,7 +1496,7 @@
    (http/post
     (util/get-url
      "https://contactcenterinsights.googleapis.com/"
-     "v1/{+parent}/views"
+     "v1/{+parent}/insightsdata:export"
      #{:parent}
      parameters)
     (merge-with
@@ -1471,32 +1504,6 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-views-get$
-  "https://cloud.google.com/contact-center/insights/docsapi/reference/rest/v1/projects/locations/views/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets a view."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://contactcenterinsights.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

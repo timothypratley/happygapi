@@ -1,7 +1,7 @@
 (ns happygapi.compute.instances
   "Compute Engine API: instances.
   Creates and runs virtual machines on Google Cloud Platform. 
-  See: https://cloud.google.com/compute/api/reference/rest/v1/instances"
+  See: https://cloud.google.com/compute/docs/reference/rest/v1/instances"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

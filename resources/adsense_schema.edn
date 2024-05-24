@@ -222,6 +222,56 @@
                                               :items {:$ref "AdUnit"}},
                                     :nextPageToken {:description "Continuation token used to page through ad units. To retrieve the next page of the results, set the next request's \"page_token\" value to this.",
                                                     :type "string"}}},
+ :PolicyIssue {:id "PolicyIssue",
+               :description "Representation of a policy issue for a single entity (site, site-section, or page). All issues for a single entity are represented by a single PolicyIssue resource, though that PolicyIssue can have multiple causes (or \"topics\") that can change over time. Policy issues are removed if there are no issues detected recently or if there's a recent successful appeal for the entity.",
+               :type "object",
+               :properties {:lastDetectedDate {:description "Required. The date (in the America/Los_Angeles timezone) when policy violations were last detected on the entity.",
+                                               :$ref "Date"},
+                            :warningEscalationDate {:description "Optional. The date (in the America/Los_Angeles timezone) when the entity will have ad serving demand restricted or ad serving disabled. This is present only for issues with a `WARNED` enforcement action. See https://support.google.com/adsense/answer/11066888.",
+                                                    :$ref "Date"},
+                            :siteSection {:description "Optional. Prefix of the site-section having policy issues (For example \"foo.com/bar-section\"). This will be present if the `entity_type` is `SITE_SECTION` and will be absent for other entity types.",
+                                          :type "string"},
+                            :site {:description "Required. Hostname/domain of the entity (for example \"foo.com\" or \"www.foo.com\"). This _should_ be a bare domain/host name without any protocol. This will be present for all policy issues.",
+                                   :type "string"},
+                            :adClients {:description "Optional. List of ad clients associated with the policy issue (either as the primary ad client or an associated host/secondary ad client). In the latter case, this will be an ad client that is not owned by the current account.",
+                                        :type "array",
+                                        :items {:type "string"}},
+                            :policyTopics {:description "Required. Unordered list. The policy topics that this entity was found to violate over the past seven days.",
+                                           :type "array",
+                                           :items {:$ref "PolicyTopic"}},
+                            :name {:description "Required. Resource name of the entity with policy issues. Format: accounts/{account}/policyIssues/{policy_issue}",
+                                   :type "string"},
+                            :adRequestCount {:description "Required. Total number of ad requests affected by the policy violations over the past seven days.",
+                                             :type "string",
+                                             :format "int64"},
+                            :firstDetectedDate {:description "Required. The date (in the America/Los_Angeles timezone) when policy violations were first detected on the entity.",
+                                                :$ref "Date"},
+                            :action {:description "Required. The most severe action taken on the entity over the past seven days.",
+                                     :type "string",
+                                     :enumDescriptions ["The action is unspecified."
+                                                        "No ad serving enforcement is currently present, but enforcement will start on the `warning_escalation_date` if the issue is not resolved."
+                                                        "Ad serving demand has been restricted on the entity."
+                                                        "Ad serving has been disabled on the entity."
+                                                        "Ads are being served for the entity but Confirmed Click is being applied to the ads. See https://support.google.com/adsense/answer/10025624."
+                                                        "Ad personalization is restricted because the ad requests coming from the EEA and UK do not have a TCF string or the Consent Management Platform (CMP) indicated by the TCF string is not Google certified. As a result, basic/limited ads will be served. See https://support.google.com/adsense/answer/13554116"],
+                                     :enum ["ENFORCEMENT_ACTION_UNSPECIFIED"
+                                            "WARNED"
+                                            "AD_SERVING_RESTRICTED"
+                                            "AD_SERVING_DISABLED"
+                                            "AD_SERVED_WITH_CLICK_CONFIRMATION"
+                                            "AD_PERSONALIZATION_RESTRICTED"]},
+                            :uri {:description "Optional. URI of the page having policy violations (for example \"foo.com/bar\" or \"www.foo.com/bar\"). This will be present if the `entity_type` is `PAGE` and will be absent for other entity types.",
+                                  :type "string"},
+                            :entityType {:description "Required. Type of the entity indicating if the entity is a site, site-section, or page.",
+                                         :type "string",
+                                         :enumDescriptions ["The entity type is unspecified."
+                                                            "The enforced entity is an entire website."
+                                                            "The enforced entity is a particular section of a website. All the pages with this prefix are enforced."
+                                                            "The enforced entity is a single web page."],
+                                         :enum ["ENTITY_TYPE_UNSPECIFIED"
+                                                "SITE"
+                                                "SITE_SECTION"
+                                                "PAGE"]}}},
  :TimeZone {:id "TimeZone",
             :description "Represents a time zone from the [IANA Time Zone Database](https://www.iana.org/time-zones).",
             :type "object",
@@ -259,6 +309,14 @@
                                       :items {:type "object",
                                               :additionalProperties {:type "any",
                                                                      :description "Properties of the object. Contains field @type with type URL."}}}}},
+ :ListPolicyIssuesResponse {:id "ListPolicyIssuesResponse",
+                            :description "Response definition for the policy issues list rpc. Policy issues are reported only if the publisher has at least one AFC ad client in READY or GETTING_READY state. If the publisher has no such AFC ad client, the response will be an empty list.",
+                            :type "object",
+                            :properties {:policyIssues {:description "The policy issues returned in the list response.",
+                                                        :type "array",
+                                                        :items {:$ref "PolicyIssue"}},
+                                         :nextPageToken {:description "Continuation token used to page through policy issues. To retrieve the next page of the results, set the next request's \"page_token\" value to this.",
+                                                         :type "string"}}},
  :Account {:id "Account",
            :description "Representation of an account.",
            :type "object",
@@ -348,6 +406,13 @@
                                             :type "string"},
                                       :errorProtectionCode {:description "Error protection code that can be used in conjunction with the tag. It'll display a message to users if an [ad blocking extension blocks their access to your site](https://support.google.com/adsense/answer/11575480).",
                                                             :type "string"}}},
+ :PolicyTopic {:id "PolicyTopic",
+               :description "Information about a particular policy topic. A policy topic represents a single class of policy issue that can impact ad serving for your site. For example, sexual content or having ads that obscure your content. A single policy issue can have multiple policy topics for a single entity.",
+               :type "object",
+               :properties {:topic {:description "Required. The policy topic. For example, \"sexual-content\" or \"ads-obscuring-content\".\"",
+                                    :type "string"},
+                            :mustFix {:description "Required. Indicates if this is a policy violation or not. When the value is true, issues that are instances of this topic must be addressed to remain in compliance with the partner's agreements with Google. A false value indicates that it's not mandatory to fix the issues but advertising demand might be restricted.",
+                                      :type "boolean"}}},
  :ListSitesResponse {:id "ListSitesResponse",
                      :description "Response definition for the sites list rpc.",
                      :type "object",

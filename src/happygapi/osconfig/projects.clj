@@ -1,7 +1,7 @@
 (ns happygapi.osconfig.projects
   "OS Config API: projects.
   OS management tools that can be used for patch management, patch compliance, and configuration management on VM instances.
-  See: https://cloud.google.com/compute/docs/osconfig/restapi/reference/rest/v1/projects"
+  See: https://cloud.google.com/compute/docs/osconfig/restdocs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -13,7 +13,7 @@
   
   Optional parameters: none
   
-  GetProjectFeatureSettings returns the feature settings for a project"
+  GetProjectFeatureSettings returns the VM Manager feature settings for a project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -43,7 +43,7 @@
   
   {:name string, :patchAndConfigFeatureSet string}
   
-  UpdateProjectFeatureSettings sets the feature settings for a project."
+  UpdateProjectFeatureSettings sets the VM Manager features for a project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -69,7 +69,7 @@
   
   Required parameters: parent
   
-  Optional parameters: osPolicyAssignmentId
+  Optional parameters: osPolicyAssignmentId, requestId
   
   Body: 
   
@@ -120,7 +120,7 @@
   
   Required parameters: name
   
-  Optional parameters: updateMask
+  Optional parameters: updateMask, allowMissing, requestId
   
   Body: 
   
@@ -249,7 +249,7 @@
   
   Required parameters: name
   
-  Optional parameters: none
+  Optional parameters: requestId
   
   Delete the OS policy assignment. This method creates a new revision of the OS policy assignment. This method returns a long running operation (LRO) that contains the rollout details. The rollout can be cancelled by cancelling the LRO. If the LRO completes and is not cancelled, all revisions associated with the OS policy assignment are deleted. For more information, see [Method: projects.locations.osPolicyAssignments.operations.cancel](https://cloud.google.com/compute/docs/osconfig/rest/v1/projects.locations.osPolicyAssignments.operations/cancel)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}

@@ -1,7 +1,7 @@
 (ns happygapi.gmail.users
   "Gmail API: users.
   The Gmail API lets you view and manage Gmail mailbox data like threads, messages, and labels.
-  See: https://developers.google.com/gmail/api/api/reference/rest/v1/users"
+  See: https://developers.google.com/gmail/api/docs/reference/rest/v1/users"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

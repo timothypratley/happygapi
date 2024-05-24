@@ -1,7 +1,7 @@
 (ns happygapi.chromepolicy.media
   "Chrome Policy API: media.
   The Chrome Policy API is a suite of services that allows Chrome administrators to control the policies applied to their managed Chrome OS devices and Chrome browsers.
-  See: http://developers.google.com/chrome/policyapi/reference/rest/v1/media"
+  See: http://developers.google.com/chrome/policydocs/reference/rest/v1/media"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

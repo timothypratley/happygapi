@@ -1,7 +1,7 @@
 (ns happygapi.ondemandscanning.projects
   "On-Demand Scanning API: projects.
   A service to scan container images for vulnerabilities.
-  See: https://cloud.google.com/container-analysis/docs/on-demand-scanning/api/reference/rest/v1/projects"
+  See: https://cloud.google.com/container-analysis/docs/on-demand-scanning/docs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

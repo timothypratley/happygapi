@@ -1,7 +1,7 @@
 (ns happygapi.cloudasset.feeds
   "Cloud Asset API: feeds.
   The Cloud Asset API manages the history and inventory of Google Cloud resources.
-  See: https://cloud.google.com/asset-inventory/docs/quickstartapi/reference/rest/v1/feeds"
+  See: https://cloud.google.com/asset-inventory/docs/quickstartdocs/reference/rest/v1/feeds"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

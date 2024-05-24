@@ -1,7 +1,7 @@
 (ns happygapi.pubsublite.topicStats
   "Pub/Sub Lite API: topicStats.
   
-  See: https://cloud.google.com/pubsub/lite/docsapi/reference/rest/v1/topicStats"
+  See: https://cloud.google.com/pubsub/lite/docsdocs/reference/rest/v1/topicStats"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

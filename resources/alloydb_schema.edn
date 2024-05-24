@@ -20,6 +20,29 @@
                                                                                        "CANCELLATION_ERROR"
                                                                                        "SQLSERVER_ERROR"
                                                                                        "INTERNAL_ERROR"]}}},
+ :MaintenanceWindow {:id "MaintenanceWindow",
+                     :description "MaintenanceWindow specifies a preferred day and time for maintenance.",
+                     :type "object",
+                     :properties {:day {:description "Preferred day of the week for maintenance, e.g. MONDAY, TUESDAY, etc.",
+                                        :type "string",
+                                        :enumDescriptions ["The day of the week is unspecified."
+                                                           "Monday"
+                                                           "Tuesday"
+                                                           "Wednesday"
+                                                           "Thursday"
+                                                           "Friday"
+                                                           "Saturday"
+                                                           "Sunday"],
+                                        :enum ["DAY_OF_WEEK_UNSPECIFIED"
+                                               "MONDAY"
+                                               "TUESDAY"
+                                               "WEDNESDAY"
+                                               "THURSDAY"
+                                               "FRIDAY"
+                                               "SATURDAY"
+                                               "SUNDAY"]},
+                                  :startTime {:description "Preferred time to start the maintenance operation on the specified day. Maintenance will start within 1 hour of this time.",
+                                              :$ref "GoogleTypeTimeOfDay"}}},
  :QueryInsightsInstanceConfig {:id "QueryInsightsInstanceConfig",
                                :description "QueryInsights Instance specific configuration.",
                                :type "object",
@@ -313,6 +336,18 @@
                           :properties {:count {:description "The number of backups to retain.",
                                                :type "integer",
                                                :format "int32"}}},
+ :PscInstanceConfig {:id "PscInstanceConfig",
+                     :description "PscInstanceConfig contains PSC related configuration at an instance level.",
+                     :type "object",
+                     :properties {:serviceAttachmentLink {:description "Output only. The service attachment created when Private Service Connect (PSC) is enabled for the instance. The name of the resource will be in the format of `projects//regions//serviceAttachments/`",
+                                                          :readOnly true,
+                                                          :type "string"},
+                                  :allowedConsumerProjects {:description "Optional. List of consumer projects that are allowed to create PSC endpoints to service-attachments to this instance.",
+                                                            :type "array",
+                                                            :items {:type "string"}},
+                                  :pscDnsName {:description "Output only. The DNS name of the instance for PSC connectivity. Name convention: ...alloydb-psc.goog",
+                                               :readOnly true,
+                                               :type "string"}}},
  :StorageDatabasecenterPartnerapiV1mainBackupRun {:id "StorageDatabasecenterPartnerapiV1mainBackupRun",
                                                   :description "A backup run.",
                                                   :type "object",
@@ -463,6 +498,7 @@
                                                                                   "On premises database product."
                                                                                   "On premises database product."
                                                                                   "Memorystore product area in GCP"
+                                                                                  "Bigtable product area in GCP"
                                                                                   "Other refers to rest of other product type. This is to be when product type is known, but it is not present in this enum."],
                                                                :enumDeprecated [false
                                                                                 false
@@ -472,6 +508,7 @@
                                                                                 false
                                                                                 false
                                                                                 true
+                                                                                false
                                                                                 false
                                                                                 false],
                                                                :enum ["PRODUCT_TYPE_UNSPECIFIED"
@@ -483,6 +520,7 @@
                                                                       "PRODUCT_TYPE_ON_PREM"
                                                                       "ON_PREM"
                                                                       "PRODUCT_TYPE_MEMORYSTORE"
+                                                                      "PRODUCT_TYPE_BIGTABLE"
                                                                       "PRODUCT_TYPE_OTHER"]},
                                                         :engine {:description "The specific engine that the underlying database is running.",
                                                                  :type "string",
@@ -698,13 +736,8 @@
                                                     :properties {:type {:description "An enum that represents the type of this entitlement.",
                                                                         :type "string",
                                                                         :enumDescriptions [""
-                                                                                           "The root entitlement representing Duet AI package ownership."
                                                                                            "The root entitlement representing Gemini package ownership."],
-                                                                        :enumDeprecated [false
-                                                                                         true
-                                                                                         false],
                                                                         :enum ["ENTITLEMENT_TYPE_UNSPECIFIED"
-                                                                               "DUET_AI"
                                                                                "GEMINI"]},
                                                                  :entitlementState {:description "The current state of user's accessibility to a feature/benefit.",
                                                                                     :type "string",
@@ -988,6 +1021,11 @@
                                                               :readOnly true,
                                                               :type "string",
                                                               :format "google-datetime"}}},
+ :PscConfig {:id "PscConfig",
+             :description "PscConfig contains PSC related configuration at a cluster level.",
+             :type "object",
+             :properties {:pscEnabled {:description "Optional. Create an instance that allows connections from Private Service Connect endpoints to the instance.",
+                                       :type "boolean"}}},
  :RestartInstanceRequest {:id "RestartInstanceRequest",
                           :type "object",
                           :properties {:requestId {:description "Optional. An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server will guarantee that for at least 60 minutes after the first request. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).",
@@ -1033,6 +1071,12 @@
                                 :enum ["USER_TYPE_UNSPECIFIED"
                                        "ALLOYDB_BUILT_IN"
                                        "ALLOYDB_IAM_USER"]}}},
+ :MaintenanceUpdatePolicy {:id "MaintenanceUpdatePolicy",
+                           :description "MaintenanceUpdatePolicy defines the policy for system updates.",
+                           :type "object",
+                           :properties {:maintenanceWindows {:description "Preferred windows to perform maintenance. Currently limited to 1.",
+                                                             :type "array",
+                                                             :items {:$ref "MaintenanceWindow"}}}},
  :ReadPoolConfig {:id "ReadPoolConfig",
                   :description "Configuration for a read pool instance.",
                   :type "object",
@@ -1053,6 +1097,8 @@
                          :labels {:description "Labels as key value pairs",
                                   :type "object",
                                   :additionalProperties {:type "string"}},
+                         :pscInstanceConfig {:description "Optional. The configuration for Private Service Connect (PSC) for the instance.",
+                                             :$ref "PscInstanceConfig"},
                          :databaseFlags {:description "Database flags. Set at instance level. * They are copied from primary instance on read instance creation. * Read instances can set new or override existing flags that are relevant for reads, e.g. for enabling columnar cache on a read instance. Flags set on read instance may or may not be present on primary. This is a list of \"key\": \"value\" pairs. \"key\": The name of the flag. These flags are passed at instance setup time, so include both server options and system variables for Postgres. Flags are specified with underscores, not hyphens. \"value\": The value of the flag. Booleans are set to **on** for true and **off** for false. This field must be omitted if the flag doesn't take a value.",
                                          :type "object",
                                          :additionalProperties {:type "string"}},
@@ -1192,8 +1238,13 @@
                                      :readOnly true,
                                      :type "string",
                                      :format "google-datetime"},
+                        :pscConfig {:description "Optional. The configuration for Private Service Connect (PSC) for the cluster.",
+                                    :$ref "PscConfig"},
                         :etag {:description "For Resource freshness validation (https://google.aip.dev/154)",
                                :type "string"},
+                        :maintenanceSchedule {:description "Output only. The maintenance schedule for the cluster, generated for a specific rollout if a maintenance window is set.",
+                                              :readOnly true,
+                                              :$ref "MaintenanceSchedule"},
                         :state {:description "Output only. The current serving state of the cluster.",
                                 :readOnly true,
                                 :type "string",
@@ -1225,6 +1276,8 @@
                         :reconciling {:description "Output only. Reconciling (https://google.aip.dev/128#reconciliation). Set to true if the current state of Cluster does not match the user's intended state, and the service is actively updating the resource to reconcile them. This can happen due to user-triggered updates or system actions like failover or maintenance.",
                                       :readOnly true,
                                       :type "boolean"},
+                        :maintenanceUpdatePolicy {:description "Optional. The maintenance update policy determines when to allow or deny updates.",
+                                                  :$ref "MaintenanceUpdatePolicy"},
                         :automatedBackupPolicy {:description "The automated backup policy for this cluster. If no policy is provided then the default policy will be used. If backups are supported for the cluster, the default policy takes one backup a day, has a backup window of 1 hour, and retains backups for 14 days. For more information on the defaults, consult the documentation for the message type.",
                                                 :$ref "AutomatedBackupPolicy"},
                         :satisfiesPzs {:description "Output only. Reserved for future use.",
@@ -1316,7 +1369,16 @@
                                                                                                          "MULTI_REGIONAL"
                                                                                                          "AVAILABILITY_TYPE_OTHER"]},
                                                                                :externalReplicaConfigured {:type "boolean"},
-                                                                               :promotableReplicaConfigured {:type "boolean"}}},
+                                                                               :promotableReplicaConfigured {:type "boolean"},
+                                                                               :crossRegionReplicaConfigured {:description "Checks for resources that are configured to have redundancy, and ongoing replication across regions",
+                                                                                                              :type "boolean"}}},
+ :MaintenanceSchedule {:id "MaintenanceSchedule",
+                       :description "MaintenanceSchedule stores the maintenance schedule generated from the MaintenanceUpdatePolicy, once a maintenance rollout is triggered, if MaintenanceWindow is set, and if there is no conflicting DenyPeriod. The schedule is cleared once the update takes place. This field cannot be manually changed; modify the MaintenanceUpdatePolicy instead.",
+                       :type "object",
+                       :properties {:startTime {:description "Output only. The scheduled start time for the maintenance.",
+                                                :readOnly true,
+                                                :type "string",
+                                                :format "google-datetime"}}},
  :ListBackupsResponse {:id "ListBackupsResponse",
                        :description "Message for response to listing Backups",
                        :type "object",

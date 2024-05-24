@@ -1,7 +1,7 @@
 (ns happygapi.searchconsole.urlInspection
   "Google Search Console API: urlInspection.
   The Search Console API provides access to both Search Console data (verified users only) and to public information on an URL basis (anyone)
-  See: https://developers.google.com/webmaster-tools/search-console-api/api/reference/rest/v1/urlInspection"
+  See: https://developers.google.com/webmaster-tools/search-console-api/docs/reference/rest/v1/urlInspection"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -15,7 +15,7 @@
   
   Body: 
   
-  {:siteUrl string, :languageCode string, :inspectionUrl string}
+  {:siteUrl string, :inspectionUrl string, :languageCode string}
   
   Index inspection."
   {:scopes ["https://www.googleapis.com/auth/webmasters"

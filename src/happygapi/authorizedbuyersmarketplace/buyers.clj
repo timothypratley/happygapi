@@ -1,7 +1,7 @@
 (ns happygapi.authorizedbuyersmarketplace.buyers
   "Authorized Buyers Marketplace API: buyers.
   The Authorized Buyers Marketplace API lets buyers programmatically discover inventory; propose, retrieve and negotiate deals with publishers.
-  See: https://developers.google.com/authorized-buyers/apis/marketplace/reference/rest/api/reference/rest/v1/buyers"
+  See: https://developers.google.com/authorized-buyers/apis/marketplace/reference/rest/docs/reference/rest/v1/buyers"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -37,9 +37,9 @@
   
   Required parameters: parent
   
-  Optional parameters: pageSize, pageToken
+  Optional parameters: pageSize, pageToken, filter, orderBy
   
-  List the auction packages subscribed by a buyer and its clients."
+  List the auction packages. Buyers can use the URL path \"/v1/buyers/{accountId}/auctionPackages\" to list auction packages for the current buyer and its clients. Bidders can use the URL path \"/v1/bidders/{accountId}/auctionPackages\" to list auction packages for the bidder, its media planners, its buyers, and all their clients."
   {:scopes ["https://www.googleapis.com/auth/authorized-buyers-marketplace"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:parent})]}
@@ -1053,14 +1053,16 @@
                      :roadblockingType string,
                      :companionDeliveryType string,
                      :creativeRotationType string},
-   :targeting {:geoTargeting CriteriaTargeting,
-               :inventorySizeTargeting InventorySizeTargeting,
-               :technologyTargeting TechnologyTargeting,
-               :placementTargeting PlacementTargeting,
-               :videoTargeting VideoTargeting,
+   :targeting {:inventoryTypeTargeting InventoryTypeTargeting,
+               :geoTargeting CriteriaTargeting,
+               :verticalTargeting CriteriaTargeting,
                :userListTargeting CriteriaTargeting,
-               :daypartTargeting DayPartTargeting,
-               :inventoryTypeTargeting InventoryTypeTargeting}}
+               :videoTargeting VideoTargeting,
+               :placementTargeting PlacementTargeting,
+               :technologyTargeting TechnologyTargeting,
+               :excludedSensitiveCategoryIds [string],
+               :inventorySizeTargeting InventorySizeTargeting,
+               :daypartTargeting DayPartTargeting}}
   
   Updates the given deal at the buyer known revision number. If the server revision has advanced since the passed-in proposal.proposal_revision an ABORTED error message will be returned. The revision number is incremented by the server whenever the proposal or its constituent deals are updated. Note: The revision number is kept at a proposal level. The buyer of the API is expected to keep track of the revision number after the last update operation and send it in as part of the next update request. This way, if there are further changes on the server (for example, seller making new updates), then the server can detect conflicts and reject the proposed changes."
   {:scopes ["https://www.googleapis.com/auth/authorized-buyers-marketplace"]}

@@ -1,7 +1,7 @@
 (ns happygapi.localservices.accountReports
   "Local Services API: accountReports.
   
-  See: https://ads.google.com/local-services-ads/api/reference/rest/v1/accountReports"
+  See: https://ads.google.com/local-services-ads/docs/reference/rest/v1/accountReports"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

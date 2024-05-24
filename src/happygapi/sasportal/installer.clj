@@ -1,7 +1,7 @@
 (ns happygapi.sasportal.installer
   "SAS Portal API: installer.
   
-  See: https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/installer"
+  See: https://developers.google.com/spectrum-access-system/docs/reference/rest/v1alpha1/installer"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

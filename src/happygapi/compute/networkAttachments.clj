@@ -1,7 +1,7 @@
 (ns happygapi.compute.networkAttachments
   "Compute Engine API: networkAttachments.
   Creates and runs virtual machines on Google Cloud Platform. 
-  See: https://cloud.google.com/compute/api/reference/rest/v1/networkAttachments"
+  See: https://cloud.google.com/compute/docs/reference/rest/v1/networkAttachments"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

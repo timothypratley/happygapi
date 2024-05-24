@@ -1,7 +1,7 @@
 (ns happygapi.forms.forms
   "Google Forms API: forms.
   Reads and writes Google Forms and responses.
-  See: https://developers.google.com/forms/apiapi/reference/rest/v1/forms"
+  See: https://developers.google.com/forms/apidocs/reference/rest/v1/forms"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

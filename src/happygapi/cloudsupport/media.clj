@@ -1,7 +1,7 @@
 (ns happygapi.cloudsupport.media
   "Google Cloud Support API: media.
   Manages Google Cloud technical support cases for Customer Care support offerings. 
-  See: https://cloud.google.com/support/docs/apisapi/reference/rest/v2/media"
+  See: https://cloud.google.com/support/docs/apisdocs/reference/rest/v2/media"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -15,11 +15,11 @@
   
   Body: 
   
-  {:attachment {:sizeBytes string,
+  {:attachment {:creator Actor,
+                :mimeType string,
                 :name string,
                 :filename string,
-                :creator Actor,
-                :mimeType string,
+                :sizeBytes string,
                 :createTime string}}
   
   Create a file attachment on a case or Cloud resource. The attachment must have the following fields set: `filename`. EXAMPLES: cURL: ```shell echo \"This text is in a file I'm uploading using CSAPI.\" \\ > \"./example_file.txt\" case=\"projects/some-project/cases/43594844\" curl \\ --header \"Authorization: Bearer $(gcloud auth print-access-token)\" \\ --data-binary @\"./example_file.txt\" \\ \"https://cloudsupport.googleapis.com/upload/v2beta/$case/attachments?attachment.filename=uploaded_via_curl.txt\" ``` Python: ```python import googleapiclient.discovery api_version = \"v2\" supportApiService = googleapiclient.discovery.build( serviceName=\"cloudsupport\", version=api_version, discoveryServiceUrl=f\"https://cloudsupport.googleapis.com/$discovery/rest?version={api_version}\", ) file_path = \"./example_file.txt\" with open(file_path, \"w\") as file: file.write( \"This text is inside a file I'm going to upload using the Cloud Support API.\", ) request = supportApiService.media().upload( parent=\"projects/some-project/cases/43595344\", media_body=file_path ) request.uri = request.uri.split(\"?\")[0] + \"?attachment.filename=uploaded_via_python.txt\" print(request.execute()) ```"

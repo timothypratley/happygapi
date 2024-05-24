@@ -1,7 +1,7 @@
 (ns happygapi.dfareporting.eventTags
   "Campaign Manager 360 API: eventTags.
   Build applications to efficiently manage large or complex trafficking, reporting, and attribution workflows for Campaign Manager 360.
-  See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v4/eventTags"
+  See: https://developers.google.com/doubleclick-advertisers/docs/reference/rest/v4/eventTags"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

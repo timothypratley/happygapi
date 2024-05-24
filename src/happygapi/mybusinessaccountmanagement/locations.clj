@@ -1,7 +1,7 @@
 (ns happygapi.mybusinessaccountmanagement.locations
   "My Business Account Management API: locations.
   The My Business Account Management API provides an interface for managing access to a location on Google. Note - If you have a quota of 0 after enabling the API, please request for GBP API access.
-  See: https://developers.google.com/my-business/api/reference/rest/v1/locations"
+  See: https://developers.google.com/my-business/docs/reference/rest/v1/locations"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

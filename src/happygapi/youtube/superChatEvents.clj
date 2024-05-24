@@ -1,7 +1,7 @@
 (ns happygapi.youtube.superChatEvents
   "YouTube Data API v3: superChatEvents.
   The YouTube Data API v3 is an API that provides access to YouTube data, such as videos, playlists, and channels.
-  See: https://developers.google.com/youtube/api/reference/rest/v3/superChatEvents"
+  See: https://developers.google.com/youtube/docs/reference/rest/v3/superChatEvents"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -11,7 +11,7 @@
   
   Required parameters: part
   
-  Optional parameters: hl, maxResults, pageToken
+  Optional parameters: maxResults, pageToken, hl
   
   Retrieves a list of resources, possibly filtered."
   {:scopes ["https://www.googleapis.com/auth/youtube"

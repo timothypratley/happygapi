@@ -37,7 +37,7 @@
                                             "ENABLED"
                                             "DISABLED"
                                             "DELETED"]},
-                            :notificationConfig {:description "Notification configuration. This is not supported for transfers involving PosixFilesystem.",
+                            :notificationConfig {:description "Notification configuration.",
                                                  :$ref "NotificationConfig"},
                             :projectId {:description "The ID of the Google Cloud project that owns the job.",
                                         :type "string"},
@@ -174,7 +174,7 @@
                                                       "STORAGE_CLASS_NEARLINE"
                                                       "STORAGE_CLASS_COLDLINE"
                                                       "STORAGE_CLASS_ARCHIVE"]},
-                                :timeCreated {:description "Specifies how each object's `timeCreated` metadata is preserved for transfers. If unspecified, the default behavior is the same as TIME_CREATED_SKIP.",
+                                :timeCreated {:description "Specifies how each object's `timeCreated` metadata is preserved for transfers. If unspecified, the default behavior is the same as TIME_CREATED_SKIP. This behavior is supported for transfers to GCS buckets from GCS, S3, Azure, S3 Compatible, and Azure sources.",
                                               :type "string",
                                               :enumDescriptions ["TimeCreated behavior is unspecified."
                                                                  "Do not preserve the `timeCreated` metadata from the source object."
@@ -354,7 +354,9 @@
                           :cloudfrontDomain {:description "Optional. The CloudFront distribution domain name pointing to this bucket, to use when fetching. See [Transfer from S3 via CloudFront](https://cloud.google.com/storage-transfer/docs/s3-cloudfront) for more information. Format: `https://{id}.cloudfront.net` or any valid custom domain. Must begin with `https://`.",
                                              :type "string"},
                           :credentialsSecret {:description "Optional. The Resource name of a secret in Secret Manager. AWS credentials must be stored in Secret Manager in JSON format: { \"access_key_id\": \"ACCESS_KEY_ID\", \"secret_access_key\": \"SECRET_ACCESS_KEY\" } GoogleServiceAccount must be granted `roles/secretmanager.secretAccessor` for the resource. See [Configure access to a source: Amazon S3] (https://cloud.google.com/storage-transfer/docs/source-amazon-s3#secret_manager) for more information. If `credentials_secret` is specified, do not specify role_arn or aws_access_key. Format: `projects/{project_number}/secrets/{secret_name}`",
-                                              :type "string"}}},
+                                              :type "string"},
+                          :managedPrivateNetwork {:description "Egress bytes over a Google-managed private network. This network is shared between other users of Storage Transfer Service.",
+                                                  :type "boolean"}}},
  :Date {:id "Date",
         :description "Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp",
         :type "object",
@@ -582,7 +584,7 @@
                                      :subjectId {:description "Unique identifier for the service account.",
                                                  :type "string"}}},
  :AgentPool {:id "AgentPool",
-             :description "Represents an On-Premises Agent pool.",
+             :description "Represents an agent pool.",
              :type "object",
              :properties {:name {:description "Required. Specifies a unique string that identifies the agent pool. Format: `projects/{project_id}/agentPools/{agent_pool_id}`",
                                  :type "string"},
@@ -592,7 +594,7 @@
                                   :readOnly true,
                                   :type "string",
                                   :enumDescriptions ["Default value. This value is unused."
-                                                     "This is an initialization state. During this stage, the resources such as Pub/Sub topics are allocated for the AgentPool."
+                                                     "This is an initialization state. During this stage, resources are allocated for the AgentPool."
                                                      "Determines that the AgentPool is created for use. At this state, Agents can join the AgentPool and participate in the transfer jobs in that pool."
                                                      "Determines that the AgentPool deletion has been initiated, and all the resources are scheduled to be cleaned up and freed."],
                                   :enum ["STATE_UNSPECIFIED"
@@ -674,9 +676,9 @@
                                        :nextPageToken {:description "The list next page token.",
                                                        :type "string"}}},
  :LoggingConfig {:id "LoggingConfig",
-                 :description "Specifies the logging behavior for transfer operations. For cloud-to-cloud transfers, logs are sent to Cloud Logging. See [Read transfer logs](https://cloud.google.com/storage-transfer/docs/read-transfer-logs) for details. For transfers to or from a POSIX file system, logs are stored in the Cloud Storage bucket that is the source or sink of the transfer. See [Managing Transfer for on-premises jobs] (https://cloud.google.com/storage-transfer/docs/managing-on-prem-jobs#viewing-logs) for details.",
+                 :description "Specifies the logging behavior for transfer operations. Logs can be sent to Cloud Logging for all transfer types. See [Read transfer logs](https://cloud.google.com/storage-transfer/docs/read-transfer-logs) for details.",
                  :type "object",
-                 :properties {:logActions {:description "Specifies the actions to be logged. If empty, no logs are generated. Not supported for transfers with PosixFilesystem data sources; use enable_onprem_gcs_transfer_logs instead.",
+                 :properties {:logActions {:description "Specifies the actions to be logged. If empty, no logs are generated.",
                                            :type "array",
                                            :items {:type "string",
                                                    :enumDescriptions ["Default value. This value is unused."
@@ -687,7 +689,7 @@
                                                           "FIND"
                                                           "DELETE"
                                                           "COPY"]}},
-                              :logActionStates {:description "States in which `log_actions` are logged. If empty, no logs are generated. Not supported for transfers with PosixFilesystem data sources; use enable_onprem_gcs_transfer_logs instead.",
+                              :logActionStates {:description "States in which `log_actions` are logged. If empty, no logs are generated.",
                                                 :type "array",
                                                 :items {:type "string",
                                                         :enumDescriptions ["Default value. This value is unused."
@@ -696,7 +698,7 @@
                                                         :enum ["LOGGABLE_ACTION_STATE_UNSPECIFIED"
                                                                "SUCCEEDED"
                                                                "FAILED"]}},
-                              :enableOnpremGcsTransferLogs {:description "For transfers with a PosixFilesystem source, this option enables the Cloud Storage transfer logs for this transfer.",
+                              :enableOnpremGcsTransferLogs {:description "For PosixFilesystem transfers, enables [file system transfer logs](https://cloud.google.com/storage-transfer/docs/on-prem-transfer-log-format) instead of, or in addition to, Cloud Logging. This option ignores [LoggableAction] and [LoggableActionState]. If these are set, Cloud Logging will also be enabled for this transfer.",
                                                             :type "boolean"}}},
  :Status {:id "Status",
           :description "The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).",

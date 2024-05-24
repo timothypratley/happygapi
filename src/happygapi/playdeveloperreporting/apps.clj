@@ -1,7 +1,7 @@
 (ns happygapi.playdeveloperreporting.apps
   "Google Play Developer Reporting API: apps.
   
-  See: https://developers.google.com/play/developer/reportingapi/reference/rest/v1beta1/apps"
+  See: https://developers.google.com/play/developer/reportingdocs/reference/rest/v1beta1/apps"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

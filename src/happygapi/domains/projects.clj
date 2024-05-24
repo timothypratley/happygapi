@@ -1,7 +1,7 @@
 (ns happygapi.domains.projects
   "Cloud Domains API: projects.
   Enables management and configuration of domain names.
-  See: https://cloud.google.com/domains/api/reference/rest/v1/projects"
+  See: https://cloud.google.com/domains/docs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -444,7 +444,7 @@
    :contactNotices [string],
    :validateOnly boolean}
   
-  Updates a `Registration`'s contact settings. Some changes require confirmation by the domain's registrant contact ."
+  Updates a `Registration`'s contact settings. Some changes require confirmation by the domain's registrant contact . Caution: Please consider carefully any changes to contact privacy settings when changing from `REDACTED_CONTACT_DATA` to `PUBLIC_CONTACT_DATA.` There may be a delay in reflecting updates you make to registrant contact information such that any changes you make to contact privacy (including from `REDACTED_CONTACT_DATA` to `PUBLIC_CONTACT_DATA`) will be applied without delay but changes to registrant contact information may take a limited time to be publicized. This means that changes to contact privacy from `REDACTED_CONTACT_DATA` to `PUBLIC_CONTACT_DATA` may make the previous registrant contact data public until the modified registrant contact details are published."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:registration})]}

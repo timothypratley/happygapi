@@ -1,7 +1,7 @@
 (ns happygapi.lifesciences.projects
   "Cloud Life Sciences API: projects.
   Cloud Life Sciences is a suite of services and tools for managing, processing, and transforming life sciences data.
-  See: https://cloud.google.com/life-sciencesapi/reference/rest/v2beta/projects"
+  See: https://cloud.google.com/life-sciencesdocs/reference/rest/v2beta/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

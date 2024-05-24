@@ -1,7 +1,7 @@
 (ns happygapi.mybusinessverifications.locations
   "My Business Verifications API: locations.
   The My Business Verifications API provides an interface for taking verifications related actions for locations.
-  See: https://developers.google.com/my-business/api/reference/rest/v1/locations"
+  See: https://developers.google.com/my-business/docs/reference/rest/v1/locations"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

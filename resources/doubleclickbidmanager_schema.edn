@@ -57,18 +57,6 @@
                                                  "YEARLY"]},
                               :nextRunTimezoneCode {:description "Canonical timezone code for report generation time. Defaults to `America/New_York`.",
                                                     :type "string"}}},
- :Rule {:id "Rule",
-        :description "A Rule defines a name, and a boolean expression in [conjunctive normal form] (http://mathworld.wolfram.com/ConjunctiveNormalForm.html){.external} that can be applied to a path event to determine if that name should be applied.",
-        :type "object",
-        :properties {:name {:description "Rule name.", :type "string"},
-                     :disjunctiveMatchStatements {:description "DisjunctiveMatchStatements within a Rule. DisjunctiveMatchStatement OR's all contained filters.",
-                                                  :type "array",
-                                                  :items {:$ref "DisjunctiveMatchStatement"}}}},
- :EventFilter {:id "EventFilter",
-               :description "Defines the type of filter to be applied to the path, a DV360 event dimension filter.",
-               :type "object",
-               :properties {:dimensionFilter {:description "Filter on a dimension.",
-                                              :$ref "PathQueryOptionsFilter"}}},
  :Report {:id "Report",
           :description "Represents a report.",
           :type "object",
@@ -78,26 +66,6 @@
                                   :$ref "ReportMetadata"},
                        :params {:description "Report parameters.",
                                 :$ref "Parameters"}}},
- :PathQueryOptionsFilter {:id "PathQueryOptionsFilter",
-                          :description "Dimension filter on path events.",
-                          :type "object",
-                          :properties {:filter {:description "Dimension the filter is applied to.",
-                                                :type "string"},
-                                       :match {:description "Match logic of the filter.",
-                                               :type "string",
-                                               :enumDescriptions ["Default value when match is not specified or is unknown in this version."
-                                                                  "Matches a value exactly."
-                                                                  "Matches a value partially."
-                                                                  "Begins with a value."
-                                                                  "Matches a value, utilizing wildcard character logic in the value."],
-                                               :enum ["UNKNOWN"
-                                                      "EXACT"
-                                                      "PARTIAL"
-                                                      "BEGINS_WITH"
-                                                      "WILDCARD_EXPRESSION"]},
-                                       :values {:description "Values to filter on.",
-                                                :type "array",
-                                                :items {:type "string"}}}},
  :Parameters {:id "Parameters",
               :description "Parameters of a query or report.",
               :type "object",
@@ -112,15 +80,11 @@
                                                      "GRP report."
                                                      "YouTube Programmatic Guaranteed report."
                                                      "Reach report."
-                                                     "Unique Reach Audience report."
-                                                     "Full Path report. This report type is deprecated and will sunset on **May 1, 2024**. After sunset, requests retrieving, creating, or running reports of this type will return an error."
-                                                     "Path Attribution report. This report type is deprecated and will sunset on **May 1, 2024**. After sunset, requests retrieving, creating, or running reports of this type will return an error."],
+                                                     "Unique Reach Audience report."],
                                   :enumDeprecated [false
                                                    false
                                                    false
                                                    true
-                                                   false
-                                                   false
                                                    false
                                                    false
                                                    false
@@ -136,9 +100,7 @@
                                          "GRP"
                                          "YOUTUBE_PROGRAMMATIC_GUARANTEED"
                                          "REACH"
-                                         "UNIQUE_REACH_AUDIENCE"
-                                         "FULL_PATH"
-                                         "PATH_ATTRIBUTION"]},
+                                         "UNIQUE_REACH_AUDIENCE"]},
                            :groupBys {:description "Data is grouped by the filters listed in this field.",
                                       :type "array",
                                       :items {:type "string"}},
@@ -155,12 +117,6 @@
                    :type "object",
                    :properties {:dataRange {:description "Report data range used to generate the report. If unspecified, the original parent query's data range is used.",
                                             :$ref "DataRange"}}},
- :DisjunctiveMatchStatement {:id "DisjunctiveMatchStatement",
-                             :description "DisjunctiveMatchStatement that OR's all contained filters.",
-                             :type "object",
-                             :properties {:eventFilters {:description "Filters. There is a limit of 100 filters that can be set per disjunctive match statement.",
-                                                         :type "array",
-                                                         :items {:$ref "EventFilter"}}}},
  :ListReportsResponse {:id "ListReportsResponse",
                        :type "object",
                        :properties {:reports {:description "Retrieved reports.",
@@ -168,40 +124,6 @@
                                               :items {:$ref "Report"}},
                                     :nextPageToken {:description "A token, which can be sent as page_token to retrieve the next page of reports. If this field is omitted, there are no subsequent pages.",
                                                     :type "string"}}},
- :ChannelGrouping {:id "ChannelGrouping",
-                   :description "A channel grouping defines a set of rules that can be used to categorize events in a path report.",
-                   :type "object",
-                   :properties {:name {:description "Channel Grouping name.",
-                                       :type "string"},
-                                :rules {:description "Rules within Channel Grouping. There is a limit of 100 rules that can be set per channel grouping.",
-                                        :type "array",
-                                        :items {:$ref "Rule"}},
-                                :fallbackName {:description "The name to apply to an event that does not match any of the rules in the channel grouping.",
-                                               :type "string"}}},
- :PathFilter {:id "PathFilter",
-              :description "Path filters specify which paths to include in a report. A path is the result of combining DV360 events based on User ID to create a workflow of users' actions. When a path filter is set, the resulting report will only include paths that match the specified event at the specified position. All other paths will be excluded.",
-              :type "object",
-              :properties {:eventFilters {:description "Filter on an event to be applied to some part of the path.",
-                                          :type "array",
-                                          :items {:$ref "EventFilter"}},
-                           :pathMatchPosition {:description "The position of the path the filter should match to (first, last, or any event in path).",
-                                               :type "string",
-                                               :enumDescriptions ["Default value when path match position is not specified or is unknown in this version."
-                                                                  "Any position in the path."
-                                                                  "The first position in the path."
-                                                                  "The last position in the path."],
-                                               :enum ["PATH_MATCH_POSITION_UNSPECIFIED"
-                                                      "ANY"
-                                                      "FIRST"
-                                                      "LAST"]}}},
- :PathQueryOptions {:id "PathQueryOptions",
-                    :description "Path Query Options for Report Options.",
-                    :type "object",
-                    :properties {:channelGrouping {:description "Custom Channel Groupings.",
-                                                   :$ref "ChannelGrouping"},
-                                 :pathFilters {:description "Path Filters. There is a limit of 100 path filters that can be set per report.",
-                                               :type "array",
-                                               :items {:$ref "PathFilter"}}}},
  :FilterPair {:id "FilterPair",
               :description "Filter used to match traffic data in your report.",
               :type "object",
@@ -213,9 +135,7 @@
            :description "Additional query options.",
            :type "object",
            :properties {:includeOnlyTargetedUserLists {:description "Set to true and filter your report by `FILTER_INSERTION_ORDER` or `FILTER_LINE_ITEM` to include data for audience lists specifically targeted by those items.",
-                                                       :type "boolean"},
-                        :pathQueryOptions {:description "Options that contain Path Filters and Custom Channel Groupings. This field is deprecated and will sunset on **May 1, 2024**. After sunset, requests using this field will return an error.",
-                                           :$ref "PathQueryOptions"}}},
+                                                       :type "boolean"}}},
  :Date {:id "Date",
         :description "Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp",
         :type "object",

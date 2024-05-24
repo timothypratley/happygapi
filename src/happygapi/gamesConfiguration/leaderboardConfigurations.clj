@@ -1,7 +1,7 @@
 (ns happygapi.gamesConfiguration.leaderboardConfigurations
   "Google Play Game Services Publishing API: leaderboardConfigurations.
   The Google Play Game Services Publishing API allows developers to configure their games in Game Services.
-  See: https://developers.google.com/games/api/reference/rest/v1configuration/leaderboardConfigurations"
+  See: https://developers.google.com/games/docs/reference/rest/v1configuration/leaderboardConfigurations"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

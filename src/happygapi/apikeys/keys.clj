@@ -1,7 +1,7 @@
 (ns happygapi.apikeys.keys
   "API Keys API: keys.
   Manages the API keys associated with developer projects.
-  See: https://cloud.google.com/api-keys/docsapi/reference/rest/v2/keys"
+  See: https://cloud.google.com/api-keys/docsdocs/reference/rest/v2/keys"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

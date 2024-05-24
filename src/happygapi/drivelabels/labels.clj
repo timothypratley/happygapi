@@ -1,7 +1,7 @@
 (ns happygapi.drivelabels.labels
   "Drive Labels API: labels.
   An API for managing Drive Labels
-  See: https://developers.google.com/drive/labelsapi/reference/rest/v2/labels"
+  See: https://developers.google.com/drive/labelsdocs/reference/rest/v2/labels"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -15,11 +15,11 @@
   
   Body: 
   
-  {:languageCode string,
-   :disabledPolicy {:hideInSearch boolean, :showInApply boolean},
+  {:updateMask string,
+   :writeControl {:requiredRevisionId string},
    :useAdminAccess boolean,
-   :updateMask string,
-   :writeControl {:requiredRevisionId string}}
+   :languageCode string,
+   :disabledPolicy {:hideInSearch boolean, :showInApply boolean}}
   
   Disable a published Label. Disabling a Label will result in a new disabled published revision based on the current published revision. If there is a draft revision, a new disabled draft revision will be created based on the latest draft revision. Older draft revisions will be deleted. Once disabled, a label may be deleted with `DeleteLabel`."
   {:scopes ["https://www.googleapis.com/auth/drive.admin.labels"
@@ -48,7 +48,7 @@
   
   Required parameters: name
   
-  Optional parameters: languageCode, useAdminAccess, view
+  Optional parameters: view, languageCode, useAdminAccess
   
   Get a label by its resource name. Resource name may be any of: * `labels/{id}` - See `labels/{id}@latest` * `labels/{id}@latest` - Gets the latest revision of the label. * `labels/{id}@published` - Gets the current published revision of the label. * `labels/{id}@{revision_id}` - Gets the label at the specified revision ID."
   {:scopes ["https://www.googleapis.com/auth/drive.admin.labels"
@@ -81,10 +81,10 @@
   
   Body: 
   
-  {:name string,
+  {:group string,
    :person string,
+   :name string,
    :role string,
-   :group string,
    :audience string,
    :email string}
   
@@ -119,9 +119,9 @@
   
   Body: 
   
-  {:languageCode string,
-   :writeControl {:requiredRevisionId string},
-   :useAdminAccess boolean}
+  {:writeControl {:requiredRevisionId string},
+   :useAdminAccess boolean,
+   :languageCode string}
   
   Enable a disabled Label and restore it to its published state. This will result in a new published revision based on the current disabled published revision. If there is an existing disabled draft revision, a new revision will be created based on that draft and will be enabled."
   {:scopes ["https://www.googleapis.com/auth/drive.admin.labels"
@@ -156,9 +156,9 @@
   
   {:disabler {:person string},
    :properties {:title string, :description string},
-   :appliedCapabilities {:canRead boolean,
-                         :canApply boolean,
-                         :canRemove boolean},
+   :appliedCapabilities {:canRemove boolean,
+                         :canRead boolean,
+                         :canApply boolean},
    :appliedLabelPolicy {:copyMode string},
    :creator {:person string},
    :publisher {:person string},
@@ -188,17 +188,17 @@
    :createTime string,
    :revisionId string,
    :labelType string,
-   :schemaCapabilities {:canDisable boolean,
-                        :canEnable boolean,
+   :schemaCapabilities {:canEnable boolean,
+                        :canDisable boolean,
                         :canDelete boolean,
                         :canUpdate boolean},
-   :lifecycle {:hasUnpublishedChanges boolean,
-               :disabledPolicy GoogleAppsDriveLabelsV2LifecycleDisabledPolicy,
-               :state string},
+   :lifecycle {:disabledPolicy GoogleAppsDriveLabelsV2LifecycleDisabledPolicy,
+               :state string,
+               :hasUnpublishedChanges boolean},
    :customer string,
    :disableTime string,
-   :displayHints {:shownInApply boolean,
-                  :disabled boolean,
+   :displayHints {:disabled boolean,
+                  :shownInApply boolean,
                   :priority string,
                   :hiddenInSearch boolean},
    :id string,
@@ -233,7 +233,7 @@
   
   Required parameters: name
   
-  Optional parameters: writeControl.requiredRevisionId, useAdminAccess
+  Optional parameters: useAdminAccess, writeControl.requiredRevisionId
   
   Permanently deletes a Label and related metadata on Drive Items. Once deleted, the Label and related Drive item metadata will be deleted. Only draft Labels, and disabled Labels may be deleted."
   {:scopes ["https://www.googleapis.com/auth/drive.admin.labels"
@@ -260,7 +260,7 @@
   
   Required parameters: none
   
-  Optional parameters: useAdminAccess, languageCode, pageSize, pageToken, customer, publishedOnly, view, minimumRole
+  Optional parameters: pageToken, minimumRole, useAdminAccess, customer, view, pageSize, languageCode, publishedOnly
   
   List labels."
   {:scopes ["https://www.googleapis.com/auth/drive.admin.labels"
@@ -294,8 +294,8 @@
   Body: 
   
   {:view string,
-   :copyMode string,
    :useAdminAccess boolean,
+   :copyMode string,
    :languageCode string}
   
   Updates a Label's `CopyMode`. Changes to this policy are not revisioned, do not require publishing, and take effect immediately."
@@ -329,7 +329,9 @@
   
   Body: 
   
-  {:requests [{:disableField GoogleAppsDriveLabelsV2DeltaUpdateLabelRequestDisableFieldRequest,
+  {:writeControl {:requiredRevisionId string},
+   :view string,
+   :requests [{:disableField GoogleAppsDriveLabelsV2DeltaUpdateLabelRequestDisableFieldRequest,
                :deleteSelectionChoice GoogleAppsDriveLabelsV2DeltaUpdateLabelRequestDeleteSelectionChoiceRequest,
                :enableSelectionChoice GoogleAppsDriveLabelsV2DeltaUpdateLabelRequestEnableSelectionChoiceRequest,
                :disableSelectionChoice GoogleAppsDriveLabelsV2DeltaUpdateLabelRequestDisableSelectionChoiceRequest,
@@ -341,9 +343,7 @@
                :updateField GoogleAppsDriveLabelsV2DeltaUpdateLabelRequestUpdateFieldPropertiesRequest,
                :updateFieldType GoogleAppsDriveLabelsV2DeltaUpdateLabelRequestUpdateFieldTypeRequest,
                :deleteField GoogleAppsDriveLabelsV2DeltaUpdateLabelRequestDeleteFieldRequest}],
-   :view string,
    :useAdminAccess boolean,
-   :writeControl {:requiredRevisionId string},
    :languageCode string}
   
   Updates a single Label by applying a set of update requests resulting in a new draft revision. The batch update is all-or-nothing: If any of the update requests are invalid, no changes are applied. The resulting draft revision must be published before the changes may be used with Drive Items."
@@ -377,8 +377,8 @@
   
   Body: 
   
-  {:writeControl {:requiredRevisionId string},
-   :languageCode string,
+  {:languageCode string,
+   :writeControl {:requiredRevisionId string},
    :useAdminAccess boolean}
   
   Publish all draft changes to the Label. Once published, the Label may not return to its draft state. See `google.apps.drive.labels.v2.Lifecycle` for more information. Publishing a Label will result in a new published revision. All previous draft revisions will be deleted. Previous published revisions will be kept but are subject to automated deletion as needed. Once published, some changes are no longer permitted. Generally, any change that would invalidate or cause new restrictions on existing metadata related to the Label will be rejected. For example, the following changes to a Label will be rejected after the Label is published: * The label cannot be directly deleted. It must be disabled first, then deleted. * Field.FieldType cannot be changed. * Changes to Field validation options cannot reject something that was previously accepted. * Reducing the max entries."
@@ -392,6 +392,67 @@
      "https://drivelabels.googleapis.com/"
      "v2/{+name}:publish"
      #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn permissions-delete$
+  "https://developers.google.com/drive/labelsapi/reference/rest/v2/labels/permissions/delete
+  
+  Required parameters: name
+  
+  Optional parameters: useAdminAccess
+  
+  Deletes a Label's permission. Permissions affect the Label resource as a whole, are not revisioned, and do not require publishing."
+  {:scopes ["https://www.googleapis.com/auth/drive.admin.labels"
+            "https://www.googleapis.com/auth/drive.labels"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://drivelabels.googleapis.com/"
+     "v2/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn permissions-batchDelete$
+  "https://developers.google.com/drive/labelsapi/reference/rest/v2/labels/permissions/batchDelete
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:requests [{:useAdminAccess boolean, :name string}],
+   :useAdminAccess boolean}
+  
+  Deletes Label permissions. Permissions affect the Label resource as a whole, are not revisioned, and do not require publishing."
+  {:scopes ["https://www.googleapis.com/auth/drive.admin.labels"
+            "https://www.googleapis.com/auth/drive.labels"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://drivelabels.googleapis.com/"
+     "v2/{+parent}/permissions:batchDelete"
+     #{:parent}
      parameters)
     (merge-with
      merge
@@ -432,40 +493,6 @@
       :as :json}
      auth))))
 
-(defn permissions-batchDelete$
-  "https://developers.google.com/drive/labelsapi/reference/rest/v2/labels/permissions/batchDelete
-  
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:requests [{:name string, :useAdminAccess boolean}],
-   :useAdminAccess boolean}
-  
-  Deletes Label permissions. Permissions affect the Label resource as a whole, are not revisioned, and do not require publishing."
-  {:scopes ["https://www.googleapis.com/auth/drive.admin.labels"
-            "https://www.googleapis.com/auth/drive.labels"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://drivelabels.googleapis.com/"
-     "v2/{+parent}/permissions:batchDelete"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn permissions-batchUpdate$
   "https://developers.google.com/drive/labelsapi/reference/rest/v2/labels/permissions/batchUpdate
   
@@ -477,8 +504,8 @@
   
   {:useAdminAccess boolean,
    :requests [{:useAdminAccess boolean,
-               :labelPermission GoogleAppsDriveLabelsV2LabelPermission,
-               :parent string}]}
+               :parent string,
+               :labelPermission GoogleAppsDriveLabelsV2LabelPermission}]}
   
   Updates Label permissions. If a permission for the indicated principal doesn't exist, a new Label Permission is created, otherwise the existing permission is updated. Permissions affect the Label resource as a whole, are not revisioned, and do not require publishing."
   {:scopes ["https://www.googleapis.com/auth/drive.admin.labels"
@@ -511,10 +538,10 @@
   
   Body: 
   
-  {:name string,
+  {:group string,
    :person string,
+   :name string,
    :role string,
-   :group string,
    :audience string,
    :email string}
   
@@ -540,39 +567,12 @@
       :as :json}
      auth))))
 
-(defn permissions-delete$
-  "https://developers.google.com/drive/labelsapi/reference/rest/v2/labels/permissions/delete
-  
-  Required parameters: name
-  
-  Optional parameters: useAdminAccess
-  
-  Deletes a Label's permission. Permissions affect the Label resource as a whole, are not revisioned, and do not require publishing."
-  {:scopes ["https://www.googleapis.com/auth/drive.admin.labels"
-            "https://www.googleapis.com/auth/drive.labels"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://drivelabels.googleapis.com/"
-     "v2/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn locks-list$
   "https://developers.google.com/drive/labelsapi/reference/rest/v2/labels/locks/list
   
   Required parameters: parent
   
-  Optional parameters: pageToken, pageSize
+  Optional parameters: pageSize, pageToken
   
   Lists the LabelLocks on a Label."
   {:scopes ["https://www.googleapis.com/auth/drive.admin.labels"
@@ -605,10 +605,10 @@
   
   Body: 
   
-  {:name string,
+  {:group string,
    :person string,
+   :name string,
    :role string,
-   :group string,
    :audience string,
    :email string}
   
@@ -672,7 +672,7 @@
   
   Body: 
   
-  {:requests [{:name string, :useAdminAccess boolean}],
+  {:requests [{:useAdminAccess boolean, :name string}],
    :useAdminAccess boolean}
   
   Deletes Label permissions. Permissions affect the Label resource as a whole, are not revisioned, and do not require publishing."
@@ -697,6 +697,71 @@
       :as :json}
      auth))))
 
+(defn revisions-permissions-batchUpdate$
+  "https://developers.google.com/drive/labelsapi/reference/rest/v2/labels/revisions/permissions/batchUpdate
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:useAdminAccess boolean,
+   :requests [{:useAdminAccess boolean,
+               :parent string,
+               :labelPermission GoogleAppsDriveLabelsV2LabelPermission}]}
+  
+  Updates Label permissions. If a permission for the indicated principal doesn't exist, a new Label Permission is created, otherwise the existing permission is updated. Permissions affect the Label resource as a whole, are not revisioned, and do not require publishing."
+  {:scopes ["https://www.googleapis.com/auth/drive.admin.labels"
+            "https://www.googleapis.com/auth/drive.labels"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://drivelabels.googleapis.com/"
+     "v2/{+parent}/permissions:batchUpdate"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn revisions-permissions-list$
+  "https://developers.google.com/drive/labelsapi/reference/rest/v2/labels/revisions/permissions/list
+  
+  Required parameters: parent
+  
+  Optional parameters: useAdminAccess, pageSize, pageToken
+  
+  Lists a Label's permissions."
+  {:scopes ["https://www.googleapis.com/auth/drive.admin.labels"
+            "https://www.googleapis.com/auth/drive.admin.labels.readonly"
+            "https://www.googleapis.com/auth/drive.labels"
+            "https://www.googleapis.com/auth/drive.labels.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://drivelabels.googleapis.com/"
+     "v2/{+parent}/permissions"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn revisions-permissions-create$
   "https://developers.google.com/drive/labelsapi/reference/rest/v2/labels/revisions/permissions/create
   
@@ -706,10 +771,10 @@
   
   Body: 
   
-  {:name string,
+  {:group string,
    :person string,
+   :name string,
    :role string,
-   :group string,
    :audience string,
    :email string}
   
@@ -757,71 +822,6 @@
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn revisions-permissions-list$
-  "https://developers.google.com/drive/labelsapi/reference/rest/v2/labels/revisions/permissions/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageSize, pageToken, useAdminAccess
-  
-  Lists a Label's permissions."
-  {:scopes ["https://www.googleapis.com/auth/drive.admin.labels"
-            "https://www.googleapis.com/auth/drive.admin.labels.readonly"
-            "https://www.googleapis.com/auth/drive.labels"
-            "https://www.googleapis.com/auth/drive.labels.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://drivelabels.googleapis.com/"
-     "v2/{+parent}/permissions"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn revisions-permissions-batchUpdate$
-  "https://developers.google.com/drive/labelsapi/reference/rest/v2/labels/revisions/permissions/batchUpdate
-  
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:useAdminAccess boolean,
-   :requests [{:useAdminAccess boolean,
-               :labelPermission GoogleAppsDriveLabelsV2LabelPermission,
-               :parent string}]}
-  
-  Updates Label permissions. If a permission for the indicated principal doesn't exist, a new Label Permission is created, otherwise the existing permission is updated. Permissions affect the Label resource as a whole, are not revisioned, and do not require publishing."
-  {:scopes ["https://www.googleapis.com/auth/drive.admin.labels"
-            "https://www.googleapis.com/auth/drive.labels"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://drivelabels.googleapis.com/"
-     "v2/{+parent}/permissions:batchUpdate"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

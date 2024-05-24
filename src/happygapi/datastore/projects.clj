@@ -1,7 +1,7 @@
 (ns happygapi.datastore.projects
   "Cloud Datastore API: projects.
   Accesses the schemaless NoSQL database to provide fully managed, robust, scalable storage for your application. 
-  See: https://cloud.google.com/datastore/api/reference/rest/v1/projects"
+  See: https://cloud.google.com/datastore/docs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

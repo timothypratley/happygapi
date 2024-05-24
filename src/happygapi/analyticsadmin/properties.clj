@@ -1,7 +1,7 @@
 (ns happygapi.analyticsadmin.properties
   "Google Analytics Admin API: properties.
   Manage properties in Google Analytics. Warning: Creating multiple Customer Applications, Accounts, or Projects to simulate or act as a single Customer Application, Account, or Project (respectively) or to circumvent Service-specific usage limits or quotas is a direct violation of Google Cloud Platform Terms of Service as well as Google APIs Terms of Service. These actions can result in immediate termination of your GCP project(s) without any warning.
-  See: http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties"
+  See: http://code.google.com/apis/analytics/docs/mgmt/home.htmldocs/reference/rest/v1beta/properties"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -213,7 +213,7 @@
   
   Required parameters: none
   
-  Optional parameters: filter, showDeleted, pageSize, pageToken
+  Optional parameters: pageSize, pageToken, filter, showDeleted
   
   Returns child Properties under the specified parent Account. Only \"GA4\" properties will be returned. Properties will be excluded if the caller does not have access. Soft-deleted (ie: \"trashed\") properties are excluded by default. Returns an empty list if no relevant properties are found."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"
@@ -279,19 +279,19 @@
   {:timeZone string,
    :limit string,
    :offset string,
-   :dimensionFilter {:accessFilter GoogleAnalyticsAdminV1betaAccessFilter,
+   :dimensionFilter {:notExpression GoogleAnalyticsAdminV1betaAccessFilterExpression,
                      :andGroup GoogleAnalyticsAdminV1betaAccessFilterExpressionList,
-                     :orGroup GoogleAnalyticsAdminV1betaAccessFilterExpressionList,
-                     :notExpression GoogleAnalyticsAdminV1betaAccessFilterExpression},
+                     :accessFilter GoogleAnalyticsAdminV1betaAccessFilter,
+                     :orGroup GoogleAnalyticsAdminV1betaAccessFilterExpressionList},
    :dimensions [{:dimensionName string}],
-   :metricFilter {:accessFilter GoogleAnalyticsAdminV1betaAccessFilter,
+   :metricFilter {:notExpression GoogleAnalyticsAdminV1betaAccessFilterExpression,
                   :andGroup GoogleAnalyticsAdminV1betaAccessFilterExpressionList,
-                  :orGroup GoogleAnalyticsAdminV1betaAccessFilterExpressionList,
-                  :notExpression GoogleAnalyticsAdminV1betaAccessFilterExpression},
-   :dateRanges [{:endDate string, :startDate string}],
+                  :accessFilter GoogleAnalyticsAdminV1betaAccessFilter,
+                  :orGroup GoogleAnalyticsAdminV1betaAccessFilterExpressionList},
+   :dateRanges [{:startDate string, :endDate string}],
    :expandGroups boolean,
-   :orderBys [{:dimension GoogleAnalyticsAdminV1betaAccessOrderByDimensionOrderBy,
-               :metric GoogleAnalyticsAdminV1betaAccessOrderByMetricOrderBy,
+   :orderBys [{:metric GoogleAnalyticsAdminV1betaAccessOrderByMetricOrderBy,
+               :dimension GoogleAnalyticsAdminV1betaAccessOrderByDimensionOrderBy,
                :desc boolean}],
    :metrics [{:metricName string}],
    :includeAllUsers boolean,
@@ -319,40 +319,14 @@
       :as :json}
      auth))))
 
-(defn googleAdsLinks-delete$
-  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties/googleAdsLinks/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes a GoogleAdsLink on a property"
-  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://analyticsadmin.googleapis.com/"
-     "v1beta/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn googleAdsLinks-list$
-  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties/googleAdsLinks/list
+(defn dataStreams-list$
+  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties/dataStreams/list
   
   Required parameters: parent
   
   Optional parameters: pageToken, pageSize
   
-  Lists GoogleAdsLinks on a property."
+  Lists DataStreams on a property."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"
             "https://www.googleapis.com/auth/analytics.readonly"]}
   [auth parameters]
@@ -361,7 +335,7 @@
    (http/get
     (util/get-url
      "https://analyticsadmin.googleapis.com/"
-     "v1beta/{+parent}/googleAdsLinks"
+     "v1beta/{+parent}/dataStreams"
      #{:parent}
      parameters)
     (merge-with
@@ -372,8 +346,8 @@
       :as :json}
      auth))))
 
-(defn googleAdsLinks-create$
-  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties/googleAdsLinks/create
+(defn dataStreams-create$
+  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties/dataStreams/create
   
   Required parameters: parent
   
@@ -381,15 +355,18 @@
   
   Body: 
   
-  {:adsPersonalizationEnabled boolean,
-   :customerId string,
-   :creatorEmailAddress string,
+  {:androidAppStreamData {:firebaseAppId string, :packageName string},
+   :iosAppStreamData {:firebaseAppId string, :bundleId string},
+   :updateTime string,
    :createTime string,
-   :canManageClients boolean,
-   :name string,
-   :updateTime string}
+   :displayName string,
+   :webStreamData {:firebaseAppId string,
+                   :measurementId string,
+                   :defaultUri string},
+   :type string,
+   :name string}
   
-  Creates a GoogleAdsLink."
+  Creates a DataStream."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:parent})]}
@@ -397,46 +374,8 @@
    (http/post
     (util/get-url
      "https://analyticsadmin.googleapis.com/"
-     "v1beta/{+parent}/googleAdsLinks"
+     "v1beta/{+parent}/dataStreams"
      #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn googleAdsLinks-patch$
-  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties/googleAdsLinks/patch
-  
-  Required parameters: name
-  
-  Optional parameters: updateMask
-  
-  Body: 
-  
-  {:adsPersonalizationEnabled boolean,
-   :customerId string,
-   :creatorEmailAddress string,
-   :createTime string,
-   :canManageClients boolean,
-   :name string,
-   :updateTime string}
-  
-  Updates a GoogleAdsLink on a property"
-  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://analyticsadmin.googleapis.com/"
-     "v1beta/{+name}"
-     #{:name}
      parameters)
     (merge-with
      merge
@@ -474,28 +413,42 @@
       :as :json}
      auth))))
 
-(defn dataStreams-list$
-  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties/dataStreams/list
+(defn dataStreams-patch$
+  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties/dataStreams/patch
   
-  Required parameters: parent
+  Required parameters: name
   
-  Optional parameters: pageToken, pageSize
+  Optional parameters: updateMask
   
-  Lists DataStreams on a property."
-  {:scopes ["https://www.googleapis.com/auth/analytics.edit"
-            "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
+  Body: 
+  
+  {:androidAppStreamData {:firebaseAppId string, :packageName string},
+   :iosAppStreamData {:firebaseAppId string, :bundleId string},
+   :updateTime string,
+   :createTime string,
+   :displayName string,
+   :webStreamData {:firebaseAppId string,
+                   :measurementId string,
+                   :defaultUri string},
+   :type string,
+   :name string}
+  
+  Updates a DataStream on a property."
+  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/get
+   (http/patch
     (util/get-url
      "https://analyticsadmin.googleapis.com/"
-     "v1beta/{+parent}/dataStreams"
-     #{:parent}
+     "v1beta/{+name}"
+     #{:name}
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -528,88 +481,6 @@
       :as :json}
      auth))))
 
-(defn dataStreams-patch$
-  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties/dataStreams/patch
-  
-  Required parameters: name
-  
-  Optional parameters: updateMask
-  
-  Body: 
-  
-  {:updateTime string,
-   :name string,
-   :type string,
-   :createTime string,
-   :androidAppStreamData {:firebaseAppId string, :packageName string},
-   :iosAppStreamData {:bundleId string, :firebaseAppId string},
-   :webStreamData {:defaultUri string,
-                   :firebaseAppId string,
-                   :measurementId string},
-   :displayName string}
-  
-  Updates a DataStream on a property."
-  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://analyticsadmin.googleapis.com/"
-     "v1beta/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn dataStreams-create$
-  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties/dataStreams/create
-  
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:updateTime string,
-   :name string,
-   :type string,
-   :createTime string,
-   :androidAppStreamData {:firebaseAppId string, :packageName string},
-   :iosAppStreamData {:bundleId string, :firebaseAppId string},
-   :webStreamData {:defaultUri string,
-                   :firebaseAppId string,
-                   :measurementId string},
-   :displayName string}
-  
-  Creates a DataStream."
-  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://analyticsadmin.googleapis.com/"
-     "v1beta/{+parent}/dataStreams"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn dataStreams-measurementProtocolSecrets-create$
   "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties/dataStreams/measurementProtocolSecrets/create
   
@@ -619,7 +490,7 @@
   
   Body: 
   
-  {:secretValue string, :displayName string, :name string}
+  {:secretValue string, :name string, :displayName string}
   
   Creates a measurement protocol secret."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
@@ -642,6 +513,33 @@
       :as :json}
      auth))))
 
+(defn dataStreams-measurementProtocolSecrets-list$
+  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties/dataStreams/measurementProtocolSecrets/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageSize, pageToken
+  
+  Returns child MeasurementProtocolSecrets under the specified parent Property."
+  {:scopes ["https://www.googleapis.com/auth/analytics.edit"
+            "https://www.googleapis.com/auth/analytics.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://analyticsadmin.googleapis.com/"
+     "v1beta/{+parent}/measurementProtocolSecrets"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn dataStreams-measurementProtocolSecrets-patch$
   "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties/dataStreams/measurementProtocolSecrets/patch
   
@@ -651,7 +549,7 @@
   
   Body: 
   
-  {:secretValue string, :displayName string, :name string}
+  {:secretValue string, :name string, :displayName string}
   
   Updates a measurement protocol secret."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
@@ -674,24 +572,24 @@
       :as :json}
      auth))))
 
-(defn dataStreams-measurementProtocolSecrets-list$
-  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties/dataStreams/measurementProtocolSecrets/list
+(defn dataStreams-measurementProtocolSecrets-get$
+  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties/dataStreams/measurementProtocolSecrets/get
   
-  Required parameters: parent
+  Required parameters: name
   
-  Optional parameters: pageToken, pageSize
+  Optional parameters: none
   
-  Returns child MeasurementProtocolSecrets under the specified parent Property."
+  Lookup for a single \"GA4\" MeasurementProtocolSecret."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"
             "https://www.googleapis.com/auth/analytics.readonly"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://analyticsadmin.googleapis.com/"
-     "v1beta/{+parent}/measurementProtocolSecrets"
-     #{:parent}
+     "v1beta/{+name}"
+     #{:name}
      parameters)
     (merge-with
      merge
@@ -727,286 +625,6 @@
       :as :json}
      auth))))
 
-(defn dataStreams-measurementProtocolSecrets-get$
-  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties/dataStreams/measurementProtocolSecrets/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Lookup for a single \"GA4\" MeasurementProtocolSecret."
-  {:scopes ["https://www.googleapis.com/auth/analytics.edit"
-            "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://analyticsadmin.googleapis.com/"
-     "v1beta/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn conversionEvents-create$
-  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties/conversionEvents/create
-  
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:custom boolean,
-   :countingMethod string,
-   :createTime string,
-   :deletable boolean,
-   :name string,
-   :eventName string,
-   :defaultConversionValue {:currencyCode string, :value number}}
-  
-  Creates a conversion event with the specified attributes."
-  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://analyticsadmin.googleapis.com/"
-     "v1beta/{+parent}/conversionEvents"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn conversionEvents-patch$
-  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties/conversionEvents/patch
-  
-  Required parameters: name
-  
-  Optional parameters: updateMask
-  
-  Body: 
-  
-  {:custom boolean,
-   :countingMethod string,
-   :createTime string,
-   :deletable boolean,
-   :name string,
-   :eventName string,
-   :defaultConversionValue {:currencyCode string, :value number}}
-  
-  Updates a conversion event with the specified attributes."
-  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://analyticsadmin.googleapis.com/"
-     "v1beta/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn conversionEvents-delete$
-  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties/conversionEvents/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes a conversion event in a property."
-  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://analyticsadmin.googleapis.com/"
-     "v1beta/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn conversionEvents-list$
-  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties/conversionEvents/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageSize, pageToken
-  
-  Returns a list of conversion events in the specified parent property. Returns an empty list if no conversion events are found."
-  {:scopes ["https://www.googleapis.com/auth/analytics.edit"
-            "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://analyticsadmin.googleapis.com/"
-     "v1beta/{+parent}/conversionEvents"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn conversionEvents-get$
-  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties/conversionEvents/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Retrieve a single conversion event."
-  {:scopes ["https://www.googleapis.com/auth/analytics.edit"
-            "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://analyticsadmin.googleapis.com/"
-     "v1beta/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn customMetrics-create$
-  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties/customMetrics/create
-  
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:displayName string,
-   :measurementUnit string,
-   :name string,
-   :scope string,
-   :description string,
-   :restrictedMetricType [string],
-   :parameterName string}
-  
-  Creates a CustomMetric."
-  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://analyticsadmin.googleapis.com/"
-     "v1beta/{+parent}/customMetrics"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn customMetrics-list$
-  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties/customMetrics/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageToken, pageSize
-  
-  Lists CustomMetrics on a property."
-  {:scopes ["https://www.googleapis.com/auth/analytics.edit"
-            "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://analyticsadmin.googleapis.com/"
-     "v1beta/{+parent}/customMetrics"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn customMetrics-archive$
-  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties/customMetrics/archive
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {}
-  
-  Archives a CustomMetric on a property."
-  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://analyticsadmin.googleapis.com/"
-     "v1beta/{+name}:archive"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn customMetrics-patch$
   "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties/customMetrics/patch
   
@@ -1016,12 +634,12 @@
   
   Body: 
   
-  {:displayName string,
-   :measurementUnit string,
-   :name string,
-   :scope string,
+  {:name string,
    :description string,
    :restrictedMetricType [string],
+   :measurementUnit string,
+   :displayName string,
+   :scope string,
    :parameterName string}
   
   Updates a CustomMetric on a property."
@@ -1072,45 +690,8 @@
       :as :json}
      auth))))
 
-(defn customDimensions-patch$
-  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties/customDimensions/patch
-  
-  Required parameters: name
-  
-  Optional parameters: updateMask
-  
-  Body: 
-  
-  {:name string,
-   :parameterName string,
-   :scope string,
-   :description string,
-   :displayName string,
-   :disallowAdsPersonalization boolean}
-  
-  Updates a CustomDimension on a property."
-  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://analyticsadmin.googleapis.com/"
-     "v1beta/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn customDimensions-archive$
-  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties/customDimensions/archive
+(defn customMetrics-archive$
+  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties/customMetrics/archive
   
   Required parameters: name
   
@@ -1120,7 +701,7 @@
   
   {}
   
-  Archives a CustomDimension on a property."
+  Archives a CustomMetric on a property."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -1141,35 +722,8 @@
       :as :json}
      auth))))
 
-(defn customDimensions-list$
-  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties/customDimensions/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageSize, pageToken
-  
-  Lists CustomDimensions on a property."
-  {:scopes ["https://www.googleapis.com/auth/analytics.edit"
-            "https://www.googleapis.com/auth/analytics.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://analyticsadmin.googleapis.com/"
-     "v1beta/{+parent}/customDimensions"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn customDimensions-create$
-  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties/customDimensions/create
+(defn customMetrics-create$
+  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties/customMetrics/create
   
   Required parameters: parent
   
@@ -1178,13 +732,14 @@
   Body: 
   
   {:name string,
-   :parameterName string,
-   :scope string,
    :description string,
+   :restrictedMetricType [string],
+   :measurementUnit string,
    :displayName string,
-   :disallowAdsPersonalization boolean}
+   :scope string,
+   :parameterName string}
   
-  Creates a CustomDimension."
+  Creates a CustomMetric."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:parent})]}
@@ -1192,7 +747,7 @@
    (http/post
     (util/get-url
      "https://analyticsadmin.googleapis.com/"
-     "v1beta/{+parent}/customDimensions"
+     "v1beta/{+parent}/customMetrics"
      #{:parent}
      parameters)
     (merge-with
@@ -1205,14 +760,79 @@
       :as :json}
      auth))))
 
-(defn customDimensions-get$
-  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties/customDimensions/get
+(defn customMetrics-list$
+  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties/customMetrics/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageToken, pageSize
+  
+  Lists CustomMetrics on a property."
+  {:scopes ["https://www.googleapis.com/auth/analytics.edit"
+            "https://www.googleapis.com/auth/analytics.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://analyticsadmin.googleapis.com/"
+     "v1beta/{+parent}/customMetrics"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn conversionEvents-create$
+  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties/conversionEvents/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:custom boolean,
+   :eventName string,
+   :deletable boolean,
+   :defaultConversionValue {:currencyCode string, :value number},
+   :countingMethod string,
+   :createTime string,
+   :name string}
+  
+  Creates a conversion event with the specified attributes."
+  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://analyticsadmin.googleapis.com/"
+     "v1beta/{+parent}/conversionEvents"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn conversionEvents-get$
+  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties/conversionEvents/get
   
   Required parameters: name
   
   Optional parameters: none
   
-  Lookup for a single CustomDimension."
+  Retrieve a single conversion event."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"
             "https://www.googleapis.com/auth/analytics.readonly"]}
   [auth parameters]
@@ -1223,6 +843,253 @@
      "https://analyticsadmin.googleapis.com/"
      "v1beta/{+name}"
      #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn conversionEvents-list$
+  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties/conversionEvents/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageToken, pageSize
+  
+  Returns a list of conversion events in the specified parent property. Returns an empty list if no conversion events are found."
+  {:scopes ["https://www.googleapis.com/auth/analytics.edit"
+            "https://www.googleapis.com/auth/analytics.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://analyticsadmin.googleapis.com/"
+     "v1beta/{+parent}/conversionEvents"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn conversionEvents-patch$
+  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties/conversionEvents/patch
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:custom boolean,
+   :eventName string,
+   :deletable boolean,
+   :defaultConversionValue {:currencyCode string, :value number},
+   :countingMethod string,
+   :createTime string,
+   :name string}
+  
+  Updates a conversion event with the specified attributes."
+  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://analyticsadmin.googleapis.com/"
+     "v1beta/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn conversionEvents-delete$
+  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties/conversionEvents/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes a conversion event in a property."
+  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://analyticsadmin.googleapis.com/"
+     "v1beta/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn googleAdsLinks-create$
+  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties/googleAdsLinks/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:canManageClients boolean,
+   :updateTime string,
+   :name string,
+   :createTime string,
+   :adsPersonalizationEnabled boolean,
+   :customerId string,
+   :creatorEmailAddress string}
+  
+  Creates a GoogleAdsLink."
+  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://analyticsadmin.googleapis.com/"
+     "v1beta/{+parent}/googleAdsLinks"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn googleAdsLinks-list$
+  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties/googleAdsLinks/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageSize, pageToken
+  
+  Lists GoogleAdsLinks on a property."
+  {:scopes ["https://www.googleapis.com/auth/analytics.edit"
+            "https://www.googleapis.com/auth/analytics.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://analyticsadmin.googleapis.com/"
+     "v1beta/{+parent}/googleAdsLinks"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn googleAdsLinks-delete$
+  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties/googleAdsLinks/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes a GoogleAdsLink on a property"
+  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://analyticsadmin.googleapis.com/"
+     "v1beta/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn googleAdsLinks-patch$
+  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties/googleAdsLinks/patch
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:canManageClients boolean,
+   :updateTime string,
+   :name string,
+   :createTime string,
+   :adsPersonalizationEnabled boolean,
+   :customerId string,
+   :creatorEmailAddress string}
+  
+  Updates a GoogleAdsLink on a property"
+  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://analyticsadmin.googleapis.com/"
+     "v1beta/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn firebaseLinks-list$
+  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties/firebaseLinks/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageToken, pageSize
+  
+  Lists FirebaseLinks on a property. Properties can have at most one FirebaseLink."
+  {:scopes ["https://www.googleapis.com/auth/analytics.edit"
+            "https://www.googleapis.com/auth/analytics.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://analyticsadmin.googleapis.com/"
+     "v1beta/{+parent}/firebaseLinks"
+     #{:parent}
      parameters)
     (merge-with
      merge
@@ -1290,14 +1157,14 @@
       :as :json}
      auth))))
 
-(defn firebaseLinks-list$
-  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties/firebaseLinks/list
+(defn keyEvents-list$
+  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties/keyEvents/list
   
   Required parameters: parent
   
   Optional parameters: pageToken, pageSize
   
-  Lists FirebaseLinks on a property. Properties can have at most one FirebaseLink."
+  Returns a list of Key Events in the specified parent property. Returns an empty list if no Key Events are found."
   {:scopes ["https://www.googleapis.com/auth/analytics.edit"
             "https://www.googleapis.com/auth/analytics.readonly"]}
   [auth parameters]
@@ -1306,7 +1173,296 @@
    (http/get
     (util/get-url
      "https://analyticsadmin.googleapis.com/"
-     "v1beta/{+parent}/firebaseLinks"
+     "v1beta/{+parent}/keyEvents"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn keyEvents-get$
+  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties/keyEvents/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Retrieve a single Key Event."
+  {:scopes ["https://www.googleapis.com/auth/analytics.edit"
+            "https://www.googleapis.com/auth/analytics.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://analyticsadmin.googleapis.com/"
+     "v1beta/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn keyEvents-patch$
+  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties/keyEvents/patch
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:countingMethod string,
+   :custom boolean,
+   :name string,
+   :defaultValue {:currencyCode string, :numericValue number},
+   :createTime string,
+   :deletable boolean,
+   :eventName string}
+  
+  Updates a Key Event."
+  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://analyticsadmin.googleapis.com/"
+     "v1beta/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn keyEvents-create$
+  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties/keyEvents/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:countingMethod string,
+   :custom boolean,
+   :name string,
+   :defaultValue {:currencyCode string, :numericValue number},
+   :createTime string,
+   :deletable boolean,
+   :eventName string}
+  
+  Creates a Key Event."
+  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://analyticsadmin.googleapis.com/"
+     "v1beta/{+parent}/keyEvents"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn keyEvents-delete$
+  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties/keyEvents/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes a Key Event."
+  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://analyticsadmin.googleapis.com/"
+     "v1beta/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn customDimensions-create$
+  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties/customDimensions/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:displayName string,
+   :disallowAdsPersonalization boolean,
+   :parameterName string,
+   :name string,
+   :description string,
+   :scope string}
+  
+  Creates a CustomDimension."
+  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://analyticsadmin.googleapis.com/"
+     "v1beta/{+parent}/customDimensions"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn customDimensions-get$
+  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties/customDimensions/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Lookup for a single CustomDimension."
+  {:scopes ["https://www.googleapis.com/auth/analytics.edit"
+            "https://www.googleapis.com/auth/analytics.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://analyticsadmin.googleapis.com/"
+     "v1beta/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn customDimensions-archive$
+  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties/customDimensions/archive
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {}
+  
+  Archives a CustomDimension on a property."
+  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://analyticsadmin.googleapis.com/"
+     "v1beta/{+name}:archive"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn customDimensions-patch$
+  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties/customDimensions/patch
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask
+  
+  Body: 
+  
+  {:displayName string,
+   :disallowAdsPersonalization boolean,
+   :parameterName string,
+   :name string,
+   :description string,
+   :scope string}
+  
+  Updates a CustomDimension on a property."
+  {:scopes ["https://www.googleapis.com/auth/analytics.edit"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://analyticsadmin.googleapis.com/"
+     "v1beta/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn customDimensions-list$
+  "http://code.google.com/apis/analytics/docs/mgmt/home.htmlapi/reference/rest/v1beta/properties/customDimensions/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageToken, pageSize
+  
+  Lists CustomDimensions on a property."
+  {:scopes ["https://www.googleapis.com/auth/analytics.edit"
+            "https://www.googleapis.com/auth/analytics.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://analyticsadmin.googleapis.com/"
+     "v1beta/{+parent}/customDimensions"
      #{:parent}
      parameters)
     (merge-with

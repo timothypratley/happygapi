@@ -1,7 +1,7 @@
 (ns happygapi.calendar.calendarList
   "Calendar API: calendarList.
   Manipulates events and other calendar data.
-  See: https://developers.google.com/google-apps/calendar/firstappapi/reference/rest/v3/calendarList"
+  See: https://developers.google.com/google-apps/calendar/firstappdocs/reference/rest/v3/calendarList"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

@@ -1,7 +1,7 @@
 (ns happygapi.vision.files
   "Cloud Vision API: files.
   Integrates Google Vision features, including image labeling, face, logo, and landmark detection, optical character recognition (OCR), and detection of explicit content, into applications.
-  See: https://cloud.google.com/vision/api/reference/rest/v1/files"
+  See: https://cloud.google.com/vision/docs/reference/rest/v1/files"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

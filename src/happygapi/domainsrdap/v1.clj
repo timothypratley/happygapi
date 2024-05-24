@@ -1,7 +1,7 @@
 (ns happygapi.domainsrdap.v1
   "Domains RDAP API: v1.
   Read-only public API that lets users search for information about domain names.
-  See: https://developers.google.com/domains/rdap/api/reference/rest/v1/v1"
+  See: https://developers.google.com/domains/rdap/docs/reference/rest/v1/v1"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

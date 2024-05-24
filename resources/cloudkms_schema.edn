@@ -77,6 +77,13 @@
                                  :macCrc32c {:description "Optional. An optional CRC32C checksum of the MacVerifyRequest.mac. If specified, KeyManagementService will verify the integrity of the received MacVerifyRequest.mac using this checksum. KeyManagementService will report an error if the checksum verification fails. If you receive a checksum error, your client should verify that CRC32C(MacVerifyRequest.tag) is equal to MacVerifyRequest.mac_crc32c, and if so, perform a limited number of retries. A persistent mismatch may indicate an issue in your computation of the CRC32C checksum. Note: This field is defined as int64 for reasons of compatibility across different languages. However, it is a non-negative integer, which will never exceed 2^32-1, and can be safely downconverted to uint32 in languages that support this type.",
                                              :type "string",
                                              :format "int64"}}},
+ :AutokeyConfig {:id "AutokeyConfig",
+                 :description "Cloud KMS Autokey configuration for a folder.",
+                 :type "object",
+                 :properties {:name {:description "Identifier. Name of the AutokeyConfig resource, e.g. `folders/{FOLDER_NUMBER}/autokeyConfig`.",
+                                     :type "string"},
+                              :keyProject {:description "Optional. Name of the key project, e.g. `projects/{PROJECT_ID}` or `projects/{PROJECT_NUMBER}`, where Cloud KMS Autokey will provision a new CryptoKey when a KeyHandle is created. On UpdateAutokeyConfig, the caller will require `cloudkms.cryptoKeys.setIamPolicy` permission on this key project. Once configured, for Cloud KMS Autokey to function properly, this key project must have the Cloud KMS API activated and the Cloud KMS Service Agent for this key project must be granted the `cloudkms.admin` role (or pertinent permissions). A request with an empty key project field will clear the configuration.",
+                                           :type "string"}}},
  :CryptoKey {:id "CryptoKey",
              :description "A CryptoKey represents a logical key that can be used for cryptographic operations. A CryptoKey is made up of zero or more versions, which represent the actual key material used in cryptographic operations.",
              :type "object",
@@ -206,6 +213,7 @@
                                                                         "ECDSA on the NIST P-256 curve with a SHA256 digest. Other hash functions can also be used: https://cloud.google.com/kms/docs/create-validate-signatures#ecdsa_support_for_other_hash_algorithms"
                                                                         "ECDSA on the NIST P-384 curve with a SHA384 digest. Other hash functions can also be used: https://cloud.google.com/kms/docs/create-validate-signatures#ecdsa_support_for_other_hash_algorithms"
                                                                         "ECDSA on the non-NIST secp256k1 curve. This curve is only supported for HSM protection level. Other hash functions can also be used: https://cloud.google.com/kms/docs/create-validate-signatures#ecdsa_support_for_other_hash_algorithms"
+                                                                        "EdDSA on the Curve25519 in pure mode (taking data as input)."
                                                                         "HMAC-SHA256 signing with a 256 bit key."
                                                                         "HMAC-SHA1 signing with a 160 bit key."
                                                                         "HMAC-SHA384 signing with a 384 bit key."
@@ -241,12 +249,30 @@
                                                             "EC_SIGN_P256_SHA256"
                                                             "EC_SIGN_P384_SHA384"
                                                             "EC_SIGN_SECP256K1_SHA256"
+                                                            "EC_SIGN_ED25519"
                                                             "HMAC_SHA256"
                                                             "HMAC_SHA1"
                                                             "HMAC_SHA384"
                                                             "HMAC_SHA512"
                                                             "HMAC_SHA224"
                                                             "EXTERNAL_SYMMETRIC_ENCRYPTION"]}}},
+ :Operation {:id "Operation",
+             :description "This resource represents a long-running operation that is the result of a network API call.",
+             :type "object",
+             :properties {:name {:description "The server-assigned name, which is only unique within the same service that originally returns it. If you use the default HTTP mapping, the `name` should be a resource name ending with `operations/{unique_id}`.",
+                                 :type "string"},
+                          :metadata {:description "Service-specific metadata associated with the operation. It typically contains progress information and common metadata such as create time. Some services might not provide such metadata. Any method that returns a long-running operation should document the metadata type, if any.",
+                                     :type "object",
+                                     :additionalProperties {:type "any",
+                                                            :description "Properties of the object. Contains field @type with type URL."}},
+                          :done {:description "If the value is `false`, it means the operation is still in progress. If `true`, the operation is completed, and either `error` or `response` is available.",
+                                 :type "boolean"},
+                          :error {:description "The error result of the operation in case of failure or cancellation.",
+                                  :$ref "Status"},
+                          :response {:description "The normal, successful response of the operation. If the original method returns no data on success, such as `Delete`, the response is `google.protobuf.Empty`. If the original method is standard `Get`/`Create`/`Update`, the response should be the resource. For other methods, the response should have the type `XxxResponse`, where `Xxx` is the original method name. For example, if the original method name is `TakeSnapshot()`, the inferred response type is `TakeSnapshotResponse`.",
+                                     :type "object",
+                                     :additionalProperties {:type "any",
+                                                            :description "Properties of the object. Contains field @type with type URL."}}}},
  :SetIamPolicyRequest {:id "SetIamPolicyRequest",
                        :description "Request message for `SetIamPolicy` method.",
                        :type "object",
@@ -547,7 +573,7 @@
  :PublicKey {:id "PublicKey",
              :description "The public keys for a given CryptoKeyVersion. Obtained via GetPublicKey.",
              :type "object",
-             :properties {:pem {:description "A public key encoded in PEM format, populated only when GetPublicKey returns one key. For more information, see the [RFC 7468](https://tools.ietf.org/html/rfc7468) sections for [General Considerations](https://tools.ietf.org/html/rfc7468#section-2) and [Textual Encoding of Subject Public Key Info] (https://tools.ietf.org/html/rfc7468#section-13).",
+             :properties {:pem {:description "The public key, encoded in PEM format. For more information, see the [RFC 7468](https://tools.ietf.org/html/rfc7468) sections for [General Considerations](https://tools.ietf.org/html/rfc7468#section-2) and [Textual Encoding of Subject Public Key Info] (https://tools.ietf.org/html/rfc7468#section-13).",
                                 :type "string"},
                           :algorithm {:description "The Algorithm associated with this key.",
                                       :type "string",
@@ -580,6 +606,7 @@
                                                          "ECDSA on the NIST P-256 curve with a SHA256 digest. Other hash functions can also be used: https://cloud.google.com/kms/docs/create-validate-signatures#ecdsa_support_for_other_hash_algorithms"
                                                          "ECDSA on the NIST P-384 curve with a SHA384 digest. Other hash functions can also be used: https://cloud.google.com/kms/docs/create-validate-signatures#ecdsa_support_for_other_hash_algorithms"
                                                          "ECDSA on the non-NIST secp256k1 curve. This curve is only supported for HSM protection level. Other hash functions can also be used: https://cloud.google.com/kms/docs/create-validate-signatures#ecdsa_support_for_other_hash_algorithms"
+                                                         "EdDSA on the Curve25519 in pure mode (taking data as input)."
                                                          "HMAC-SHA256 signing with a 256 bit key."
                                                          "HMAC-SHA1 signing with a 160 bit key."
                                                          "HMAC-SHA384 signing with a 384 bit key."
@@ -615,13 +642,14 @@
                                              "EC_SIGN_P256_SHA256"
                                              "EC_SIGN_P384_SHA384"
                                              "EC_SIGN_SECP256K1_SHA256"
+                                             "EC_SIGN_ED25519"
                                              "HMAC_SHA256"
                                              "HMAC_SHA1"
                                              "HMAC_SHA384"
                                              "HMAC_SHA512"
                                              "HMAC_SHA224"
                                              "EXTERNAL_SYMMETRIC_ENCRYPTION"]},
-                          :pemCrc32c {:description "Integrity verification field: A CRC32C checksum of the returned PublicKey.pem. It is only populated when GetPublicKey returns one key. An integrity check of PublicKey.pem can be performed by computing the CRC32C checksum of PublicKey.pem and comparing your results to this field. Discard the response in case of non-matching checksum values, and perform a limited number of retries. A persistent mismatch may indicate an issue in your computation of the CRC32C checksum. Note: This field is defined as int64 for reasons of compatibility across different languages. However, it is a non-negative integer, which will never exceed 2^32-1, and can be safely downconverted to uint32 in languages that support this type. NOTE: This field is in Beta.",
+                          :pemCrc32c {:description "Integrity verification field. A CRC32C checksum of the returned PublicKey.pem. An integrity check of PublicKey.pem can be performed by computing the CRC32C checksum of PublicKey.pem and comparing your results to this field. Discard the response in case of non-matching checksum values, and perform a limited number of retries. A persistent mismatch may indicate an issue in your computation of the CRC32C checksum. Note: This field is defined as int64 for reasons of compatibility across different languages. However, it is a non-negative integer, which will never exceed 2^32-1, and can be safely downconverted to uint32 in languages that support this type. NOTE: This field is in Beta.",
                                       :type "string",
                                       :format "int64"},
                           :name {:description "The name of the CryptoKeyVersion public key. Provided here for verification. NOTE: This field is in Beta.",
@@ -830,6 +858,12 @@
                                                          "HSM"
                                                          "EXTERNAL"
                                                          "EXTERNAL_VPC"]}}},
+ :ListKeyHandlesResponse {:id "ListKeyHandlesResponse",
+                          :description "Response message for Autokey.ListKeyHandles.",
+                          :type "object",
+                          :properties {:keyHandles {:description "Resulting KeyHandles.",
+                                                    :type "array",
+                                                    :items {:$ref "KeyHandle"}}}},
  :Expr {:id "Expr",
         :description "Represents a textual expression in the Common Expression Language (CEL) syntax. CEL is a C-like expression language. The syntax and semantics of CEL are documented at https://github.com/google/cel-spec. Example (Comparison): title: \"Summary size limit\" description: \"Determines if a summary is less than 100 chars\" expression: \"document.summary.size() < 100\" Example (Equality): title: \"Requestor is owner\" description: \"Determines if requestor is the document owner\" expression: \"document.owner == request.auth.claims.email\" Example (Logic): title: \"Public documents\" description: \"Determine whether the document should be publicly visible\" expression: \"document.type != 'private' && document.type != 'internal'\" Example (Data Manipulation): title: \"Notification string\" description: \"Create a notification string with a timestamp.\" expression: \"'New message received at ' + string(document.create_time)\" The exact variables and functions that may be referenced within an expression are determined by the service that evaluates it. See the service documentation for additional information.",
         :type "object",
@@ -841,6 +875,11 @@
                                    :type "string"},
                      :location {:description "Optional. String indicating the location of the expression for error reporting, e.g. a file name and a position in the file.",
                                 :type "string"}}},
+ :ShowEffectiveAutokeyConfigResponse {:id "ShowEffectiveAutokeyConfigResponse",
+                                      :description "Response message for ShowEffectiveAutokeyConfig.",
+                                      :type "object",
+                                      :properties {:keyProject {:description "Name of the key project configured in the resource project's folder ancestry.",
+                                                                :type "string"}}},
  :ExternalProtectionLevelOptions {:id "ExternalProtectionLevelOptions",
                                   :description "ExternalProtectionLevelOptions stores a group of additional fields for configuring a CryptoKeyVersion that are specific to the EXTERNAL protection level and EXTERNAL_VPC protection levels.",
                                   :type "object",
@@ -894,6 +933,16 @@
                                                          "CLOUD_KMS"]},
                               :cryptoSpacePath {:description "Optional. Identifies the EKM Crypto Space that this EkmConnection maps to. Note: This field is required if KeyManagementMode is CLOUD_KMS.",
                                                 :type "string"}}},
+ :KeyHandle {:id "KeyHandle",
+             :description "Resource-oriented representation of a request to Cloud KMS Autokey and the resulting provisioning of a CryptoKey.",
+             :type "object",
+             :properties {:name {:description "Identifier. Name of the KeyHandle resource, e.g. `projects/{PROJECT_ID}/locations/{LOCATION}/keyHandles/{KEY_HANDLE_ID}`.",
+                                 :type "string"},
+                          :kmsKey {:description "Output only. Name of a CryptoKey that has been provisioned for Customer Managed Encryption Key (CMEK) use in the KeyHandle project and location for the requested resource type. The CryptoKey project will reflect the value configured in the AutokeyConfig on the resource project's ancestor folder at the time of the KeyHandle creation. If more than one ancestor folder has a configured AutokeyConfig, the nearest of these configurations is used.",
+                                   :readOnly true,
+                                   :type "string"},
+                          :resourceTypeSelector {:description "Required. Indicates the resource type that the resulting CryptoKey is meant to protect, e.g. `{SERVICE}.googleapis.com/{TYPE}`. See documentation for supported resource types.",
+                                                 :type "string"}}},
  :LocationMetadata {:id "LocationMetadata",
                     :description "Cloud KMS metadata for the given google.cloud.location.Location.",
                     :type "object",
@@ -963,6 +1012,7 @@
                                                                 "ECDSA on the NIST P-256 curve with a SHA256 digest. Other hash functions can also be used: https://cloud.google.com/kms/docs/create-validate-signatures#ecdsa_support_for_other_hash_algorithms"
                                                                 "ECDSA on the NIST P-384 curve with a SHA384 digest. Other hash functions can also be used: https://cloud.google.com/kms/docs/create-validate-signatures#ecdsa_support_for_other_hash_algorithms"
                                                                 "ECDSA on the non-NIST secp256k1 curve. This curve is only supported for HSM protection level. Other hash functions can also be used: https://cloud.google.com/kms/docs/create-validate-signatures#ecdsa_support_for_other_hash_algorithms"
+                                                                "EdDSA on the Curve25519 in pure mode (taking data as input)."
                                                                 "HMAC-SHA256 signing with a 256 bit key."
                                                                 "HMAC-SHA1 signing with a 160 bit key."
                                                                 "HMAC-SHA384 signing with a 384 bit key."
@@ -998,6 +1048,7 @@
                                                     "EC_SIGN_P256_SHA256"
                                                     "EC_SIGN_P384_SHA384"
                                                     "EC_SIGN_SECP256K1_SHA256"
+                                                    "EC_SIGN_ED25519"
                                                     "HMAC_SHA256"
                                                     "HMAC_SHA1"
                                                     "HMAC_SHA384"
@@ -1117,6 +1168,7 @@
                                                                              "ECDSA on the NIST P-256 curve with a SHA256 digest. Other hash functions can also be used: https://cloud.google.com/kms/docs/create-validate-signatures#ecdsa_support_for_other_hash_algorithms"
                                                                              "ECDSA on the NIST P-384 curve with a SHA384 digest. Other hash functions can also be used: https://cloud.google.com/kms/docs/create-validate-signatures#ecdsa_support_for_other_hash_algorithms"
                                                                              "ECDSA on the non-NIST secp256k1 curve. This curve is only supported for HSM protection level. Other hash functions can also be used: https://cloud.google.com/kms/docs/create-validate-signatures#ecdsa_support_for_other_hash_algorithms"
+                                                                             "EdDSA on the Curve25519 in pure mode (taking data as input)."
                                                                              "HMAC-SHA256 signing with a 256 bit key."
                                                                              "HMAC-SHA1 signing with a 160 bit key."
                                                                              "HMAC-SHA384 signing with a 384 bit key."
@@ -1152,6 +1204,7 @@
                                                                  "EC_SIGN_P256_SHA256"
                                                                  "EC_SIGN_P384_SHA384"
                                                                  "EC_SIGN_SECP256K1_SHA256"
+                                                                 "EC_SIGN_ED25519"
                                                                  "HMAC_SHA256"
                                                                  "HMAC_SHA1"
                                                                  "HMAC_SHA384"
@@ -1221,4 +1274,17 @@
                                       :items {:$ref "AuditConfig"}},
                        :etag {:description "`etag` is used for optimistic concurrency control as a way to help prevent simultaneous updates of a policy from overwriting each other. It is strongly suggested that systems make use of the `etag` in the read-modify-write cycle to perform policy updates in order to avoid race conditions: An `etag` is returned in the response to `getIamPolicy`, and systems are expected to put that etag in the request to `setIamPolicy` to ensure that their change will be applied to the same version of the policy. **Important:** If you use IAM Conditions, you must include the `etag` field whenever you call `setIamPolicy`. If you omit this field, then IAM allows you to overwrite a version `3` policy with a version `1` policy, and all of the conditions in the version `3` policy are lost.",
                               :type "string",
-                              :format "byte"}}}}
+                              :format "byte"}}},
+ :Status {:id "Status",
+          :description "The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).",
+          :type "object",
+          :properties {:code {:description "The status code, which should be an enum value of google.rpc.Code.",
+                              :type "integer",
+                              :format "int32"},
+                       :message {:description "A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the google.rpc.Status.details field, or localized by the client.",
+                                 :type "string"},
+                       :details {:description "A list of messages that carry the error details. There is a common set of message types for APIs to use.",
+                                 :type "array",
+                                 :items {:type "object",
+                                         :additionalProperties {:type "any",
+                                                                :description "Properties of the object. Contains field @type with type URL."}}}}}}

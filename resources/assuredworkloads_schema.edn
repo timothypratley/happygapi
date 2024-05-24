@@ -1,132 +1,149 @@
-{:GoogleCloudAssuredworkloadsV1AcknowledgeViolationResponse {:id "GoogleCloudAssuredworkloadsV1AcknowledgeViolationResponse",
+{:GoogleCloudAssuredworkloadsV1AcknowledgeViolationResponse {:description "Response for violation acknowledgement",
                                                              :type "object",
-                                                             :properties {},
-                                                             :description "Response for violation acknowledgement"},
- :GoogleCloudAssuredworkloadsV1Workload {:type "object",
-                                         :description "A Workload object for managing highly regulated workloads of cloud customers.",
-                                         :id "GoogleCloudAssuredworkloadsV1Workload",
-                                         :properties {:provisionedResourcesParent {:type "string",
-                                                                                   :description "Input only. The parent resource for the resources managed by this Assured Workload. May be either empty or a folder resource which is a child of the Workload parent. If not specified all resources are created under the parent organization. Format: folders/{folder_id}"},
+                                                             :id "GoogleCloudAssuredworkloadsV1AcknowledgeViolationResponse",
+                                                             :properties {}},
+ :GoogleCloudAssuredworkloadsV1Workload {:properties {:provisionedResourcesParent {:description "Input only. The parent resource for the resources managed by this Assured Workload. May be either empty or a folder resource which is a child of the Workload parent. If not specified all resources are created under the parent organization. Format: folders/{folder_id}",
+                                                                                   :type "string"},
                                                       :compliantButDisallowedServices {:readOnly true,
-                                                                                       :items {:type "string"},
+                                                                                       :description "Output only. Urls for services which are compliant for this Assured Workload, but which are currently disallowed by the ResourceUsageRestriction org policy. Invoke RestrictAllowedResources endpoint to allow your project developers to use these services in their environment.",
                                                                                        :type "array",
-                                                                                       :description "Output only. Urls for services which are compliant for this Assured Workload, but which are currently disallowed by the ResourceUsageRestriction org policy. Invoke RestrictAllowedResources endpoint to allow your project developers to use these services in their environment."},
-                                                      :labels {:additionalProperties {:type "string"},
+                                                                                       :items {:type "string"}},
+                                                      :labels {:description "Optional. Labels applied to the workload.",
                                                                :type "object",
-                                                               :description "Optional. Labels applied to the workload."},
+                                                               :additionalProperties {:type "string"}},
                                                       :kmsSettings {:deprecated true,
-                                                                    :description "Input only. Settings used to create a CMEK crypto key. When set, a project with a KMS CMEK key is provisioned. This field is deprecated as of Feb 28, 2022. In order to create a Keyring, callers should specify, ENCRYPTION_KEYS_PROJECT or KEYRING in ResourceSettings.resource_type field.",
-                                                                    :$ref "GoogleCloudAssuredworkloadsV1WorkloadKMSSettings"},
-                                                      :partnerPermissions {:description "Optional. Permissions granted to the AW Partner SA account for the customer workload",
-                                                                           :$ref "GoogleCloudAssuredworkloadsV1WorkloadPartnerPermissions"},
-                                                      :billingAccount {:description "Optional. The billing account used for the resources which are direct children of workload. This billing account is initially associated with the resources created as part of Workload creation. After the initial creation of these resources, the customer can change the assigned billing account. The resource name has the form `billingAccounts/{billing_account_id}`. For example, `billingAccounts/012345-567890-ABCDEF`.",
-                                                                       :type "string"},
-                                                      :complianceStatus {:description "Output only. Count of active Violations in the Workload.",
-                                                                         :$ref "GoogleCloudAssuredworkloadsV1WorkloadComplianceStatus",
-                                                                         :readOnly true},
+                                                                    :$ref "GoogleCloudAssuredworkloadsV1WorkloadKMSSettings",
+                                                                    :description "Input only. Settings used to create a CMEK crypto key. When set, a project with a KMS CMEK key is provisioned. This field is deprecated as of Feb 28, 2022. In order to create a Keyring, callers should specify, ENCRYPTION_KEYS_PROJECT or KEYRING in ResourceSettings.resource_type field."},
+                                                      :partnerPermissions {:$ref "GoogleCloudAssuredworkloadsV1WorkloadPartnerPermissions",
+                                                                           :description "Optional. Permissions granted to the AW Partner SA account for the customer workload"},
+                                                      :billingAccount {:type "string",
+                                                                       :description "Optional. The billing account used for the resources which are direct children of workload. This billing account is initially associated with the resources created as part of Workload creation. After the initial creation of these resources, the customer can change the assigned billing account. The resource name has the form `billingAccounts/{billing_account_id}`. For example, `billingAccounts/012345-567890-ABCDEF`."},
+                                                      :complianceStatus {:$ref "GoogleCloudAssuredworkloadsV1WorkloadComplianceStatus",
+                                                                         :readOnly true,
+                                                                         :description "Output only. Count of active Violations in the Workload."},
                                                       :partner {:enumDescriptions [""
                                                                                    "Enum representing S3NS (Thales) partner."
                                                                                    "Enum representing T_SYSTEM (TSI) partner."
                                                                                    "Enum representing SIA_MINSAIT (Indra) partner."
                                                                                    "Enum representing PSN (TIM) partner."],
-                                                                :description "Optional. Partner regime associated with this workload.",
                                                                 :enum ["PARTNER_UNSPECIFIED"
                                                                        "LOCAL_CONTROLS_BY_S3NS"
                                                                        "SOVEREIGN_CONTROLS_BY_T_SYSTEMS"
                                                                        "SOVEREIGN_CONTROLS_BY_SIA_MINSAIT"
                                                                        "SOVEREIGN_CONTROLS_BY_PSN"],
-                                                                :type "string"},
-                                                      :resourceMonitoringEnabled {:type "boolean",
-                                                                                  :description "Output only. Indicates whether resource monitoring is enabled for workload or not. It is true when Resource feed is subscribed to AWM topic and AWM Service Agent Role is binded to AW Service Account for resource Assured workload.",
-                                                                                  :readOnly true},
-                                                      :displayName {:description "Required. The user-assigned display name of the Workload. When present it must be between 4 to 30 characters. Allowed characters are: lowercase and uppercase letters, numbers, hyphen, and spaces. Example: My Workload",
-                                                                    :type "string"},
+                                                                :type "string",
+                                                                :description "Optional. Partner regime associated with this workload."},
+                                                      :resourceMonitoringEnabled {:readOnly true,
+                                                                                  :type "boolean",
+                                                                                  :description "Output only. Indicates whether resource monitoring is enabled for workload or not. It is true when Resource feed is subscribed to AWM topic and AWM Service Agent Role is binded to AW Service Account for resource Assured workload."},
+                                                      :displayName {:type "string",
+                                                                    :description "Required. The user-assigned display name of the Workload. When present it must be between 4 to 30 characters. Allowed characters are: lowercase and uppercase letters, numbers, hyphen, and spaces. Example: My Workload"},
                                                       :name {:description "Optional. The resource name of the workload. Format: organizations/{organization}/locations/{location}/workloads/{workload} Read-only.",
                                                              :type "string"},
-                                                      :createTime {:format "google-datetime",
-                                                                   :readOnly true,
-                                                                   :description "Output only. Immutable. The Workload creation timestamp.",
-                                                                   :type "string"},
-                                                      :ekmProvisioningResponse {:readOnly true,
-                                                                                :$ref "GoogleCloudAssuredworkloadsV1WorkloadEkmProvisioningResponse",
-                                                                                :description "Output only. Represents the Ekm Provisioning State of the given workload."},
+                                                      :createTime {:readOnly true,
+                                                                   :type "string",
+                                                                   :format "google-datetime",
+                                                                   :description "Output only. Immutable. The Workload creation timestamp."},
+                                                      :ekmProvisioningResponse {:description "Output only. Represents the Ekm Provisioning State of the given workload.",
+                                                                                :readOnly true,
+                                                                                :$ref "GoogleCloudAssuredworkloadsV1WorkloadEkmProvisioningResponse"},
                                                       :etag {:type "string",
                                                              :description "Optional. ETag of the workload, it is calculated on the basis of the Workload contents. It will be used in Update & Delete operations."},
-                                                      :violationNotificationsEnabled {:description "Optional. Indicates whether the e-mail notification for a violation is enabled for a workload. This value will be by default True, and if not present will be considered as true. This should only be updated via updateWorkload call. Any Changes to this field during the createWorkload call will not be honored. This will always be true while creating the workload.",
-                                                                                      :type "boolean"},
-                                                      :complianceRegime {:enum ["COMPLIANCE_REGIME_UNSPECIFIED"
+                                                      :violationNotificationsEnabled {:type "boolean",
+                                                                                      :description "Optional. Indicates whether the e-mail notification for a violation is enabled for a workload. This value will be by default True, and if not present will be considered as true. This should only be updated via updateWorkload call. Any Changes to this field during the createWorkload call will not be honored. This will always be true while creating the workload."},
+                                                      :complianceRegime {:description "Required. Immutable. Compliance Regime associated with this workload.",
+                                                                         :type "string",
+                                                                         :enum ["COMPLIANCE_REGIME_UNSPECIFIED"
                                                                                 "IL4"
                                                                                 "CJIS"
                                                                                 "FEDRAMP_HIGH"
                                                                                 "FEDRAMP_MODERATE"
                                                                                 "US_REGIONAL_ACCESS"
+                                                                                "REGIONAL_CONTROLS_PREMIUM_US"
                                                                                 "HIPAA"
                                                                                 "HITRUST"
                                                                                 "EU_REGIONS_AND_SUPPORT"
+                                                                                "REGIONAL_CONTROLS_PREMIUM_EU"
                                                                                 "CA_REGIONS_AND_SUPPORT"
+                                                                                "REGIONAL_CONTROLS_PREMIUM_CA"
                                                                                 "ITAR"
                                                                                 "AU_REGIONS_AND_US_SUPPORT"
+                                                                                "REGIONAL_CONTROLS_PREMIUM_AU"
                                                                                 "ASSURED_WORKLOADS_FOR_PARTNERS"
                                                                                 "ISR_REGIONS"
+                                                                                "REGIONAL_CONTROLS_PREMIUM_ISR"
                                                                                 "ISR_REGIONS_AND_SUPPORT"
                                                                                 "CA_PROTECTED_B"
                                                                                 "IL5"
                                                                                 "IL2"
                                                                                 "JP_REGIONS_AND_SUPPORT"
-                                                                                "KSA_REGIONS_AND_SUPPORT_WITH_SOVEREIGNTY_CONTROLS"],
-                                                                         :description "Required. Immutable. Compliance Regime associated with this workload.",
+                                                                                "REGIONAL_CONTROLS_PREMIUM_JP"
+                                                                                "KSA_REGIONS_AND_SUPPORT_WITH_SOVEREIGNTY_CONTROLS"
+                                                                                "REGIONAL_CONTROLS"
+                                                                                "FREE_REGIONS"],
                                                                          :enumDescriptions ["Unknown compliance regime."
                                                                                             "Information protection as per DoD IL4 requirements."
                                                                                             "Criminal Justice Information Services (CJIS) Security policies."
                                                                                             "FedRAMP High data protection controls"
                                                                                             "FedRAMP Moderate data protection controls"
                                                                                             "Assured Workloads For US Regions data protection controls"
+                                                                                            "Assured Workloads For US Regions data protection controls"
                                                                                             "Health Insurance Portability and Accountability Act controls"
                                                                                             "Health Information Trust Alliance controls"
                                                                                             "Assured Workloads For EU Regions and Support controls"
+                                                                                            "Assured Workloads For EU Regions and Support controls"
+                                                                                            "Assured Workloads For Canada Regions and Support controls"
                                                                                             "Assured Workloads For Canada Regions and Support controls"
                                                                                             "International Traffic in Arms Regulations"
                                                                                             "Assured Workloads for Australia Regions and Support controls"
+                                                                                            "Assured Workloads for Australia Regions and Support controls"
                                                                                             "Assured Workloads for Partners;"
+                                                                                            "Assured Workloads for Israel Regions"
                                                                                             "Assured Workloads for Israel"
                                                                                             "Assured Workloads for Israel Regions"
                                                                                             "Assured Workloads for Canada Protected B regime"
                                                                                             "Information protection as per DoD IL5 requirements."
                                                                                             "Information protection as per DoD IL2 requirements."
                                                                                             "Assured Workloads for Japan Regions"
-                                                                                            "KSA R5 Controls."],
-                                                                         :type "string"},
+                                                                                            "Assured Workloads for Japan Regions"
+                                                                                            "KSA R5 Controls."
+                                                                                            "Assured Workloads for Regional Controls/Free Regions"
+                                                                                            "Assured Workloads for Regional Controls/Free Regions"]},
                                                       :saaEnrollmentResponse {:readOnly true,
                                                                               :description "Output only. Represents the SAA enrollment response of the given workload. SAA enrollment response is queried during GetWorkload call. In failure cases, user friendly error message is shown in SAA details page.",
                                                                               :$ref "GoogleCloudAssuredworkloadsV1WorkloadSaaEnrollmentResponse"},
-                                                      :resourceSettings {:description "Input only. Resource properties that are used to customize workload resources. These properties (such as custom project id) will be used to create workload resources if possible. This field is optional.",
-                                                                         :items {:$ref "GoogleCloudAssuredworkloadsV1WorkloadResourceSettings"},
-                                                                         :type "array"},
-                                                      :kajEnrollmentState {:type "string",
+                                                      :resourceSettings {:type "array",
+                                                                         :description "Input only. Resource properties that are used to customize workload resources. These properties (such as custom project id) will be used to create workload resources if possible. This field is optional.",
+                                                                         :items {:$ref "GoogleCloudAssuredworkloadsV1WorkloadResourceSettings"}},
+                                                      :kajEnrollmentState {:description "Output only. Represents the KAJ enrollment state of the given workload.",
                                                                            :enum ["KAJ_ENROLLMENT_STATE_UNSPECIFIED"
                                                                                   "KAJ_ENROLLMENT_STATE_PENDING"
                                                                                   "KAJ_ENROLLMENT_STATE_COMPLETE"],
+                                                                           :readOnly true,
                                                                            :enumDescriptions ["Default State for KAJ Enrollment."
                                                                                               "Pending State for KAJ Enrollment."
                                                                                               "Complete State for KAJ Enrollment."],
-                                                                           :description "Output only. Represents the KAJ enrollment state of the given workload.",
-                                                                           :readOnly true},
-                                                      :enableSovereignControls {:description "Optional. Indicates the sovereignty status of the given workload. Currently meant to be used by Europe/Canada customers.",
-                                                                                :type "boolean"},
-                                                      :resources {:description "Output only. The resources associated with this workload. These resources will be created when creating the workload. If any of the projects already exist, the workload creation will fail. Always read only.",
-                                                                  :type "array",
+                                                                           :type "string"},
+                                                      :enableSovereignControls {:type "boolean",
+                                                                                :description "Optional. Indicates the sovereignty status of the given workload. Currently meant to be used by Europe/Canada customers."},
+                                                      :resources {:readOnly true,
                                                                   :items {:$ref "GoogleCloudAssuredworkloadsV1WorkloadResourceInfo"},
-                                                                  :readOnly true}}},
- :GoogleCloudAssuredworkloadsV1AnalyzeWorkloadMoveResponse {:properties {:assetMoveAnalyses {:items {:$ref "GoogleCloudAssuredworkloadsV1AssetMoveAnalysis"},
-                                                                                             :type "array",
-                                                                                             :description "List of analysis results for each asset in scope."},
-                                                                         :nextPageToken {:description "The next page token. Is empty if the last page is reached.",
-                                                                                         :type "string"}},
-                                                            :type "object",
-                                                            :id "GoogleCloudAssuredworkloadsV1AnalyzeWorkloadMoveResponse",
-                                                            :description "Response containing the analysis results for the hypothetical resource move."},
+                                                                  :type "array",
+                                                                  :description "Output only. The resources associated with this workload. These resources will be created when creating the workload. If any of the projects already exist, the workload creation will fail. Always read only."}},
+                                         :description "A Workload object for managing highly regulated workloads of cloud customers.",
+                                         :type "object",
+                                         :id "GoogleCloudAssuredworkloadsV1Workload"},
+ :GoogleCloudAssuredworkloadsV1AnalyzeWorkloadMoveResponse {:id "GoogleCloudAssuredworkloadsV1AnalyzeWorkloadMoveResponse",
+                                                            :properties {:nextPageToken {:description "The next page token. Is empty if the last page is reached.",
+                                                                                         :type "string"},
+                                                                         :assetMoveAnalyses {:type "array",
+                                                                                             :description "List of analysis results for each asset in scope.",
+                                                                                             :items {:$ref "GoogleCloudAssuredworkloadsV1AssetMoveAnalysis"}}},
+                                                            :description "Response containing the analysis results for the hypothetical resource move.",
+                                                            :type "object"},
  :GoogleCloudAssuredworkloadsV1ViolationRemediation {:type "object",
                                                      :description "Represents remediation guidance to resolve compliance violation for AssuredWorkload",
+                                                     :id "GoogleCloudAssuredworkloadsV1ViolationRemediation",
                                                      :properties {:remediationType {:type "string",
                                                                                     :enum ["REMEDIATION_TYPE_UNSPECIFIED"
                                                                                            "REMEDIATION_BOOLEAN_ORG_POLICY_VIOLATION"
@@ -142,182 +159,182 @@
                                                                                                        "Remediation type for resource violation."],
                                                                                     :description "Output only. Reemediation type based on the type of org policy values violated",
                                                                                     :readOnly true},
-                                                                  :compliantValues {:description "Values that can resolve the violation For example: for list org policy violations, this will either be the list of allowed or denied values",
-                                                                                    :items {:type "string"},
-                                                                                    :type "array"},
-                                                                  :instructions {:description "Required. Remediation instructions to resolve violations",
-                                                                                 :$ref "GoogleCloudAssuredworkloadsV1ViolationRemediationInstructions"}},
-                                                     :id "GoogleCloudAssuredworkloadsV1ViolationRemediation"},
- :GoogleCloudAssuredworkloadsV1WorkloadPartnerPermissions {:type "object",
-                                                           :description "Permissions granted to the AW Partner SA account for the customer workload",
+                                                                  :instructions {:$ref "GoogleCloudAssuredworkloadsV1ViolationRemediationInstructions",
+                                                                                 :description "Required. Remediation instructions to resolve violations"},
+                                                                  :compliantValues {:items {:type "string"},
+                                                                                    :type "array",
+                                                                                    :description "Values that can resolve the violation For example: for list org policy violations, this will either be the list of allowed or denied values"}}},
+ :GoogleCloudAssuredworkloadsV1WorkloadPartnerPermissions {:description "Permissions granted to the AW Partner SA account for the customer workload",
                                                            :id "GoogleCloudAssuredworkloadsV1WorkloadPartnerPermissions",
+                                                           :type "object",
                                                            :properties {:dataLogsViewer {:description "Allow the partner to view inspectability logs and monitoring violations.",
                                                                                          :type "boolean"},
-                                                                        :assuredWorkloadsMonitoring {:description "Optional. Allow partner to view violation alerts.",
-                                                                                                     :type "boolean"},
+                                                                        :assuredWorkloadsMonitoring {:type "boolean",
+                                                                                                     :description "Optional. Allow partner to view violation alerts."},
                                                                         :serviceAccessApprover {:type "boolean",
                                                                                                 :description "Optional. Allow partner to view access approval logs."}}},
- :GoogleCloudAssuredworkloadsV1MutatePartnerPermissionsRequest {:description "Request for updating permission settings for a partner workload.",
+ :GoogleCloudAssuredworkloadsV1MutatePartnerPermissionsRequest {:type "object",
                                                                 :id "GoogleCloudAssuredworkloadsV1MutatePartnerPermissionsRequest",
-                                                                :properties {:updateMask {:format "google-fieldmask",
-                                                                                          :type "string",
+                                                                :properties {:partnerPermissions {:description "Required. The partner permissions to be updated.",
+                                                                                                  :$ref "GoogleCloudAssuredworkloadsV1WorkloadPartnerPermissions"},
+                                                                             :updateMask {:type "string",
+                                                                                          :format "google-fieldmask",
                                                                                           :description "Required. The list of fields to be updated. E.g. update_mask { paths: \"partner_permissions.data_logs_viewer\"}"},
-                                                                             :etag {:type "string",
-                                                                                    :description "Optional. The etag of the workload. If this is provided, it must match the server's etag."},
-                                                                             :partnerPermissions {:description "Required. The partner permissions to be updated.",
-                                                                                                  :$ref "GoogleCloudAssuredworkloadsV1WorkloadPartnerPermissions"}},
-                                                                :type "object"},
- :GoogleCloudAssuredworkloadsV1RestrictAllowedResourcesResponse {:properties {},
-                                                                 :type "object",
+                                                                             :etag {:description "Optional. The etag of the workload. If this is provided, it must match the server's etag.",
+                                                                                    :type "string"}},
+                                                                :description "Request for updating permission settings for a partner workload."},
+ :GoogleCloudAssuredworkloadsV1RestrictAllowedResourcesResponse {:type "object",
+                                                                 :description "Response for restricting the list of allowed resources.",
                                                                  :id "GoogleCloudAssuredworkloadsV1RestrictAllowedResourcesResponse",
-                                                                 :description "Response for restricting the list of allowed resources."},
- :GoogleCloudAssuredworkloadsV1Violation {:type "object",
-                                          :id "GoogleCloudAssuredworkloadsV1Violation",
-                                          :description "Workload monitoring Violation.",
-                                          :properties {:description {:readOnly true,
-                                                                     :type "string",
-                                                                     :description "Output only. Description for the Violation. e.g. OrgPolicy gcp.resourceLocations has non compliant value."},
-                                                       :category {:readOnly true,
-                                                                  :type "string",
-                                                                  :description "Output only. Category under which this violation is mapped. e.g. Location, Service Usage, Access, Encryption, etc."},
-                                                       :remediation {:description "Output only. Compliance violation remediation",
+                                                                 :properties {}},
+ :GoogleCloudAssuredworkloadsV1Violation {:properties {:description {:type "string",
                                                                      :readOnly true,
-                                                                     :$ref "GoogleCloudAssuredworkloadsV1ViolationRemediation"},
-                                                       :auditLogLink {:readOnly true,
+                                                                     :description "Output only. Description for the Violation. e.g. OrgPolicy gcp.resourceLocations has non compliant value."},
+                                                       :category {:description "Output only. Category under which this violation is mapped. e.g. Location, Service Usage, Access, Encryption, etc.",
+                                                                  :readOnly true,
+                                                                  :type "string"},
+                                                       :remediation {:$ref "GoogleCloudAssuredworkloadsV1ViolationRemediation",
+                                                                     :description "Output only. Compliance violation remediation",
+                                                                     :readOnly true},
+                                                       :auditLogLink {:type "string",
                                                                       :description "Output only. Immutable. Audit Log Link for violated resource Format: https://console.cloud.google.com/logs/query;query={logName}{protoPayload.resourceName}{timeRange}{folder}",
-                                                                      :type "string"},
-                                                       :exceptionContexts {:description "Output only. List of all the exception detail added for the violation.",
+                                                                      :readOnly true},
+                                                       :exceptionContexts {:items {:$ref "GoogleCloudAssuredworkloadsV1ViolationExceptionContext"},
                                                                            :readOnly true,
-                                                                           :items {:$ref "GoogleCloudAssuredworkloadsV1ViolationExceptionContext"},
+                                                                           :description "Output only. List of all the exception detail added for the violation.",
                                                                            :type "array"},
-                                                       :exceptionAuditLogLink {:type "string",
-                                                                               :description "Output only. Immutable. Audit Log link to find business justification provided for violation exception. Format: https://console.cloud.google.com/logs/query;query={logName}{protoPayload.resourceName}{protoPayload.methodName}{timeRange}{organization}",
-                                                                               :readOnly true},
-                                                       :name {:description "Output only. Immutable. Name of the Violation. Format: organizations/{organization}/locations/{location}/workloads/{workload_id}/violations/{violations_id}",
-                                                              :readOnly true,
-                                                              :type "string"},
-                                                       :violationType {:readOnly true,
-                                                                       :description "Output only. Type of the violation",
-                                                                       :enum ["VIOLATION_TYPE_UNSPECIFIED"
+                                                       :exceptionAuditLogLink {:description "Output only. Immutable. Audit Log link to find business justification provided for violation exception. Format: https://console.cloud.google.com/logs/query;query={logName}{protoPayload.resourceName}{protoPayload.methodName}{timeRange}{organization}",
+                                                                               :readOnly true,
+                                                                               :type "string"},
+                                                       :name {:type "string",
+                                                              :description "Output only. Immutable. Name of the Violation. Format: organizations/{organization}/locations/{location}/workloads/{workload_id}/violations/{violations_id}",
+                                                              :readOnly true},
+                                                       :violationType {:enum ["VIOLATION_TYPE_UNSPECIFIED"
                                                                               "ORG_POLICY"
                                                                               "RESOURCE"],
+                                                                       :description "Output only. Type of the violation",
                                                                        :enumDescriptions ["Unspecified type."
                                                                                           "Org Policy Violation."
                                                                                           "Resource Violation."],
+                                                                       :readOnly true,
                                                                        :type "string"},
-                                                       :state {:readOnly true,
+                                                       :state {:enum ["STATE_UNSPECIFIED"
+                                                                      "RESOLVED"
+                                                                      "UNRESOLVED"
+                                                                      "EXCEPTION"],
                                                                :enumDescriptions ["Unspecified state."
                                                                                   "Violation is resolved."
                                                                                   "Violation is Unresolved"
                                                                                   "Violation is Exception"],
-                                                               :description "Output only. State of the violation",
-                                                               :enum ["STATE_UNSPECIFIED"
-                                                                      "RESOLVED"
-                                                                      "UNRESOLVED"
-                                                                      "EXCEPTION"],
-                                                               :type "string"},
+                                                               :type "string",
+                                                               :readOnly true,
+                                                               :description "Output only. State of the violation"},
                                                        :resourceType {:type "string",
                                                                       :description "Optional. Output only. Type of the resource like compute.googleapis.com/Disk, etc. Empty for org-policy violations.",
                                                                       :readOnly true},
                                                        :resolveTime {:readOnly true,
                                                                      :format "google-datetime",
-                                                                     :type "string",
-                                                                     :description "Output only. Time of the event which fixed the Violation. If the violation is ACTIVE this will be empty."},
-                                                       :updateTime {:format "google-datetime",
+                                                                     :description "Output only. Time of the event which fixed the Violation. If the violation is ACTIVE this will be empty.",
+                                                                     :type "string"},
+                                                       :updateTime {:type "string",
                                                                     :description "Output only. The last time when the Violation record was updated.",
-                                                                    :type "string",
-                                                                    :readOnly true},
-                                                       :resourceName {:description "Optional. Output only. Name of the resource like //storage.googleapis.com/myprojectxyz-testbucket. Empty for org-policy violations.",
-                                                                      :type "string",
+                                                                    :readOnly true,
+                                                                    :format "google-datetime"},
+                                                       :resourceName {:type "string",
+                                                                      :description "Optional. Output only. Name of the resource like //storage.googleapis.com/myprojectxyz-testbucket. Empty for org-policy violations.",
                                                                       :readOnly true},
                                                        :acknowledged {:type "boolean",
                                                                       :description "A boolean that indicates if the violation is acknowledged"},
-                                                       :associatedOrgPolicyViolationId {:description "Optional. Output only. Violation Id of the org-policy violation due to which the resource violation is caused. Empty for org-policy violations.",
-                                                                                        :readOnly true,
+                                                       :associatedOrgPolicyViolationId {:readOnly true,
+                                                                                        :description "Optional. Output only. Violation Id of the org-policy violation due to which the resource violation is caused. Empty for org-policy violations.",
                                                                                         :type "string"},
-                                                       :parentProjectNumber {:description "Optional. Output only. Parent project number where resource is present. Empty for org-policy violations.",
+                                                       :parentProjectNumber {:readOnly true,
                                                                              :type "string",
-                                                                             :readOnly true},
-                                                       :nonCompliantOrgPolicy {:type "string",
-                                                                               :description "Output only. Immutable. Name of the OrgPolicy which was modified with non-compliant change and resulted this violation. Format: projects/{project_number}/policies/{constraint_name} folders/{folder_id}/policies/{constraint_name} organizations/{organization_id}/policies/{constraint_name}",
+                                                                             :description "Optional. Output only. Parent project number where resource is present. Empty for org-policy violations."},
+                                                       :nonCompliantOrgPolicy {:description "Output only. Immutable. Name of the OrgPolicy which was modified with non-compliant change and resulted this violation. Format: projects/{project_number}/policies/{constraint_name} folders/{folder_id}/policies/{constraint_name} organizations/{organization_id}/policies/{constraint_name}",
+                                                                               :type "string",
                                                                                :readOnly true},
-                                                       :acknowledgementTime {:description "Optional. Timestamp when this violation was acknowledged first. Check exception_contexts to find the last time the violation was acknowledged when there are more than one violations. This field will be absent when acknowledged field is marked as false.",
-                                                                             :type "string",
-                                                                             :format "google-datetime"},
-                                                       :orgPolicyConstraint {:type "string",
-                                                                             :deprecated true,
+                                                       :acknowledgementTime {:format "google-datetime",
+                                                                             :description "Optional. Timestamp when this violation was acknowledged first. Check exception_contexts to find the last time the violation was acknowledged when there are more than one violations. This field will be absent when acknowledged field is marked as false.",
+                                                                             :type "string"},
+                                                       :orgPolicyConstraint {:deprecated true,
                                                                              :readOnly true,
+                                                                             :type "string",
                                                                              :description "Output only. Immutable. The org-policy-constraint that was incorrectly changed, which resulted in this violation."},
-                                                       :beginTime {:type "string",
+                                                       :beginTime {:format "google-datetime",
                                                                    :description "Output only. Time of the event which triggered the Violation.",
-                                                                   :format "google-datetime",
-                                                                   :readOnly true}}},
- :GoogleCloudAssuredworkloadsV1EnableResourceMonitoringResponse {:properties {},
-                                                                 :id "GoogleCloudAssuredworkloadsV1EnableResourceMonitoringResponse",
+                                                                   :readOnly true,
+                                                                   :type "string"}},
+                                          :description "Workload monitoring Violation.",
+                                          :id "GoogleCloudAssuredworkloadsV1Violation",
+                                          :type "object"},
+ :GoogleCloudAssuredworkloadsV1EnableResourceMonitoringResponse {:id "GoogleCloudAssuredworkloadsV1EnableResourceMonitoringResponse",
                                                                  :description "Response for EnableResourceMonitoring endpoint.",
-                                                                 :type "object"},
- :GoogleCloudAssuredworkloadsV1MoveAnalysisGroup {:properties {:error {:description "Error details for a failed analysis.",
-                                                                       :$ref "GoogleRpcStatus"},
+                                                                 :type "object",
+                                                                 :properties {}},
+ :GoogleCloudAssuredworkloadsV1MoveAnalysisGroup {:id "GoogleCloudAssuredworkloadsV1MoveAnalysisGroup",
+                                                  :properties {:analysisResult {:$ref "GoogleCloudAssuredworkloadsV1MoveAnalysisResult",
+                                                                                :description "Result of a successful analysis."},
                                                                :displayName {:description "Name of the analysis group.",
                                                                              :type "string"},
-                                                               :analysisResult {:description "Result of a successful analysis.",
-                                                                                :$ref "GoogleCloudAssuredworkloadsV1MoveAnalysisResult"}},
+                                                               :error {:description "Error details for a failed analysis.",
+                                                                       :$ref "GoogleRpcStatus"}},
                                                   :description "Represents a logical group of checks performed for an asset. If successful, the group contains the analysis result, otherwise it contains an error with the failure reason.",
-                                                  :id "GoogleCloudAssuredworkloadsV1MoveAnalysisGroup",
                                                   :type "object"},
- :GoogleCloudAssuredworkloadsV1WorkloadSaaEnrollmentResponse {:type "object",
-                                                              :id "GoogleCloudAssuredworkloadsV1WorkloadSaaEnrollmentResponse",
-                                                              :properties {:setupErrors {:type "array",
-                                                                                         :items {:type "string",
+ :GoogleCloudAssuredworkloadsV1WorkloadSaaEnrollmentResponse {:description "Signed Access Approvals (SAA) enrollment response.",
+                                                              :type "object",
+                                                              :properties {:setupErrors {:description "Indicates SAA enrollment setup error if any.",
+                                                                                         :items {:enumDescriptions ["Unspecified."
+                                                                                                                    "Invalid states for all customers, to be redirected to AA UI for additional details."
+                                                                                                                    "Returned when there is not an EKM key configured."
+                                                                                                                    "Returned when there are no enrolled services or the customer is enrolled in CAA only for a subset of services."
+                                                                                                                    "Returned when exception was encountered during evaluation of other criteria."],
                                                                                                  :enum ["SETUP_ERROR_UNSPECIFIED"
                                                                                                         "ERROR_INVALID_BASE_SETUP"
                                                                                                         "ERROR_MISSING_EXTERNAL_SIGNING_KEY"
                                                                                                         "ERROR_NOT_ALL_SERVICES_ENROLLED"
                                                                                                         "ERROR_SETUP_CHECK_FAILED"],
-                                                                                                 :enumDescriptions ["Unspecified."
-                                                                                                                    "Invalid states for all customers, to be redirected to AA UI for additional details."
-                                                                                                                    "Returned when there is not an EKM key configured."
-                                                                                                                    "Returned when there are no enrolled services or the customer is enrolled in CAA only for a subset of services."
-                                                                                                                    "Returned when exception was encountered during evaluation of other criteria."]},
-                                                                                         :description "Indicates SAA enrollment setup error if any."},
+                                                                                                 :type "string"},
+                                                                                         :type "array"},
                                                                            :setupStatus {:enumDescriptions ["Unspecified."
                                                                                                             "SAA enrollment pending."
                                                                                                             "SAA enrollment comopleted."],
+                                                                                         :type "string",
                                                                                          :enum ["SETUP_STATE_UNSPECIFIED"
                                                                                                 "STATUS_PENDING"
                                                                                                 "STATUS_COMPLETE"],
-                                                                                         :type "string",
                                                                                          :description "Indicates SAA enrollment status of a given workload."}},
-                                                              :description "Signed Access Approvals (SAA) enrollment response."},
- :GoogleCloudAssuredworkloadsV1WorkloadKMSSettings {:type "object",
+                                                              :id "GoogleCloudAssuredworkloadsV1WorkloadSaaEnrollmentResponse"},
+ :GoogleCloudAssuredworkloadsV1WorkloadKMSSettings {:deprecated true,
+                                                    :type "object",
+                                                    :description "Settings specific to the Key Management Service.",
                                                     :id "GoogleCloudAssuredworkloadsV1WorkloadKMSSettings",
                                                     :properties {:nextRotationTime {:description "Required. Input only. Immutable. The time at which the Key Management Service will automatically create a new version of the crypto key and mark it as the primary.",
                                                                                     :format "google-datetime",
                                                                                     :type "string"},
-                                                                 :rotationPeriod {:description "Required. Input only. Immutable. [next_rotation_time] will be advanced by this period when the Key Management Service automatically rotates a key. Must be at least 24 hours and at most 876,000 hours.",
-                                                                                  :type "string",
-                                                                                  :format "google-duration"}},
-                                                    :deprecated true,
-                                                    :description "Settings specific to the Key Management Service."},
- :GoogleCloudAssuredworkloadsV1ViolationExceptionContext {:id "GoogleCloudAssuredworkloadsV1ViolationExceptionContext",
+                                                                 :rotationPeriod {:format "google-duration",
+                                                                                  :description "Required. Input only. Immutable. [next_rotation_time] will be advanced by this period when the Key Management Service automatically rotates a key. Must be at least 24 hours and at most 876,000 hours.",
+                                                                                  :type "string"}}},
+ :GoogleCloudAssuredworkloadsV1ViolationExceptionContext {:description "Violation exception detail.",
+                                                          :id "GoogleCloudAssuredworkloadsV1ViolationExceptionContext",
                                                           :type "object",
-                                                          :properties {:acknowledgementTime {:format "google-datetime",
-                                                                                             :description "Timestamp when the violation was acknowledged.",
-                                                                                             :type "string"},
-                                                                       :userName {:description "Name of the user (or service account) who acknowledged the violation.",
-                                                                                  :type "string"},
+                                                          :properties {:acknowledgementTime {:type "string",
+                                                                                             :format "google-datetime",
+                                                                                             :description "Timestamp when the violation was acknowledged."},
                                                                        :comment {:type "string",
-                                                                                 :description "Business justification provided towards the acknowledgement of the violation."}},
-                                                          :description "Violation exception detail."},
- :GoogleCloudAssuredworkloadsV1ListViolationsResponse {:description "Response of ListViolations endpoint.",
-                                                       :properties {:violations {:type "array",
+                                                                                 :description "Business justification provided towards the acknowledgement of the violation."},
+                                                                       :userName {:type "string",
+                                                                                  :description "Name of the user (or service account) who acknowledged the violation."}}},
+ :GoogleCloudAssuredworkloadsV1ListViolationsResponse {:id "GoogleCloudAssuredworkloadsV1ListViolationsResponse",
+                                                       :description "Response of ListViolations endpoint.",
+                                                       :type "object",
+                                                       :properties {:nextPageToken {:type "string",
+                                                                                    :description "The next page token. Returns empty if reached the last page."},
+                                                                    :violations {:type "array",
                                                                                  :description "List of Violations under a Workload.",
-                                                                                 :items {:$ref "GoogleCloudAssuredworkloadsV1Violation"}},
-                                                                    :nextPageToken {:type "string",
-                                                                                    :description "The next page token. Returns empty if reached the last page."}},
-                                                       :id "GoogleCloudAssuredworkloadsV1ListViolationsResponse",
-                                                       :type "object"},
- :GoogleCloudAssuredworkloadsV1RestrictAllowedResourcesRequest {:properties {:restrictionType {:enumDescriptions ["Unknown restriction type."
+                                                                                 :items {:$ref "GoogleCloudAssuredworkloadsV1Violation"}}}},
+ :GoogleCloudAssuredworkloadsV1RestrictAllowedResourcesRequest {:description "Request for restricting list of available resources in Workload environment.",
+                                                                :properties {:restrictionType {:enumDescriptions ["Unknown restriction type."
                                                                                                                   "Allow the use all of all gcp products, irrespective of the compliance posture. This effectively removes gcp.restrictServiceUsage OrgPolicy on the AssuredWorkloads Folder."
                                                                                                                   "Based on Workload's compliance regime, allowed list changes. See - https://cloud.google.com/assured-workloads/docs/supported-products for the list of supported resources."
                                                                                                                   "Similar to ALLOW_COMPLIANT_RESOURCES but adds the list of compliant resources to the existing list of compliant resources. Effective org-policy of the Folder is considered to ensure there is no disruption to the existing customer workflows."],
@@ -325,44 +342,42 @@
                                                                                                       "ALLOW_ALL_GCP_RESOURCES"
                                                                                                       "ALLOW_COMPLIANT_RESOURCES"
                                                                                                       "APPEND_COMPLIANT_RESOURCES"],
-                                                                                               :type "string",
-                                                                                               :description "Required. The type of restriction for using gcp products in the Workload environment."}},
-                                                                :description "Request for restricting list of available resources in Workload environment.",
-                                                                :type "object",
-                                                                :id "GoogleCloudAssuredworkloadsV1RestrictAllowedResourcesRequest"},
+                                                                                               :description "Required. The type of restriction for using gcp products in the Workload environment.",
+                                                                                               :type "string"}},
+                                                                :id "GoogleCloudAssuredworkloadsV1RestrictAllowedResourcesRequest",
+                                                                :type "object"},
  :GoogleCloudAssuredworkloadsV1AssetMoveAnalysis {:id "GoogleCloudAssuredworkloadsV1AssetMoveAnalysis",
                                                   :description "Represents move analysis results for an asset.",
                                                   :type "object",
-                                                  :properties {:analysisGroups {:description "List of eligible analyses performed for the asset.",
-                                                                                :items {:$ref "GoogleCloudAssuredworkloadsV1MoveAnalysisGroup"},
-                                                                                :type "array"},
-                                                               :assetType {:type "string",
-                                                                           :description "Type of the asset being analyzed. Possible values will be among the ones listed [here](https://cloud.google.com/asset-inventory/docs/supported-asset-types)."},
+                                                  :properties {:analysisGroups {:type "array",
+                                                                                :description "List of eligible analyses performed for the asset.",
+                                                                                :items {:$ref "GoogleCloudAssuredworkloadsV1MoveAnalysisGroup"}},
                                                                :asset {:description "The full resource name of the asset being analyzed. Example: //compute.googleapis.com/projects/my_project_123/zones/zone1/instances/instance1",
-                                                                       :type "string"}}},
- :GoogleCloudAssuredworkloadsV1ViolationRemediationInstructions {:id "GoogleCloudAssuredworkloadsV1ViolationRemediationInstructions",
-                                                                 :description "Instructions to remediate violation",
+                                                                       :type "string"},
+                                                               :assetType {:type "string",
+                                                                           :description "Type of the asset being analyzed. Possible values will be among the ones listed [here](https://cloud.google.com/asset-inventory/docs/supported-asset-types)."}}},
+ :GoogleCloudAssuredworkloadsV1ViolationRemediationInstructions {:description "Instructions to remediate violation",
+                                                                 :properties {:gcloudInstructions {:description "Remediation instructions to resolve violation via gcloud cli",
+                                                                                                   :$ref "GoogleCloudAssuredworkloadsV1ViolationRemediationInstructionsGcloud"},
+                                                                              :consoleInstructions {:description "Remediation instructions to resolve violation via cloud console",
+                                                                                                    :$ref "GoogleCloudAssuredworkloadsV1ViolationRemediationInstructionsConsole"}},
                                                                  :type "object",
-                                                                 :properties {:consoleInstructions {:$ref "GoogleCloudAssuredworkloadsV1ViolationRemediationInstructionsConsole",
-                                                                                                    :description "Remediation instructions to resolve violation via cloud console"},
-                                                                              :gcloudInstructions {:description "Remediation instructions to resolve violation via gcloud cli",
-                                                                                                   :$ref "GoogleCloudAssuredworkloadsV1ViolationRemediationInstructionsGcloud"}}},
- :GoogleProtobufEmpty {:properties {},
-                       :type "object",
+                                                                 :id "GoogleCloudAssuredworkloadsV1ViolationRemediationInstructions"},
+ :GoogleProtobufEmpty {:id "GoogleProtobufEmpty",
+                       :properties {},
                        :description "A generic empty message that you can re-use to avoid defining duplicated empty messages in your APIs. A typical example is to use it as the request or the response type of an API method. For instance: service Foo { rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty); }",
-                       :id "GoogleProtobufEmpty"},
- :GoogleCloudAssuredworkloadsV1WorkloadEkmProvisioningResponse {:properties {:ekmProvisioningState {:type "string",
+                       :type "object"},
+ :GoogleCloudAssuredworkloadsV1WorkloadEkmProvisioningResponse {:properties {:ekmProvisioningState {:enum ["EKM_PROVISIONING_STATE_UNSPECIFIED"
+                                                                                                           "EKM_PROVISIONING_STATE_PENDING"
+                                                                                                           "EKM_PROVISIONING_STATE_FAILED"
+                                                                                                           "EKM_PROVISIONING_STATE_COMPLETED"],
+                                                                                                    :type "string",
                                                                                                     :enumDescriptions ["Default State for Ekm Provisioning"
                                                                                                                        "Pending State for Ekm Provisioning"
                                                                                                                        "Failed State for Ekm Provisioning"
                                                                                                                        "Completed State for Ekm Provisioning"],
-                                                                                                    :description "Indicates Ekm enrollment Provisioning of a given workload.",
-                                                                                                    :enum ["EKM_PROVISIONING_STATE_UNSPECIFIED"
-                                                                                                           "EKM_PROVISIONING_STATE_PENDING"
-                                                                                                           "EKM_PROVISIONING_STATE_FAILED"
-                                                                                                           "EKM_PROVISIONING_STATE_COMPLETED"]},
+                                                                                                    :description "Indicates Ekm enrollment Provisioning of a given workload."},
                                                                              :ekmProvisioningErrorDomain {:description "Indicates Ekm provisioning error if any.",
-                                                                                                          :type "string",
                                                                                                           :enum ["EKM_PROVISIONING_ERROR_DOMAIN_UNSPECIFIED"
                                                                                                                  "UNSPECIFIED_ERROR"
                                                                                                                  "GOOGLE_SERVER_ERROR"
@@ -374,231 +389,248 @@
                                                                                                                              "Internal logic breaks within provisioning code."
                                                                                                                              "Error occurred with the customer not granting permission/creating resource."
                                                                                                                              "Error occurred within the partner's provisioning cluster."
-                                                                                                                             "Resource wasn't provisioned in the required 7 day time period"]},
-                                                                             :ekmProvisioningErrorMapping {:enumDescriptions ["Error is unspecified."
-                                                                                                                              "Service account is used is invalid."
-                                                                                                                              "Iam permission monitoring.MetricsScopeAdmin wasn't applied."
-                                                                                                                              "Iam permission cloudkms.ekmConnectionsAdmin wasn't applied."],
-                                                                                                           :type "string",
+                                                                                                                             "Resource wasn't provisioned in the required 7 day time period"],
+                                                                                                          :type "string"},
+                                                                             :ekmProvisioningErrorMapping {:type "string",
                                                                                                            :description "Detailed error message if Ekm provisioning fails",
                                                                                                            :enum ["EKM_PROVISIONING_ERROR_MAPPING_UNSPECIFIED"
                                                                                                                   "INVALID_SERVICE_ACCOUNT"
                                                                                                                   "MISSING_METRICS_SCOPE_ADMIN_PERMISSION"
-                                                                                                                  "MISSING_EKM_CONNECTION_ADMIN_PERMISSION"]}},
+                                                                                                                  "MISSING_EKM_CONNECTION_ADMIN_PERMISSION"],
+                                                                                                           :enumDescriptions ["Error is unspecified."
+                                                                                                                              "Service account is used is invalid."
+                                                                                                                              "Iam permission monitoring.MetricsScopeAdmin wasn't applied."
+                                                                                                                              "Iam permission cloudkms.ekmConnectionsAdmin wasn't applied."]}},
                                                                 :description "External key management systems(EKM) Provisioning response",
                                                                 :type "object",
                                                                 :id "GoogleCloudAssuredworkloadsV1WorkloadEkmProvisioningResponse"},
- :GoogleCloudAssuredworkloadsV1CreateWorkloadOperationMetadata {:type "object",
-                                                                :id "GoogleCloudAssuredworkloadsV1CreateWorkloadOperationMetadata",
-                                                                :description "Operation metadata to give request details of CreateWorkload.",
-                                                                :properties {:complianceRegime {:type "string",
+ :GoogleCloudAssuredworkloadsV1CreateWorkloadOperationMetadata {:properties {:createTime {:format "google-datetime",
+                                                                                          :description "Optional. Time when the operation was created.",
+                                                                                          :type "string"},
+                                                                             :parent {:type "string",
+                                                                                      :description "Optional. The parent of the workload."},
+                                                                             :complianceRegime {:enum ["COMPLIANCE_REGIME_UNSPECIFIED"
+                                                                                                       "IL4"
+                                                                                                       "CJIS"
+                                                                                                       "FEDRAMP_HIGH"
+                                                                                                       "FEDRAMP_MODERATE"
+                                                                                                       "US_REGIONAL_ACCESS"
+                                                                                                       "REGIONAL_CONTROLS_PREMIUM_US"
+                                                                                                       "HIPAA"
+                                                                                                       "HITRUST"
+                                                                                                       "EU_REGIONS_AND_SUPPORT"
+                                                                                                       "REGIONAL_CONTROLS_PREMIUM_EU"
+                                                                                                       "CA_REGIONS_AND_SUPPORT"
+                                                                                                       "REGIONAL_CONTROLS_PREMIUM_CA"
+                                                                                                       "ITAR"
+                                                                                                       "AU_REGIONS_AND_US_SUPPORT"
+                                                                                                       "REGIONAL_CONTROLS_PREMIUM_AU"
+                                                                                                       "ASSURED_WORKLOADS_FOR_PARTNERS"
+                                                                                                       "ISR_REGIONS"
+                                                                                                       "REGIONAL_CONTROLS_PREMIUM_ISR"
+                                                                                                       "ISR_REGIONS_AND_SUPPORT"
+                                                                                                       "CA_PROTECTED_B"
+                                                                                                       "IL5"
+                                                                                                       "IL2"
+                                                                                                       "JP_REGIONS_AND_SUPPORT"
+                                                                                                       "REGIONAL_CONTROLS_PREMIUM_JP"
+                                                                                                       "KSA_REGIONS_AND_SUPPORT_WITH_SOVEREIGNTY_CONTROLS"
+                                                                                                       "REGIONAL_CONTROLS"
+                                                                                                       "FREE_REGIONS"],
                                                                                                 :enumDescriptions ["Unknown compliance regime."
                                                                                                                    "Information protection as per DoD IL4 requirements."
                                                                                                                    "Criminal Justice Information Services (CJIS) Security policies."
                                                                                                                    "FedRAMP High data protection controls"
                                                                                                                    "FedRAMP Moderate data protection controls"
                                                                                                                    "Assured Workloads For US Regions data protection controls"
+                                                                                                                   "Assured Workloads For US Regions data protection controls"
                                                                                                                    "Health Insurance Portability and Accountability Act controls"
                                                                                                                    "Health Information Trust Alliance controls"
                                                                                                                    "Assured Workloads For EU Regions and Support controls"
+                                                                                                                   "Assured Workloads For EU Regions and Support controls"
+                                                                                                                   "Assured Workloads For Canada Regions and Support controls"
                                                                                                                    "Assured Workloads For Canada Regions and Support controls"
                                                                                                                    "International Traffic in Arms Regulations"
                                                                                                                    "Assured Workloads for Australia Regions and Support controls"
+                                                                                                                   "Assured Workloads for Australia Regions and Support controls"
                                                                                                                    "Assured Workloads for Partners;"
+                                                                                                                   "Assured Workloads for Israel Regions"
                                                                                                                    "Assured Workloads for Israel"
                                                                                                                    "Assured Workloads for Israel Regions"
                                                                                                                    "Assured Workloads for Canada Protected B regime"
                                                                                                                    "Information protection as per DoD IL5 requirements."
                                                                                                                    "Information protection as per DoD IL2 requirements."
                                                                                                                    "Assured Workloads for Japan Regions"
-                                                                                                                   "KSA R5 Controls."],
-                                                                                                :enum ["COMPLIANCE_REGIME_UNSPECIFIED"
-                                                                                                       "IL4"
-                                                                                                       "CJIS"
-                                                                                                       "FEDRAMP_HIGH"
-                                                                                                       "FEDRAMP_MODERATE"
-                                                                                                       "US_REGIONAL_ACCESS"
-                                                                                                       "HIPAA"
-                                                                                                       "HITRUST"
-                                                                                                       "EU_REGIONS_AND_SUPPORT"
-                                                                                                       "CA_REGIONS_AND_SUPPORT"
-                                                                                                       "ITAR"
-                                                                                                       "AU_REGIONS_AND_US_SUPPORT"
-                                                                                                       "ASSURED_WORKLOADS_FOR_PARTNERS"
-                                                                                                       "ISR_REGIONS"
-                                                                                                       "ISR_REGIONS_AND_SUPPORT"
-                                                                                                       "CA_PROTECTED_B"
-                                                                                                       "IL5"
-                                                                                                       "IL2"
-                                                                                                       "JP_REGIONS_AND_SUPPORT"
-                                                                                                       "KSA_REGIONS_AND_SUPPORT_WITH_SOVEREIGNTY_CONTROLS"],
-                                                                                                :description "Optional. Compliance controls that should be applied to the resources managed by the workload."},
-                                                                             :createTime {:format "google-datetime",
-                                                                                          :type "string",
-                                                                                          :description "Optional. Time when the operation was created."},
+                                                                                                                   "Assured Workloads for Japan Regions"
+                                                                                                                   "KSA R5 Controls."
+                                                                                                                   "Assured Workloads for Regional Controls/Free Regions"
+                                                                                                                   "Assured Workloads for Regional Controls/Free Regions"],
+                                                                                                :description "Optional. Compliance controls that should be applied to the resources managed by the workload.",
+                                                                                                :type "string"},
                                                                              :displayName {:description "Optional. The display name of the workload.",
-                                                                                           :type "string"},
-                                                                             :parent {:type "string",
-                                                                                      :description "Optional. The parent of the workload."}}},
- :GoogleLongrunningOperation {:description "This resource represents a long-running operation that is the result of a network API call.",
-                              :properties {:name {:description "The server-assigned name, which is only unique within the same service that originally returns it. If you use the default HTTP mapping, the `name` should be a resource name ending with `operations/{unique_id}`.",
-                                                  :type "string"},
-                                           :response {:description "The normal, successful response of the operation. If the original method returns no data on success, such as `Delete`, the response is `google.protobuf.Empty`. If the original method is standard `Get`/`Create`/`Update`, the response should be the resource. For other methods, the response should have the type `XxxResponse`, where `Xxx` is the original method name. For example, if the original method name is `TakeSnapshot()`, the inferred response type is `TakeSnapshotResponse`.",
-                                                      :additionalProperties {:description "Properties of the object. Contains field @type with type URL.",
-                                                                             :type "any"},
-                                                      :type "object"},
-                                           :error {:$ref "GoogleRpcStatus",
-                                                   :description "The error result of the operation in case of failure or cancellation."},
-                                           :done {:type "boolean",
+                                                                                           :type "string"}},
+                                                                :type "object",
+                                                                :description "Operation metadata to give request details of CreateWorkload.",
+                                                                :id "GoogleCloudAssuredworkloadsV1CreateWorkloadOperationMetadata"},
+ :GoogleLongrunningOperation {:properties {:done {:type "boolean",
                                                   :description "If the value is `false`, it means the operation is still in progress. If `true`, the operation is completed, and either `error` or `response` is available."},
-                                           :metadata {:type "object",
-                                                      :additionalProperties {:description "Properties of the object. Contains field @type with type URL.",
+                                           :name {:description "The server-assigned name, which is only unique within the same service that originally returns it. If you use the default HTTP mapping, the `name` should be a resource name ending with `operations/{unique_id}`.",
+                                                  :type "string"},
+                                           :response {:additionalProperties {:description "Properties of the object. Contains field @type with type URL.",
                                                                              :type "any"},
-                                                      :description "Service-specific metadata associated with the operation. It typically contains progress information and common metadata such as create time. Some services might not provide such metadata. Any method that returns a long-running operation should document the metadata type, if any."}},
+                                                      :type "object",
+                                                      :description "The normal, successful response of the operation. If the original method returns no data on success, such as `Delete`, the response is `google.protobuf.Empty`. If the original method is standard `Get`/`Create`/`Update`, the response should be the resource. For other methods, the response should have the type `XxxResponse`, where `Xxx` is the original method name. For example, if the original method name is `TakeSnapshot()`, the inferred response type is `TakeSnapshotResponse`."},
+                                           :metadata {:type "object",
+                                                      :description "Service-specific metadata associated with the operation. It typically contains progress information and common metadata such as create time. Some services might not provide such metadata. Any method that returns a long-running operation should document the metadata type, if any.",
+                                                      :additionalProperties {:description "Properties of the object. Contains field @type with type URL.",
+                                                                             :type "any"}},
+                                           :error {:$ref "GoogleRpcStatus",
+                                                   :description "The error result of the operation in case of failure or cancellation."}},
+                              :description "This resource represents a long-running operation that is the result of a network API call.",
                               :id "GoogleLongrunningOperation",
                               :type "object"},
- :GoogleCloudAssuredworkloadsV1ListWorkloadsResponse {:id "GoogleCloudAssuredworkloadsV1ListWorkloadsResponse",
-                                                      :properties {:nextPageToken {:type "string",
-                                                                                   :description "The next page token. Return empty if reached the last page."},
-                                                                   :workloads {:type "array",
+ :GoogleCloudAssuredworkloadsV1ListWorkloadsResponse {:description "Response of ListWorkloads endpoint.",
+                                                      :properties {:workloads {:description "List of Workloads under a given parent.",
                                                                                :items {:$ref "GoogleCloudAssuredworkloadsV1Workload"},
-                                                                               :description "List of Workloads under a given parent."}},
-                                                      :type "object",
-                                                      :description "Response of ListWorkloads endpoint."},
- :GoogleCloudAssuredworkloadsV1MoveAnalysisResult {:description "Represents the successful move analysis results for a group.",
-                                                   :properties {:blockers {:items {:$ref "GoogleCloudAssuredworkloadsV1MoveImpact"},
-                                                                           :description "List of blockers. If not resolved, these will result in compliance violations in the target.",
-                                                                           :type "array"},
-                                                                :warnings {:description "List of warnings. These are risks that may or may not result in compliance violations.",
-                                                                           :items {:$ref "GoogleCloudAssuredworkloadsV1MoveImpact"},
-                                                                           :type "array"}},
+                                                                               :type "array"},
+                                                                   :nextPageToken {:type "string",
+                                                                                   :description "The next page token. Return empty if reached the last page."}},
+                                                      :id "GoogleCloudAssuredworkloadsV1ListWorkloadsResponse",
+                                                      :type "object"},
+ :GoogleCloudAssuredworkloadsV1MoveAnalysisResult {:id "GoogleCloudAssuredworkloadsV1MoveAnalysisResult",
                                                    :type "object",
-                                                   :id "GoogleCloudAssuredworkloadsV1MoveAnalysisResult"},
- :GoogleCloudAssuredworkloadsV1AcknowledgeViolationRequest {:id "GoogleCloudAssuredworkloadsV1AcknowledgeViolationRequest",
-                                                            :description "Request for acknowledging the violation",
-                                                            :properties {:acknowledgeType {:type "string",
+                                                   :description "Represents the successful move analysis results for a group.",
+                                                   :properties {:blockers {:type "array",
+                                                                           :description "List of blockers. If not resolved, these will result in compliance violations in the target.",
+                                                                           :items {:$ref "GoogleCloudAssuredworkloadsV1MoveImpact"}},
+                                                                :warnings {:type "array",
+                                                                           :description "List of warnings. These are risks that may or may not result in compliance violations.",
+                                                                           :items {:$ref "GoogleCloudAssuredworkloadsV1MoveImpact"}}}},
+ :GoogleCloudAssuredworkloadsV1AcknowledgeViolationRequest {:properties {:comment {:type "string",
+                                                                                   :description "Required. Business justification explaining the need for violation acknowledgement"},
+                                                                         :nonCompliantOrgPolicy {:deprecated true,
+                                                                                                 :type "string",
+                                                                                                 :description "Optional. This field is deprecated and will be removed in future version of the API. Name of the OrgPolicy which was modified with non-compliant change and resulted in this violation. Format: projects/{project_number}/policies/{constraint_name} folders/{folder_id}/policies/{constraint_name} organizations/{organization_id}/policies/{constraint_name}"},
+                                                                         :acknowledgeType {:description "Optional. Acknowledge type of specified violation.",
                                                                                            :enum ["ACKNOWLEDGE_TYPE_UNSPECIFIED"
                                                                                                   "SINGLE_VIOLATION"
                                                                                                   "EXISTING_CHILD_RESOURCE_VIOLATIONS"],
-                                                                                           :description "Optional. Acknowledge type of specified violation.",
                                                                                            :enumDescriptions ["Acknowledge type unspecified."
                                                                                                               "Acknowledge only the specific violation."
-                                                                                                              "Acknowledge specified orgPolicy violation and also associated resource violations."]},
-                                                                         :comment {:description "Required. Business justification explaining the need for violation acknowledgement",
-                                                                                   :type "string"},
-                                                                         :nonCompliantOrgPolicy {:type "string",
-                                                                                                 :deprecated true,
-                                                                                                 :description "Optional. This field is deprecated and will be removed in future version of the API. Name of the OrgPolicy which was modified with non-compliant change and resulted in this violation. Format: projects/{project_number}/policies/{constraint_name} folders/{folder_id}/policies/{constraint_name} organizations/{organization_id}/policies/{constraint_name}"}},
+                                                                                                              "Acknowledge specified orgPolicy violation and also associated resource violations."],
+                                                                                           :type "string"}},
+                                                            :description "Request for acknowledging the violation",
+                                                            :id "GoogleCloudAssuredworkloadsV1AcknowledgeViolationRequest",
                                                             :type "object"},
- :GoogleCloudAssuredworkloadsV1WorkloadComplianceStatus {:id "GoogleCloudAssuredworkloadsV1WorkloadComplianceStatus",
-                                                         :description "Represents the Compliance Status of this workload",
-                                                         :properties {:acknowledgedViolationCount {:type "integer",
-                                                                                                   :format "int32",
-                                                                                                   :description "Number of current orgPolicy violations which are acknowledged."},
-                                                                      :activeResourceViolationCount {:format "int32",
+ :GoogleCloudAssuredworkloadsV1WorkloadComplianceStatus {:properties {:acknowledgedViolationCount {:format "int32",
+                                                                                                   :description "Number of current orgPolicy violations which are acknowledged.",
+                                                                                                   :type "integer"},
+                                                                      :activeResourceViolationCount {:type "integer",
                                                                                                      :description "Number of current resource violations which are acknowledged.",
-                                                                                                     :type "integer"},
+                                                                                                     :format "int32"},
                                                                       :activeViolationCount {:format "int32",
                                                                                              :type "integer",
                                                                                              :description "Number of current orgPolicy violations which are not acknowledged."},
-                                                                      :acknowledgedResourceViolationCount {:description "Number of current resource violations which are not acknowledged.",
-                                                                                                           :type "integer",
-                                                                                                           :format "int32"}},
-                                                         :type "object"},
- :GoogleCloudAssuredworkloadsV1ViolationRemediationInstructionsGcloud {:properties {:additionalLinks {:type "array",
-                                                                                                      :description "Additional urls for more information about steps",
-                                                                                                      :items {:type "string"}},
-                                                                                    :steps {:items {:type "string"},
-                                                                                            :type "array",
-                                                                                            :description "Steps to resolve violation via gcloud cli"},
-                                                                                    :gcloudCommands {:items {:type "string"},
-                                                                                                     :description "Gcloud command to resolve violation",
-                                                                                                     :type "array"}},
+                                                                      :acknowledgedResourceViolationCount {:type "integer",
+                                                                                                           :format "int32",
+                                                                                                           :description "Number of current resource violations which are not acknowledged."}},
+                                                         :description "Represents the Compliance Status of this workload",
+                                                         :type "object",
+                                                         :id "GoogleCloudAssuredworkloadsV1WorkloadComplianceStatus"},
+ :GoogleCloudAssuredworkloadsV1ViolationRemediationInstructionsGcloud {:description "Remediation instructions to resolve violation via gcloud cli",
                                                                        :type "object",
-                                                                       :description "Remediation instructions to resolve violation via gcloud cli",
-                                                                       :id "GoogleCloudAssuredworkloadsV1ViolationRemediationInstructionsGcloud"},
+                                                                       :id "GoogleCloudAssuredworkloadsV1ViolationRemediationInstructionsGcloud",
+                                                                       :properties {:steps {:description "Steps to resolve violation via gcloud cli",
+                                                                                            :type "array",
+                                                                                            :items {:type "string"}},
+                                                                                    :additionalLinks {:description "Additional urls for more information about steps",
+                                                                                                      :items {:type "string"},
+                                                                                                      :type "array"},
+                                                                                    :gcloudCommands {:type "array",
+                                                                                                     :description "Gcloud command to resolve violation",
+                                                                                                     :items {:type "string"}}}},
  :GoogleCloudAssuredworkloadsV1WorkloadResourceInfo {:type "object",
                                                      :id "GoogleCloudAssuredworkloadsV1WorkloadResourceInfo",
-                                                     :properties {:resourceType {:enum ["RESOURCE_TYPE_UNSPECIFIED"
+                                                     :description "Represent the resources that are children of this Workload.",
+                                                     :properties {:resourceId {:format "int64",
+                                                                               :description "Resource identifier. For a project this represents project_number.",
+                                                                               :type "string"},
+                                                                  :resourceType {:enum ["RESOURCE_TYPE_UNSPECIFIED"
                                                                                         "CONSUMER_PROJECT"
                                                                                         "CONSUMER_FOLDER"
                                                                                         "ENCRYPTION_KEYS_PROJECT"
                                                                                         "KEYRING"],
-                                                                                 :type "string",
-                                                                                 :enumDescriptions ["Unknown resource type."
-                                                                                                    "Deprecated. Existing workloads will continue to support this, but new CreateWorkloadRequests should not specify this as an input value."
-                                                                                                    "Consumer Folder."
-                                                                                                    "Consumer project containing encryption keys."
-                                                                                                    "Keyring resource that hosts encryption keys."],
                                                                                  :enumDeprecated [false
                                                                                                   true
                                                                                                   false
                                                                                                   false
                                                                                                   false],
-                                                                                 :description "Indicates the type of resource."},
-                                                                  :resourceId {:format "int64",
-                                                                               :description "Resource identifier. For a project this represents project_number.",
-                                                                               :type "string"}},
-                                                     :description "Represent the resources that are children of this Workload."},
- :GoogleCloudAssuredworkloadsV1WorkloadResourceSettings {:description "Represent the custom settings for the resources to be created.",
-                                                         :type "object",
+                                                                                 :enumDescriptions ["Unknown resource type."
+                                                                                                    "Deprecated. Existing workloads will continue to support this, but new CreateWorkloadRequests should not specify this as an input value."
+                                                                                                    "Consumer Folder."
+                                                                                                    "Consumer project containing encryption keys."
+                                                                                                    "Keyring resource that hosts encryption keys."],
+                                                                                 :description "Indicates the type of resource.",
+                                                                                 :type "string"}}},
+ :GoogleCloudAssuredworkloadsV1WorkloadResourceSettings {:type "object",
                                                          :id "GoogleCloudAssuredworkloadsV1WorkloadResourceSettings",
-                                                         :properties {:displayName {:type "string",
-                                                                                    :description "User-assigned resource display name. If not empty it will be used to create a resource with the specified name."},
-                                                                      :resourceId {:type "string",
-                                                                                   :description "Resource identifier. For a project this represents project_id. If the project is already taken, the workload creation will fail. For KeyRing, this represents the keyring_id. For a folder, don't set this value as folder_id is assigned by Google."},
-                                                                      :resourceType {:enumDeprecated [false
-                                                                                                      true
-                                                                                                      false
-                                                                                                      false
-                                                                                                      false],
+                                                         :description "Represent the custom settings for the resources to be created.",
+                                                         :properties {:displayName {:description "User-assigned resource display name. If not empty it will be used to create a resource with the specified name.",
+                                                                                    :type "string"},
+                                                                      :resourceType {:enum ["RESOURCE_TYPE_UNSPECIFIED"
+                                                                                            "CONSUMER_PROJECT"
+                                                                                            "CONSUMER_FOLDER"
+                                                                                            "ENCRYPTION_KEYS_PROJECT"
+                                                                                            "KEYRING"],
                                                                                      :enumDescriptions ["Unknown resource type."
                                                                                                         "Deprecated. Existing workloads will continue to support this, but new CreateWorkloadRequests should not specify this as an input value."
                                                                                                         "Consumer Folder."
                                                                                                         "Consumer project containing encryption keys."
                                                                                                         "Keyring resource that hosts encryption keys."],
-                                                                                     :enum ["RESOURCE_TYPE_UNSPECIFIED"
-                                                                                            "CONSUMER_PROJECT"
-                                                                                            "CONSUMER_FOLDER"
-                                                                                            "ENCRYPTION_KEYS_PROJECT"
-                                                                                            "KEYRING"],
-                                                                                     :type "string",
-                                                                                     :description "Indicates the type of resource. This field should be specified to correspond the id to the right project type (CONSUMER_PROJECT or ENCRYPTION_KEYS_PROJECT)"}}},
- :GoogleLongrunningListOperationsResponse {:id "GoogleLongrunningListOperationsResponse",
-                                           :properties {:operations {:description "A list of operations that matches the specified filter in the request.",
-                                                                     :items {:$ref "GoogleLongrunningOperation"},
-                                                                     :type "array"},
-                                                        :nextPageToken {:description "The standard List next-page token.",
-                                                                        :type "string"}},
-                                           :type "object",
-                                           :description "The response message for Operations.ListOperations."},
+                                                                                     :description "Indicates the type of resource. This field should be specified to correspond the id to the right project type (CONSUMER_PROJECT or ENCRYPTION_KEYS_PROJECT)",
+                                                                                     :enumDeprecated [false
+                                                                                                      true
+                                                                                                      false
+                                                                                                      false
+                                                                                                      false],
+                                                                                     :type "string"},
+                                                                      :resourceId {:type "string",
+                                                                                   :description "Resource identifier. For a project this represents project_id. If the project is already taken, the workload creation will fail. For KeyRing, this represents the keyring_id. For a folder, don't set this value as folder_id is assigned by Google."}}},
+ :GoogleLongrunningListOperationsResponse {:properties {:nextPageToken {:type "string",
+                                                                        :description "The standard List next-page token."},
+                                                        :operations {:description "A list of operations that matches the specified filter in the request.",
+                                                                     :type "array",
+                                                                     :items {:$ref "GoogleLongrunningOperation"}}},
+                                           :id "GoogleLongrunningListOperationsResponse",
+                                           :description "The response message for Operations.ListOperations.",
+                                           :type "object"},
  :GoogleCloudAssuredworkloadsV1MoveImpact {:type "object",
-                                           :properties {:detail {:description "Explanation of the impact.",
-                                                                 :type "string"}},
                                            :description "Represents the impact of moving the asset to the target.",
-                                           :id "GoogleCloudAssuredworkloadsV1MoveImpact"},
- :GoogleCloudAssuredworkloadsV1ViolationRemediationInstructionsConsole {:type "object",
-                                                                        :description "Remediation instructions to resolve violation via cloud console",
-                                                                        :properties {:steps {:description "Steps to resolve violation via cloud console",
-                                                                                             :items {:type "string"},
+                                           :id "GoogleCloudAssuredworkloadsV1MoveImpact",
+                                           :properties {:detail {:type "string",
+                                                                 :description "Explanation of the impact."}}},
+ :GoogleCloudAssuredworkloadsV1ViolationRemediationInstructionsConsole {:properties {:steps {:items {:type "string"},
+                                                                                             :description "Steps to resolve violation via cloud console",
                                                                                              :type "array"},
+                                                                                     :additionalLinks {:type "array",
+                                                                                                       :items {:type "string"},
+                                                                                                       :description "Additional urls for more information about steps"},
                                                                                      :consoleUris {:description "Link to console page where violations can be resolved",
                                                                                                    :items {:type "string"},
-                                                                                                   :type "array"},
-                                                                                     :additionalLinks {:type "array",
-                                                                                                       :description "Additional urls for more information about steps",
-                                                                                                       :items {:type "string"}}},
+                                                                                                   :type "array"}},
+                                                                        :type "object",
+                                                                        :description "Remediation instructions to resolve violation via cloud console",
                                                                         :id "GoogleCloudAssuredworkloadsV1ViolationRemediationInstructionsConsole"},
- :GoogleRpcStatus {:properties {:details {:type "array",
-                                          :description "A list of messages that carry the error details. There is a common set of message types for APIs to use.",
-                                          :items {:type "object",
-                                                  :additionalProperties {:type "any",
-                                                                         :description "Properties of the object. Contains field @type with type URL."}}},
-                                :code {:description "The status code, which should be an enum value of google.rpc.Code.",
-                                       :type "integer",
+ :GoogleRpcStatus {:description "The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).",
+                   :properties {:details {:items {:type "object",
+                                                  :additionalProperties {:description "Properties of the object. Contains field @type with type URL.",
+                                                                         :type "any"}},
+                                          :type "array",
+                                          :description "A list of messages that carry the error details. There is a common set of message types for APIs to use."},
+                                :code {:type "integer",
+                                       :description "The status code, which should be an enum value of google.rpc.Code.",
                                        :format "int32"},
                                 :message {:description "A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the google.rpc.Status.details field, or localized by the client.",
                                           :type "string"}},
-                   :description "The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).",
                    :id "GoogleRpcStatus",
                    :type "object"}}

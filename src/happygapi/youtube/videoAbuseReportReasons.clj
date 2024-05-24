@@ -1,7 +1,7 @@
 (ns happygapi.youtube.videoAbuseReportReasons
   "YouTube Data API v3: videoAbuseReportReasons.
   The YouTube Data API v3 is an API that provides access to YouTube data, such as videos, playlists, and channels.
-  See: https://developers.google.com/youtube/api/reference/rest/v3/videoAbuseReportReasons"
+  See: https://developers.google.com/youtube/docs/reference/rest/v3/videoAbuseReportReasons"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

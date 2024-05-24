@@ -1,7 +1,7 @@
 (ns happygapi.siteVerification.webResource
   "Google Site Verification API: webResource.
   Verifies ownership of websites or domains with Google.
-  See: https://developers.google.com/site-verification/api/reference/rest/v1/webResource"
+  See: https://developers.google.com/site-verification/docs/reference/rest/v1/webResource"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

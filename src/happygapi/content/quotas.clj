@@ -1,7 +1,7 @@
 (ns happygapi.content.quotas
   "Content API for Shopping: quotas.
   Manage your product listings and accounts for Google Shopping
-  See: https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/quotas"
+  See: https://developers.google.com/shopping-content/v2/docs/reference/rest/v2.1/quotas"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

@@ -1,7 +1,7 @@
 (ns happygapi.cloudscheduler.projects
   "Cloud Scheduler API: projects.
   Creates and manages jobs run on a regular recurring schedule.
-  See: https://cloud.google.com/scheduler/api/reference/rest/v1/projects"
+  See: https://cloud.google.com/scheduler/docs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

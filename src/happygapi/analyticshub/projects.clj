@@ -1,7 +1,7 @@
 (ns happygapi.analyticshub.projects
   "Analytics Hub API: projects.
   Exchange data and analytics assets securely and efficiently.
-  See: https://cloud.google.com/bigquery/docs/analytics-hub-introductionapi/reference/rest/v1/projects"
+  See: https://cloud.google.com/bigquery/docs/analytics-hub-introductiondocs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -420,7 +420,8 @@
    :categories [string],
    :primaryContact string,
    :bigqueryDataset {:dataset string,
-                     :selectedResources [SelectedResource]}}
+                     :selectedResources [SelectedResource],
+                     :restrictedExportPolicy RestrictedExportPolicy}}
   
   Updates an existing listing."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
@@ -501,7 +502,8 @@
    :categories [string],
    :primaryContact string,
    :bigqueryDataset {:dataset string,
-                     :selectedResources [SelectedResource]}}
+                     :selectedResources [SelectedResource],
+                     :restrictedExportPolicy RestrictedExportPolicy}}
   
   Creates a new listing."
   {:scopes ["https://www.googleapis.com/auth/bigquery"

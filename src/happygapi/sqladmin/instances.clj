@@ -1,7 +1,7 @@
 (ns happygapi.sqladmin.instances
   "Cloud SQL Admin API: instances.
   API for Cloud SQL database instance management
-  See: https://developers.google.com/cloud-sql/api/reference/rest/v1/instances"
+  See: https://developers.google.com/cloud-sql/docs/reference/rest/v1/instances"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -87,7 +87,8 @@
    :diskEncryptionConfiguration {:kmsKeyName string, :kind string},
    :databaseVersion string,
    :maxDiskSize string,
-   :replicationCluster {:failoverDrReplicaName string,
+   :replicationCluster {:psaWriteEndpoint string,
+                        :failoverDrReplicaName string,
                         :drReplica boolean},
    :instanceType string,
    :rootPassword string,
@@ -287,7 +288,8 @@
    :diskEncryptionConfiguration {:kmsKeyName string, :kind string},
    :databaseVersion string,
    :maxDiskSize string,
-   :replicationCluster {:failoverDrReplicaName string,
+   :replicationCluster {:psaWriteEndpoint string,
+                        :failoverDrReplicaName string,
                         :drReplica boolean},
    :instanceType string,
    :rootPassword string,
@@ -477,7 +479,8 @@
    :diskEncryptionConfiguration {:kmsKeyName string, :kind string},
    :databaseVersion string,
    :maxDiskSize string,
-   :replicationCluster {:failoverDrReplicaName string,
+   :replicationCluster {:psaWriteEndpoint string,
+                        :failoverDrReplicaName string,
                         :drReplica boolean},
    :instanceType string,
    :rootPassword string,
@@ -765,7 +768,7 @@
   
   Optional parameters: failover
   
-  Promotes the read replica instance to be a stand-alone Cloud SQL instance. Using this operation might cause your instance to restart."
+  Promotes the read replica instance to be an independent Cloud SQL primary instance. Using this operation might cause your instance to restart."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/sqlservice.admin"]}
   [auth parameters]
@@ -1051,7 +1054,7 @@
   
   Optional parameters: dbTimeout
   
-  Switches over from the primary instance to the replica instance."
+  Switches over from the primary instance to the designated DR replica instance."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/sqlservice.admin"]}
   [auth parameters]
@@ -1132,7 +1135,9 @@
                                       :recoveryOnly boolean,
                                       :bakType string,
                                       :stopAt string,
-                                      :stopAtMark string}}}
+                                      :stopAtMark string},
+                   :sqlImportOptions {:threads integer,
+                                      :parallel boolean}}}
   
   Imports data into a Cloud SQL instance from a SQL dump or CSV file in Cloud Storage."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}

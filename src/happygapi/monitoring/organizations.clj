@@ -1,7 +1,7 @@
 (ns happygapi.monitoring.organizations
   "Cloud Monitoring API: organizations.
   Manages your Cloud Monitoring data and configurations.
-  See: https://cloud.google.com/monitoring/api/api/reference/rest/v3/organizations"
+  See: https://cloud.google.com/monitoring/api/docs/reference/rest/v3/organizations"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

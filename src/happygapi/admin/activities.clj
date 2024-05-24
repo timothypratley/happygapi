@@ -1,7 +1,7 @@
 (ns happygapi.admin.activities
   "Admin SDK API: activities.
   Admin SDK lets administrators of enterprise domains to view and manage resources like user, groups etc. It also provides audit and usage reports of domain.
-  See: https://developers.google.com/admin-sdk/api/reference/rest/reports_v1/activities"
+  See: https://developers.google.com/admin-sdk/docs/reference/rest/reports_v1/activities"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

@@ -1,10 +1,65 @@
 (ns happygapi.youtube.liveChatMessages
   "YouTube Data API v3: liveChatMessages.
   The YouTube Data API v3 is an API that provides access to YouTube data, such as videos, playlists, and channels.
-  See: https://developers.google.com/youtube/api/reference/rest/v3/liveChatMessages"
+  See: https://developers.google.com/youtube/docs/reference/rest/v3/liveChatMessages"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
+
+(defn transition$
+  "https://developers.google.com/youtube/api/reference/rest/v3/liveChatMessages/transition
+  
+  Required parameters: none
+  
+  Optional parameters: id, status
+  
+  Transition a durable chat event."
+  {:scopes ["https://www.googleapis.com/auth/youtube"
+            "https://www.googleapis.com/auth/youtube.force-ssl"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://youtube.googleapis.com/"
+     "youtube/v3/liveChat/messages/transition"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn list$
+  "https://developers.google.com/youtube/api/reference/rest/v3/liveChatMessages/list
+  
+  Required parameters: liveChatId, part
+  
+  Optional parameters: maxResults, pageToken, profileImageSize, hl
+  
+  Retrieves a list of resources, possibly filtered."
+  {:scopes ["https://www.googleapis.com/auth/youtube"
+            "https://www.googleapis.com/auth/youtube.force-ssl"
+            "https://www.googleapis.com/auth/youtube.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:part :liveChatId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://youtube.googleapis.com/"
+     "youtube/v3/liveChat/messages"
+     #{:part :liveChatId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
 
 (defn delete$
   "https://developers.google.com/youtube/api/reference/rest/v3/liveChatMessages/delete
@@ -24,34 +79,6 @@
      "https://youtube.googleapis.com/"
      "youtube/v3/liveChat/messages"
      #{:id}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn list$
-  "https://developers.google.com/youtube/api/reference/rest/v3/liveChatMessages/list
-  
-  Required parameters: part, liveChatId
-  
-  Optional parameters: pageToken, maxResults, profileImageSize, hl
-  
-  Retrieves a list of resources, possibly filtered."
-  {:scopes ["https://www.googleapis.com/auth/youtube"
-            "https://www.googleapis.com/auth/youtube.force-ssl"
-            "https://www.googleapis.com/auth/youtube.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:part :liveChatId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://youtube.googleapis.com/"
-     "youtube/v3/liveChat/messages"
-     #{:part :liveChatId}
      parameters)
     (merge-with
      merge
@@ -88,17 +115,17 @@
              :displayMessage string,
              :messageRetractedDetails LiveChatMessageRetractedDetails,
              :membershipGiftingDetails LiveChatMembershipGiftingDetails},
-   :kind string,
-   :id string,
    :authorDetails {:isVerified boolean,
-                   :isChatSponsor boolean,
                    :channelId string,
+                   :isChatSponsor boolean,
                    :profileImageUrl string,
                    :channelUrl string,
-                   :isChatModerator boolean,
                    :displayName string,
+                   :isChatModerator boolean,
                    :isChatOwner boolean},
-   :etag string}
+   :etag string,
+   :kind string,
+   :id string}
   
   Inserts a new resource into this collection."
   {:scopes ["https://www.googleapis.com/auth/youtube"

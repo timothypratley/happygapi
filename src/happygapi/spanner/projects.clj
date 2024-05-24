@@ -1,7 +1,7 @@
 (ns happygapi.spanner.projects
   "Cloud Spanner API: projects.
   Cloud Spanner is a managed, mission-critical, globally consistent and scalable relational database service.
-  See: https://cloud.google.com/spanner/api/reference/rest/v1/projects"
+  See: https://cloud.google.com/spanner/docs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -424,33 +424,6 @@
       :as :json}
      auth))))
 
-(defn instances-list$
-  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageSize, pageToken, filter, instanceDeadline
-  
-  Lists all instances in the given project."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/spanner.admin"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://spanner.googleapis.com/"
-     "v1/{+parent}/instances"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn instances-get$
   "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/get
   
@@ -478,41 +451,28 @@
       :as :json}
      auth))))
 
-(defn instances-create$
-  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/create
+(defn instances-setIamPolicy$
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/setIamPolicy
   
-  Required parameters: parent
+  Required parameters: resource
   
   Optional parameters: none
   
   Body: 
   
-  {:instanceId string,
-   :instance {:labels {},
-              :freeInstanceMetadata FreeInstanceMetadata,
-              :instanceType string,
-              :config string,
-              :displayName string,
-              :name string,
-              :createTime string,
-              :state string,
-              :updateTime string,
-              :endpointUris [string],
-              :processingUnits integer,
-              :nodeCount integer,
-              :autoscalingConfig AutoscalingConfig}}
+  {:policy {:version integer, :bindings [Binding], :etag string}}
   
-  Creates an instance and begins preparing it to begin serving. The returned long-running operation can be used to track the progress of preparing the new instance. The instance name is assigned by the caller. If the named instance already exists, `CreateInstance` returns `ALREADY_EXISTS`. Immediately upon completion of this request: * The instance is readable via the API, with all requested attributes but no allocated resources. Its state is `CREATING`. Until completion of the returned operation: * Cancelling the operation renders the instance immediately unreadable via the API. * The instance can be deleted. * All other attempts to modify the instance are rejected. Upon completion of the returned operation: * Billing for all successfully-allocated resources begins (some types may have lower than the requested levels). * Databases can be created in the instance. * The instance's allocated resource levels are readable via the API. * The instance's state becomes `READY`. The returned long-running operation will have a name of the format `/operations/` and can be used to track creation of the instance. The metadata field type is CreateInstanceMetadata. The response field type is Instance, if successful."
+  Sets the access control policy on an instance resource. Replaces any existing policy. Authorization requires `spanner.instances.setIamPolicy` on resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.admin"]}
   [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
+  {:pre [(util/has-keys? parameters #{:resource})]}
   (util/get-response
    (http/post
     (util/get-url
      "https://spanner.googleapis.com/"
-     "v1/{+parent}/instances"
-     #{:parent}
+     "v1/{+resource}:setIamPolicy"
+     #{:resource}
      parameters)
     (merge-with
      merge
@@ -570,6 +530,118 @@
       :as :json}
      auth))))
 
+(defn instances-testIamPermissions$
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/testIamPermissions
+  
+  Required parameters: resource
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:permissions [string]}
+  
+  Returns permissions that the caller has on the specified instance resource. Attempting this RPC on a non-existent Cloud Spanner instance resource will result in a NOT_FOUND error if the user has `spanner.instances.list` permission on the containing Google Cloud Project. Otherwise returns an empty set of permissions."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/spanner.admin"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://spanner.googleapis.com/"
+     "v1/{+resource}:testIamPermissions"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn instances-create$
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:instanceId string,
+   :instance {:labels {},
+              :freeInstanceMetadata FreeInstanceMetadata,
+              :instanceType string,
+              :config string,
+              :displayName string,
+              :name string,
+              :createTime string,
+              :state string,
+              :updateTime string,
+              :endpointUris [string],
+              :processingUnits integer,
+              :nodeCount integer,
+              :autoscalingConfig AutoscalingConfig}}
+  
+  Creates an instance and begins preparing it to begin serving. The returned long-running operation can be used to track the progress of preparing the new instance. The instance name is assigned by the caller. If the named instance already exists, `CreateInstance` returns `ALREADY_EXISTS`. Immediately upon completion of this request: * The instance is readable via the API, with all requested attributes but no allocated resources. Its state is `CREATING`. Until completion of the returned operation: * Cancelling the operation renders the instance immediately unreadable via the API. * The instance can be deleted. * All other attempts to modify the instance are rejected. Upon completion of the returned operation: * Billing for all successfully-allocated resources begins (some types may have lower than the requested levels). * Databases can be created in the instance. * The instance's allocated resource levels are readable via the API. * The instance's state becomes `READY`. The returned long-running operation will have a name of the format `/operations/` and can be used to track creation of the instance. The metadata field type is CreateInstanceMetadata. The response field type is Instance, if successful."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/spanner.admin"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://spanner.googleapis.com/"
+     "v1/{+parent}/instances"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn instances-move$
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/move
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:targetConfig string}
+  
+  Moves the instance to the target instance config. The returned long-running operation can be used to track the progress of moving the instance. `MoveInstance` returns `FAILED_PRECONDITION` if the instance meets any of the following criteria: * Has an ongoing move to a different instance config * Has backups * Has an ongoing update * Is under free trial * Contains any CMEK-enabled databases While the operation is pending: * All other attempts to modify the instance, including changes to its compute capacity, are rejected. * The following database and backup admin operations are rejected: * DatabaseAdmin.CreateDatabase, * DatabaseAdmin.UpdateDatabaseDdl (Disabled if default_leader is specified in the request.) * DatabaseAdmin.RestoreDatabase * DatabaseAdmin.CreateBackup * DatabaseAdmin.CopyBackup * Both the source and target instance configs are subject to hourly compute and storage charges. * The instance may experience higher read-write latencies and a higher transaction abort rate. However, moving an instance does not cause any downtime. The returned long-running operation will have a name of the format `/operations/` and can be used to track the move instance operation. The metadata field type is MoveInstanceMetadata. The response field type is Instance, if successful. Cancelling the operation sets its metadata's cancel_time. Cancellation is not immediate since it involves moving any data previously moved to target instance config back to the original instance config. The same operation can be used to track the progress of the cancellation. Upon successful completion of the cancellation, the operation terminates with CANCELLED status. Upon completion(if not cancelled) of the returned operation: * Instance would be successfully moved to the target instance config. * You are billed for compute and storage in target instance config. Authorization requires `spanner.instances.update` permission on the resource instance. For more details, please see [documentation](https://cloud.google.com/spanner/docs/move-instance)."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/spanner.admin"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://spanner.googleapis.com/"
+     "v1/{+name}:move"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn instances-delete$
   "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/delete
   
@@ -592,39 +664,6 @@
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn instances-setIamPolicy$
-  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/setIamPolicy
-  
-  Required parameters: resource
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:policy {:version integer, :bindings [Binding], :etag string}}
-  
-  Sets the access control policy on an instance resource. Replaces any existing policy. Authorization requires `spanner.instances.setIamPolicy` on resource."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/spanner.admin"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:resource})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://spanner.googleapis.com/"
-     "v1/{+resource}:setIamPolicy"
-     #{:resource}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -663,34 +702,28 @@
       :as :json}
      auth))))
 
-(defn instances-testIamPermissions$
-  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/testIamPermissions
+(defn instances-list$
+  "https://cloud.google.com/spanner/api/reference/rest/v1/projects/instances/list
   
-  Required parameters: resource
+  Required parameters: parent
   
-  Optional parameters: none
+  Optional parameters: pageSize, pageToken, filter, instanceDeadline
   
-  Body: 
-  
-  {:permissions [string]}
-  
-  Returns permissions that the caller has on the specified instance resource. Attempting this RPC on a non-existent Cloud Spanner instance resource will result in a NOT_FOUND error if the user has `spanner.instances.list` permission on the containing Google Cloud Project. Otherwise returns an empty set of permissions."
+  Lists all instances in the given project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/spanner.admin"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:resource})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
-   (http/post
+   (http/get
     (util/get-url
      "https://spanner.googleapis.com/"
-     "v1/{+resource}:testIamPermissions"
-     #{:resource}
+     "v1/{+parent}/instances"
+     #{:parent}
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -805,7 +838,7 @@
    :reconciling boolean,
    :databaseDialect string,
    :enableDropProtection boolean,
-   :encryptionConfig {:kmsKeyName string}}
+   :encryptionConfig {:kmsKeyName string, :kmsKeyNames [string]}}
   
   Updates a Cloud Spanner database. The returned long-running operation can be used to track the progress of updating the database. If the named database does not exist, returns `NOT_FOUND`. While the operation is pending: * The database's reconciling field is set to true. * Cancelling the operation is best-effort. If the cancellation succeeds, the operation metadata's cancel_time is set, the updates are reverted, and the operation terminates with a `CANCELLED` status. * New UpdateDatabase requests will return a `FAILED_PRECONDITION` error until the pending operation is done (returns successfully or with error). * Reading the database via the API continues to give the pre-request values. Upon completion of the returned operation: * The new values are in effect and readable via the API. * The database's reconciling field becomes false. The returned long-running operation will have a name of the format `projects//instances//databases//operations/` and can be used to track the database modification. The metadata field type is UpdateDatabaseMetadata. The response field type is Database, if successful."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -873,7 +906,9 @@
   
   {:databaseId string,
    :backup string,
-   :encryptionConfig {:encryptionType string, :kmsKeyName string}}
+   :encryptionConfig {:encryptionType string,
+                      :kmsKeyName string,
+                      :kmsKeyNames [string]}}
   
   Create a new database by restoring from a completed backup. The new database must be in the same project and in an instance with the same instance configuration as the instance containing the backup. The returned database long-running operation has a name of the format `projects//instances//databases//operations/`, and can be used to track the progress of the operation, and to cancel it. The metadata field type is RestoreDatabaseMetadata. The response type is Database, if successful. Cancelling the returned operation will stop the restore and delete the database. There can be only one database being restored into an instance at a time. Once the restore operation completes, a new restore operation can be initiated, without waiting for the optimize operation associated with the first restore to complete."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -908,7 +943,7 @@
   
   {:createStatement string,
    :extraStatements [string],
-   :encryptionConfig {:kmsKeyName string},
+   :encryptionConfig {:kmsKeyName string, :kmsKeyNames [string]},
    :databaseDialect string,
    :protoDescriptors string}
   
@@ -2025,7 +2060,9 @@
   {:backupId string,
    :sourceBackup string,
    :expireTime string,
-   :encryptionConfig {:encryptionType string, :kmsKeyName string}}
+   :encryptionConfig {:encryptionType string,
+                      :kmsKeyName string,
+                      :kmsKeyNames [string]}}
   
   Starts copying a Cloud Spanner Backup. The returned backup long-running operation will have a name of the format `projects//instances//backups//operations/` and can be used to track copying of the backup. The operation is associated with the destination backup. The metadata field type is CopyBackupMetadata. The response field type is Backup, if successful. Cancelling the returned operation will stop the copying and delete the destination backup. Concurrent CopyBackup requests can run on the same source backup."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -2100,6 +2137,9 @@
    :sizeBytes string,
    :createTime string,
    :state string,
+   :encryptionInformation [{:encryptionType string,
+                            :encryptionStatus Status,
+                            :kmsKeyVersion string}],
    :referencingBackups [string],
    :database string,
    :databaseDialect string,
@@ -2166,7 +2206,7 @@
   
   Required parameters: parent
   
-  Optional parameters: backupId, encryptionConfig.encryptionType, encryptionConfig.kmsKeyName
+  Optional parameters: backupId, encryptionConfig.encryptionType, encryptionConfig.kmsKeyName, encryptionConfig.kmsKeyNames
   
   Body: 
   
@@ -2179,6 +2219,9 @@
    :sizeBytes string,
    :createTime string,
    :state string,
+   :encryptionInformation [{:encryptionType string,
+                            :encryptionStatus Status,
+                            :kmsKeyVersion string}],
    :referencingBackups [string],
    :database string,
    :databaseDialect string,

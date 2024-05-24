@@ -1,7 +1,7 @@
 (ns happygapi.servicedirectory.projects
   "Service Directory API: projects.
   Service Directory is a platform for discovering, publishing, and connecting services. 
-  See: https://cloud.google.com/service-directoryapi/reference/rest/v1/projects"
+  See: https://cloud.google.com/service-directorydocs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

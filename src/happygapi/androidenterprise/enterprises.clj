@@ -1,7 +1,7 @@
 (ns happygapi.androidenterprise.enterprises
   "Google Play EMM API: enterprises.
   Manages the deployment of apps to Android Enterprise devices.
-  See: https://developers.google.com/android/work/play/emm-apiapi/reference/rest/v1/enterprises"
+  See: https://developers.google.com/android/work/play/emm-apidocs/reference/rest/v1/enterprises"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -108,7 +108,7 @@
    :managedConfigurations {:enabled boolean},
    :zeroTouch {:enabled boolean}}
   
-  Returns a unique token to access an embeddable UI. To generate a web UI, pass the generated token into the managed Google Play javascript API. Each token may only be used to start one UI session. See the javascript API documentation for further information."
+  Returns a unique token to access an embeddable UI. To generate a web UI, pass the generated token into the managed Google Play javascript API. Each token may only be used to start one UI session. See the JavaScript API documentation for further information."
   {:scopes ["https://www.googleapis.com/auth/androidenterprise"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:enterpriseId})]}

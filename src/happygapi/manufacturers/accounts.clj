@@ -1,7 +1,7 @@
 (ns happygapi.manufacturers.accounts
   "Manufacturer Center API: accounts.
   Public API for managing Manufacturer Center related data.
-  See: https://developers.google.com/manufacturers/api/reference/rest/v1/accounts"
+  See: https://developers.google.com/manufacturers/docs/reference/rest/v1/accounts"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

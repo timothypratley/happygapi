@@ -1,7 +1,7 @@
 (ns happygapi.dns.changes
   "Cloud DNS API: changes.
   
-  See: https://cloud.google.com/dns/docsapi/reference/rest/v1/changes"
+  See: https://cloud.google.com/dns/docsdocs/reference/rest/v1/changes"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

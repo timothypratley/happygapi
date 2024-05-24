@@ -1,7 +1,7 @@
 (ns happygapi.workflows.projects
   "Workflows API: projects.
   Manage workflow definitions. To execute workflows and manage executions, see the Workflows Executions API.
-  See: https://cloud.google.com/workflowsapi/reference/rest/v1/projects"
+  See: https://cloud.google.com/workflowsdocs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -200,6 +200,7 @@
   {:description string,
    :serviceAccount string,
    :labels {},
+   :allKmsKeysVersions [string],
    :cryptoKeyName string,
    :sourceContents string,
    :revisionCreateTime string,
@@ -210,7 +211,9 @@
    :stateError {:details string, :type string},
    :updateTime string,
    :userEnvVars {},
-   :callLogLevel string}
+   :cryptoKeyVersion string,
+   :callLogLevel string,
+   :allKmsKeys [string]}
   
   Creates a new workflow. If a workflow with the specified name already exists in the specified project and location, the long running operation returns a ALREADY_EXISTS error."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -271,6 +274,7 @@
   {:description string,
    :serviceAccount string,
    :labels {},
+   :allKmsKeysVersions [string],
    :cryptoKeyName string,
    :sourceContents string,
    :revisionCreateTime string,
@@ -281,7 +285,9 @@
    :stateError {:details string, :type string},
    :updateTime string,
    :userEnvVars {},
-   :callLogLevel string}
+   :cryptoKeyVersion string,
+   :callLogLevel string,
+   :allKmsKeys [string]}
   
   Updates an existing workflow. Running this method has no impact on already running executions of the workflow. A new revision of the workflow might be created as a result of a successful update operation. In that case, the new revision is used in new workflow executions."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}

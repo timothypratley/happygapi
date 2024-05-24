@@ -1,29 +1,29 @@
 (ns happygapi.blogger.blogs
   "Blogger API: blogs.
   The Blogger API provides access to posts, comments and pages of a Blogger blog.
-  See: https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/blogs"
+  See: https://developers.google.com/blogger/docs/3.0/getting_starteddocs/reference/rest/v3/blogs"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn listByUser$
-  "https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/blogs/listByUser
+(defn get$
+  "https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/blogs/get
   
-  Required parameters: userId
+  Required parameters: blogId
   
-  Optional parameters: view, fetchUserInfo, role, status
+  Optional parameters: view, maxPosts
   
-  Lists blogs by user."
+  Gets a blog by id."
   {:scopes ["https://www.googleapis.com/auth/blogger"
             "https://www.googleapis.com/auth/blogger.readonly"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:userId})]}
+  {:pre [(util/has-keys? parameters #{:blogId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://blogger.googleapis.com/"
-     "v3/users/{userId}/blogs"
-     #{:userId}
+     "v3/blogs/{blogId}"
+     #{:blogId}
      parameters)
     (merge-with
      merge
@@ -60,24 +60,24 @@
       :as :json}
      auth))))
 
-(defn get$
-  "https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/blogs/get
+(defn listByUser$
+  "https://developers.google.com/blogger/docs/3.0/getting_startedapi/reference/rest/v3/blogs/listByUser
   
-  Required parameters: blogId
+  Required parameters: userId
   
-  Optional parameters: view, maxPosts
+  Optional parameters: role, view, fetchUserInfo, status
   
-  Gets a blog by id."
+  Lists blogs by user."
   {:scopes ["https://www.googleapis.com/auth/blogger"
             "https://www.googleapis.com/auth/blogger.readonly"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:blogId})]}
+  {:pre [(util/has-keys? parameters #{:userId})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://blogger.googleapis.com/"
-     "v3/blogs/{blogId}"
-     #{:blogId}
+     "v3/users/{userId}/blogs"
+     #{:userId}
      parameters)
     (merge-with
      merge

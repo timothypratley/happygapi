@@ -1,7 +1,7 @@
 (ns happygapi.bigquerydatatransfer.projects
   "BigQuery Data Transfer API: projects.
   Schedule queries or transfer external data from SaaS applications to Google BigQuery on a regular basis.
-  See: https://cloud.google.com/bigquery-transfer/api/reference/rest/v1/projects"
+  See: https://cloud.google.com/bigquery-transfer/docs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

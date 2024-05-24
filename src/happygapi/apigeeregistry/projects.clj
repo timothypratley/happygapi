@@ -1,7 +1,7 @@
 (ns happygapi.apigeeregistry.projects
   "Apigee Registry API: projects.
   
-  See: https://cloud.google.com/apigee/docs/api-hub/what-is-api-hubapi/reference/rest/v1/projects"
+  See: https://cloud.google.com/apigee/docs/api-hub/what-is-api-hubdocs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

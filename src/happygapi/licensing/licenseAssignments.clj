@@ -1,7 +1,7 @@
 (ns happygapi.licensing.licenseAssignments
   "Enterprise License Manager API: licenseAssignments.
   The Google Enterprise License Manager API lets you manage Google Workspace and related licenses for all users of a customer that you manage.
-  See: https://developers.google.com/admin-sdk/licensing/api/reference/rest/v1/licenseAssignments"
+  See: https://developers.google.com/admin-sdk/licensing/docs/reference/rest/v1/licenseAssignments"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

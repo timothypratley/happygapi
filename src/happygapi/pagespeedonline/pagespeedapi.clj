@@ -1,7 +1,7 @@
 (ns happygapi.pagespeedonline.pagespeedapi
   "PageSpeed Insights API: pagespeedapi.
   The PageSpeed Insights API lets you analyze the performance of your website with a simple API. It offers tailored suggestions for how you can optimize your site, and lets you easily integrate PageSpeed Insights analysis into your development tools and workflow. 
-  See: https://developers.google.com/speed/docs/insights/v5/aboutapi/reference/rest/v5/pagespeedapi"
+  See: https://developers.google.com/speed/docs/insights/v5/aboutdocs/reference/rest/v5/pagespeedapi"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

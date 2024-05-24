@@ -1,7 +1,7 @@
 (ns happygapi.apigateway.projects
   "API Gateway API: projects.
   
-  See: https://cloud.google.com/api-gateway/docsapi/reference/rest/v1/projects"
+  See: https://cloud.google.com/api-gateway/docsdocs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

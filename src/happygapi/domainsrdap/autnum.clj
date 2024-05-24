@@ -1,7 +1,7 @@
 (ns happygapi.domainsrdap.autnum
   "Domains RDAP API: autnum.
   Read-only public API that lets users search for information about domain names.
-  See: https://developers.google.com/domains/rdap/api/reference/rest/v1/autnum"
+  See: https://developers.google.com/domains/rdap/docs/reference/rest/v1/autnum"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

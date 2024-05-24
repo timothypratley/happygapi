@@ -1,7 +1,7 @@
 (ns happygapi.cloudresourcemanager.folders
   "Cloud Resource Manager API: folders.
   Creates, reads, and updates metadata for Google Cloud Platform resource containers.
-  See: https://cloud.google.com/resource-managerapi/reference/rest/v3/folders"
+  See: https://cloud.google.com/resource-managerdocs/reference/rest/v3/folders"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

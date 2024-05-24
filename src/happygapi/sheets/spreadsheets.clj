@@ -1,7 +1,7 @@
 (ns happygapi.sheets.spreadsheets
   "Google Sheets API: spreadsheets.
   Reads and writes Google Sheets.
-  See: https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets"
+  See: https://developers.google.com/sheets/docs/reference/rest/v4/spreadsheets"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -180,6 +180,7 @@
                :deleteDuplicates DeleteDuplicatesRequest,
                :deleteSheet DeleteSheetRequest,
                :deleteProtectedRange DeleteProtectedRangeRequest,
+               :cancelDataSourceRefresh CancelDataSourceRefreshRequest,
                :updateDeveloperMetadata UpdateDeveloperMetadataRequest,
                :updateSheetProperties UpdateSheetPropertiesRequest,
                :duplicateFilterView DuplicateFilterViewRequest,

@@ -1,7 +1,7 @@
 (ns happygapi.dns.policies
   "Cloud DNS API: policies.
   
-  See: https://cloud.google.com/dns/docsapi/reference/rest/v1/policies"
+  See: https://cloud.google.com/dns/docsdocs/reference/rest/v1/policies"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

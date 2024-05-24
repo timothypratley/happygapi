@@ -1,7 +1,7 @@
 (ns happygapi.games.recall
   "Google Play Game Services: recall.
   The Google Play games service allows developers to enhance games with social leaderboards, achievements, game state, sign-in with Google, and more.
-  See: https://developers.google.com/games/api/reference/rest/v1/recall"
+  See: https://developers.google.com/games/docs/reference/rest/v1/recall"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -60,6 +60,32 @@
     (util/get-url
      "https://games.googleapis.com/"
      "games/v1/recall/tokens/{sessionId}"
+     #{:sessionId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn lastTokenFromAllDeveloperGames$
+  "https://developers.google.com/games/api/reference/rest/v1/recall/lastTokenFromAllDeveloperGames
+  
+  Required parameters: sessionId
+  
+  Optional parameters: none
+  
+  Retrieve the last Recall token from all developer games that is associated with the PGS Player principal encoded in the provided recall session id. The API is only available for users that have active PGS Player profile."
+  {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:sessionId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://games.googleapis.com/"
+     "games/v1/recall/developerGamesLastPlayerToken/{sessionId}"
      #{:sessionId}
      parameters)
     (merge-with

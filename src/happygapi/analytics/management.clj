@@ -1,7 +1,7 @@
 (ns happygapi.analytics.management
   "Google Analytics API: management.
   Views and manages your Google Analytics data.
-  See: https://developers.google.com/analytics/api/reference/rest/v3/management"
+  See: https://developers.google.com/analytics/docs/reference/rest/v3/management"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

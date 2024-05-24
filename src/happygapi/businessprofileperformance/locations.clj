@@ -1,7 +1,7 @@
 (ns happygapi.businessprofileperformance.locations
   "Business Profile Performance API: locations.
   The Business Profile Performance API allows merchants to fetch performance reports about their business profile on Google. Note - If you have a quota of 0 after enabling the API, please request for GBP API access.
-  See: https://developers.google.com/my-business/api/reference/rest/v1/locations"
+  See: https://developers.google.com/my-business/docs/reference/rest/v1/locations"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

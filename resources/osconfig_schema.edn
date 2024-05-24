@@ -725,15 +725,15 @@
                                                 :nextPageToken {:description "The pagination token to retrieve the next page of OS policy assignments.",
                                                                 :type "string"}}},
  :ProjectFeatureSettings {:id "ProjectFeatureSettings",
-                          :description "ProjectFeatureSettings represents the features settings for the VM Manager. The project features settings can be set for a project.",
+                          :description "ProjectFeatureSettings represents the VM Manager feature settings in a project. For more information, see Enable full VM Manager functionality.",
                           :type "object",
-                          :properties {:name {:description "Required. Immutable. Name of the config, e.g. projects/12345/locations/global/projectFeatureSettings",
+                          :properties {:name {:description "Required. Immutable. Name specifies the URL for the ProjectFeatureSettings resource: projects/project_id/locations/global/projectFeatureSettings.",
                                               :type "string"},
-                                       :patchAndConfigFeatureSet {:description "Currently set PatchAndConfigFeatureSet for name.",
+                                       :patchAndConfigFeatureSet {:description "Set PatchAndConfigFeatureSet for the project.",
                                                                   :type "string",
                                                                   :enumDescriptions ["Not specified placeholder"
-                                                                                     "Basic feature set. Enables only the basic set of features."
-                                                                                     "Classic set of functionality."],
+                                                                                     "Enables only the basic set of VM Manager features in the project."
+                                                                                     "Enables all VM Manager features in the project."],
                                                                   :enum ["PATCH_AND_CONFIG_FEATURE_SET_UNSPECIFIED"
                                                                          "OSCONFIG_B"
                                                                          "OSCONFIG_C"]}}},

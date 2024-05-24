@@ -1,7 +1,7 @@
 (ns happygapi.trafficdirector.discovery
   "Traffic Director API: discovery.
   
-  See: https://cloud.google.com/traffic-directorapi/reference/rest/v3/discovery"
+  See: https://cloud.google.com/traffic-directordocs/reference/rest/v3/discovery"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

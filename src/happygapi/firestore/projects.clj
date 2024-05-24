@@ -1,7 +1,7 @@
 (ns happygapi.firestore.projects
   "Cloud Firestore API: projects.
   Accesses the NoSQL document database built for automatic scaling, high performance, and ease of application development. 
-  See: https://cloud.google.com/firestoreapi/reference/rest/v1/projects"
+  See: https://cloud.google.com/firestoredocs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -221,7 +221,8 @@
   
   Body: 
   
-  {:cmekConfig {:kmsKeyName string, :activeKeyVersion [string]},
+  {:deleteTime string,
+   :cmekConfig {:kmsKeyName string, :activeKeyVersion [string]},
    :deleteProtectionState string,
    :locationId string,
    :uid string,
@@ -234,6 +235,7 @@
    :concurrencyMode string,
    :versionRetentionPeriod string,
    :updateTime string,
+   :previousId string,
    :keyPrefix string,
    :pointInTimeRecoveryEnablement string}
   
@@ -291,7 +293,7 @@
   
   Required parameters: parent
   
-  Optional parameters: none
+  Optional parameters: showDeleted
   
   List all the databases in the project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -322,7 +324,8 @@
   
   Body: 
   
-  {:cmekConfig {:kmsKeyName string, :activeKeyVersion [string]},
+  {:deleteTime string,
+   :cmekConfig {:kmsKeyName string, :activeKeyVersion [string]},
    :deleteProtectionState string,
    :locationId string,
    :uid string,
@@ -335,6 +338,7 @@
    :concurrencyMode string,
    :versionRetentionPeriod string,
    :updateTime string,
+   :previousId string,
    :keyPrefix string,
    :pointInTimeRecoveryEnablement string}
   
@@ -762,10 +766,10 @@
    :createTime string,
    :updateTime string,
    :retention string,
-   :dailyRecurrence {},
-   :weeklyRecurrence {:day string}}
+   :dailyRecurrence {:time TimeOfDay},
+   :weeklyRecurrence {:time TimeOfDay, :day string}}
   
-  Creates a backup schedule on a database. At most two backup schedules can be configured on a database, one daily backup schedule with retention up to 7 days and one weekly backup schedule with retention up to 14 weeks."
+  Creates a backup schedule on a database. At most two backup schedules can be configured on a database, one daily backup schedule and one weekly backup schedule."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
             "https://www.googleapis.com/auth/datastore"]}
   [auth parameters body]
@@ -854,8 +858,8 @@
    :createTime string,
    :updateTime string,
    :retention string,
-   :dailyRecurrence {},
-   :weeklyRecurrence {:day string}}
+   :dailyRecurrence {:time TimeOfDay},
+   :weeklyRecurrence {:time TimeOfDay, :day string}}
   
   Updates a backup schedule."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -1111,14 +1115,15 @@
   
   Body: 
   
-  {:structuredQuery {:select Projection,
-                     :from [CollectionSelector],
-                     :where Filter,
-                     :orderBy [Order],
-                     :startAt Cursor,
-                     :endAt Cursor,
+  {:structuredQuery {:where Filter,
+                     :limit integer,
                      :offset integer,
-                     :limit integer},
+                     :endAt Cursor,
+                     :from [CollectionSelector],
+                     :findNearest FindNearest,
+                     :startAt Cursor,
+                     :select Projection,
+                     :orderBy [Order]},
    :transaction string,
    :newTransaction {:readOnly ReadOnly, :readWrite ReadWrite},
    :readTime string,
@@ -1155,14 +1160,15 @@
   
   Body: 
   
-  {:structuredQuery {:select Projection,
-                     :from [CollectionSelector],
-                     :where Filter,
-                     :orderBy [Order],
-                     :startAt Cursor,
-                     :endAt Cursor,
+  {:structuredQuery {:where Filter,
+                     :limit integer,
                      :offset integer,
-                     :limit integer},
+                     :endAt Cursor,
+                     :from [CollectionSelector],
+                     :findNearest FindNearest,
+                     :startAt Cursor,
+                     :select Projection,
+                     :orderBy [Order]},
    :partitionCount string,
    :pageToken string,
    :pageSize integer,

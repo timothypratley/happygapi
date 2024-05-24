@@ -1,7 +1,7 @@
 (ns happygapi.adsense.accounts
   "AdSense Management API: accounts.
   The AdSense Management API allows publishers to access their inventory and run earnings and performance reports.
-  See: https://developers.google.com/adsense/management/api/reference/rest/v2/accounts"
+  See: https://developers.google.com/adsense/management/docs/reference/rest/v2/accounts"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -650,6 +650,60 @@
     (util/get-url
      "https://adsense.googleapis.com/"
      "v2/{+parent}/payments"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn policyIssues-get$
+  "https://developers.google.com/adsense/management/api/reference/rest/v2/accounts/policyIssues/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets information about the selected policy issue."
+  {:scopes ["https://www.googleapis.com/auth/adsense"
+            "https://www.googleapis.com/auth/adsense.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://adsense.googleapis.com/"
+     "v2/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn policyIssues-list$
+  "https://developers.google.com/adsense/management/api/reference/rest/v2/accounts/policyIssues/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageSize, pageToken
+  
+  Lists all the policy issues where the specified account is involved, both directly and through any AFP child accounts."
+  {:scopes ["https://www.googleapis.com/auth/adsense"
+            "https://www.googleapis.com/auth/adsense.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://adsense.googleapis.com/"
+     "v2/{+parent}/policyIssues"
      #{:parent}
      parameters)
     (merge-with

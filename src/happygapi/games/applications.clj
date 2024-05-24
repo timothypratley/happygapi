@@ -1,7 +1,7 @@
 (ns happygapi.games.applications
   "Google Play Game Services: applications.
   The Google Play games service allows developers to enhance games with social leaderboards, achievements, game state, sign-in with Google, and more.
-  See: https://developers.google.com/games/api/reference/rest/v1/applications"
+  See: https://developers.google.com/games/docs/reference/rest/v1/applications"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

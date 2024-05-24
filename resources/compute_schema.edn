@@ -762,9 +762,11 @@
                                                      ""
                                                      ""
                                                      ""
+                                                     ""
                                                      ""],
                                   :enum ["ACCELERATOR_OPTIMIZED"
                                          "ACCELERATOR_OPTIMIZED_A3"
+                                         "ACCELERATOR_OPTIMIZED_A3_MEGA"
                                          "COMPUTE_OPTIMIZED"
                                          "COMPUTE_OPTIMIZED_C2D"
                                          "COMPUTE_OPTIMIZED_C3"
@@ -883,7 +885,9 @@
                                                :items {:$ref "RouterAdvertisedIpRange"}},
                           :keepaliveInterval {:description "The interval in seconds between BGP keepalive messages that are sent to the peer. Hold time is three times the interval at which keepalive messages are sent, and the hold time is the maximum number of seconds allowed to elapse between successive keepalive messages that BGP receives from a peer. BGP will use the smaller of either the local hold time value or the peer's hold time value as the hold time for the BGP connection between the two peers. If set, this value must be between 20 and 60. The default is 20.",
                                               :type "integer",
-                                              :format "uint32"}}},
+                                              :format "uint32"},
+                          :identifierRange {:description "Explicitly specifies a range of valid BGP Identifiers for this Router. It is provided as a link-local IPv4 range (from 169.254.0.0/16), of size at least /30, even if the BGP sessions are over IPv6. It must not overlap with any IPv4 BGP session ranges. Other vendors commonly call this \"router ID\".",
+                                            :type "string"}}},
  :HelpLink {:id "HelpLink",
             :description "Describes a URL link.",
             :type "object",
@@ -5092,6 +5096,12 @@
                           :maintenanceWindow {:$ref "NodeGroupMaintenanceWindow"},
                           :autoscalingPolicy {:description "Specifies how autoscaling should behave.",
                                               :$ref "NodeGroupAutoscalingPolicy"},
+                          :maintenanceInterval {:description "Specifies the frequency of planned maintenance events. The accepted values are: `AS_NEEDED` and `RECURRENT`.",
+                                                :type "string",
+                                                :enumDescriptions ["VMs are eligible to receive infrastructure and hypervisor updates as they become available. This may result in more maintenance operations (live migrations or terminations) for the VM than the PERIODIC and RECURRENT options."
+                                                                   "VMs receive infrastructure and hypervisor updates on a periodic basis, minimizing the number of maintenance operations (live migrations or terminations) on an individual VM. This may mean a VM will take longer to receive an update than if it was configured for AS_NEEDED. Security updates will still be applied as soon as they are available. RECURRENT is used for GEN3 and Slice of Hardware VMs."],
+                                                :enum ["AS_NEEDED"
+                                                       "RECURRENT"]},
                           :fingerprint {:type "string",
                                         :format "byte"}}},
  :PacketMirroringsScopedList {:id "PacketMirroringsScopedList",
@@ -6003,7 +6013,7 @@
  :SnapshotSettingsStorageLocationSettingsStorageLocationPreference {:id "SnapshotSettingsStorageLocationSettingsStorageLocationPreference",
                                                                     :description "A structure for specifying storage locations.",
                                                                     :type "object",
-                                                                    :properties {:name {:description "Name of the location. It should be one of the GCS buckets.",
+                                                                    :properties {:name {:description "Name of the location. It should be one of the Cloud Storage buckets. Only one location can be specified.",
                                                                                         :type "string"}}},
  :BackendServiceFailoverPolicy {:id "BackendServiceFailoverPolicy",
                                 :description "For load balancers that have configurable failover: [Internal passthrough Network Load Balancers](https://cloud.google.com/load-balancing/docs/internal/failover-overview) and [external passthrough Network Load Balancers](https://cloud.google.com/load-balancing/docs/network/networklb-failover-overview). On failover or failback, this field indicates whether connection draining will be honored. Google Cloud has a fixed connection draining timeout of 10 minutes. A setting of true terminates existing TCP connections to the active pool during failover and failback, immediately draining traffic. A setting of false allows existing TCP connections to persist, even on VMs no longer in the active pool, for up to the duration of the connection draining timeout (10 minutes).",
@@ -8083,7 +8093,7 @@
                                        :enum ["FALSE" "TRUE"]},
                               :md5AuthenticationKeyName {:description "Present if MD5 authentication is enabled for the peering. Must be the name of one of the entries in the Router.md5_authentication_keys. The field must comply with RFC1035.",
                                                          :type "string"},
-                              :peerIpAddress {:description "IP address of the BGP interface outside Google Cloud Platform. Only IPv4 is supported.",
+                              :peerIpAddress {:description "IP address of the BGP interface outside Google Cloud Platform.",
                                               :type "string"},
                               :name {:description "Name of this BGP peer. The name must be 1-63 characters long, and comply with RFC1035. Specifically, the name must be 1-63 characters long and match the regular expression `[a-z]([-a-z0-9]*[a-z0-9])?` which means the first character must be a lowercase letter, and all following characters must be a dash, lowercase letter, or digit, except the last character, which cannot be a dash.",
                                      :pattern "[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?",
@@ -8107,6 +8117,9 @@
                                                       "MANAGED_BY_USER"]},
                               :ipv6NexthopAddress {:description "IPv6 address of the interface inside Google Cloud Platform.",
                                                    :type "string"},
+                              :exportPolicies {:description "List of export policies applied to this peer, in the order they must be evaluated. The name must correspond to an existing policy that has ROUTE_POLICY_TYPE_EXPORT type. Note that Route Policies are currently available in preview. Please use Beta API to use Route Policies.",
+                                               :type "array",
+                                               :items {:type "string"}},
                               :advertiseMode {:description "User-specified flag to indicate which mode to use for advertisement.",
                                               :type "string",
                                               :enumDescriptions [""
@@ -8122,13 +8135,22 @@
                                                            :format "int32"},
                               :interfaceName {:description "Name of the interface the BGP peer is associated with.",
                                               :type "string"},
-                              :enableIpv6 {:description "Enable IPv6 traffic over BGP Peer. If not specified, it is disabled by default.",
+                              :importPolicies {:description "List of import policies applied to this peer, in the order they must be evaluated. The name must correspond to an existing policy that has ROUTE_POLICY_TYPE_IMPORT type. Note that Route Policies are currently available in preview. Please use Beta API to use Route Policies.",
+                                               :type "array",
+                                               :items {:type "string"}},
+                              :enableIpv6 {:description "Enable IPv6 traffic over BGP Peer. It is enabled by default if the peerIpAddress is version 6.",
                                            :type "boolean"},
-                              :ipAddress {:description "IP address of the interface inside Google Cloud Platform. Only IPv4 is supported.",
+                              :ipAddress {:description "IP address of the interface inside Google Cloud Platform.",
                                           :type "string"},
+                              :peerIpv4NexthopAddress {:description "IPv4 address of the BGP interface outside Google Cloud Platform.",
+                                                       :type "string"},
+                              :enableIpv4 {:description "Enable IPv4 traffic over BGP Peer. It is enabled by default if the peerIpAddress is version 4.",
+                                           :type "boolean"},
                               :advertisedRoutePriority {:description "The priority of routes advertised to this BGP peer. Where there is more than one matching route of maximum length, the routes with the lowest priority value win.",
                                                         :type "integer",
                                                         :format "uint32"},
+                              :ipv4NexthopAddress {:description "IPv4 address of the interface inside Google Cloud Platform.",
+                                                   :type "string"},
                               :customLearnedIpRanges {:description "A list of user-defined custom learned route IP address ranges for a BGP session.",
                                                       :type "array",
                                                       :items {:$ref "RouterBgpPeerCustomLearnedIpRange"}}}},
@@ -9235,7 +9257,7 @@
                                 :type "string"},
                        :defaultRouteAction {:description "defaultRouteAction takes effect when none of the hostRules match. The load balancer performs advanced routing actions, such as URL rewrites and header transformations, before forwarding the request to the selected backend. If defaultRouteAction specifies any weightedBackendServices, defaultService must not be set. Conversely if defaultService is set, defaultRouteAction cannot contain any weightedBackendServices. Only one of defaultRouteAction or defaultUrlRedirect must be set. URL maps for classic Application Load Balancers only support the urlRewrite action within defaultRouteAction. defaultRouteAction has no effect when the URL map is bound to a target gRPC proxy that has the validateForProxyless field set to true.",
                                             :$ref "HttpRouteAction"},
-                       :defaultService {:description "The full or partial URL of the defaultService resource to which traffic is directed if none of the hostRules match. If defaultRouteAction is also specified, advanced routing actions, such as URL rewrites, take effect before sending the request to the backend. However, if defaultService is specified, defaultRouteAction cannot contain any weightedBackendServices. Conversely, if routeAction specifies any weightedBackendServices, service must not be specified. Only one of defaultService, defaultUrlRedirect , or defaultRouteAction.weightedBackendService must be set. defaultService has no effect when the URL map is bound to a target gRPC proxy that has the validateForProxyless field set to true.",
+                       :defaultService {:description "The full or partial URL of the defaultService resource to which traffic is directed if none of the hostRules match. If defaultRouteAction is also specified, advanced routing actions, such as URL rewrites, take effect before sending the request to the backend. However, if defaultService is specified, defaultRouteAction cannot contain any weightedBackendServices. Conversely, if routeAction specifies any weightedBackendServices, service must not be specified. If defaultService is specified, then set either defaultUrlRedirect , or defaultRouteAction.weightedBackendService Don't set both. defaultService has no effect when the URL map is bound to a target gRPC proxy that has the validateForProxyless field set to true.",
                                         :type "string"},
                        :id {:description "[Output Only] The unique identifier for the resource. This identifier is defined by the server.",
                             :type "string",
@@ -9516,7 +9538,7 @@
                                                                                               :value {:description "[Output Only] A warning data value corresponding to the key.",
                                                                                                       :type "string"}}}}}}}},
  :ResourcePolicyGroupPlacementPolicy {:id "ResourcePolicyGroupPlacementPolicy",
-                                      :description "A GroupPlacementPolicy specifies resource placement configuration. It specifies the failure bucket separation as well as network locality",
+                                      :description "A GroupPlacementPolicy specifies resource placement configuration. It specifies the failure bucket separation",
                                       :type "object",
                                       :properties {:vmCount {:description "Number of VMs in this placement group. Google does not recommend that you use this field unless you use a compact policy and you want your policy to work only if it contains this exact number of VMs.",
                                                              :type "integer",
@@ -9542,7 +9564,7 @@
                                                       :type "string"},
                                   :enableProxyProtocol {:description "If true, enable the proxy protocol which is for supplying client TCP/IP address data in TCP connections that traverse proxies on their way to destination servers.",
                                                         :type "boolean"},
-                                  :consumerAcceptLists {:description "Projects that are allowed to connect to this service attachment.",
+                                  :consumerAcceptLists {:description "Specifies which consumer projects or networks are allowed to connect to the service attachment. Each project or network has a connection limit. A given service attachment can manage connections at either the project or network level. Therefore, both the accept and reject lists for a given service attachment must contain either only projects or only networks.",
                                                         :type "array",
                                                         :items {:$ref "ServiceAttachmentConsumerProjectLimit"}},
                                   :name {:description "Name of the resource. Provided by the client when the resource is created. The name must be 1-63 characters long, and comply with RFC1035. Specifically, the name must be 1-63 characters long and match the regular expression `[a-z]([-a-z0-9]*[a-z0-9])?` which means the first character must be a lowercase letter, and all following characters must be a dash, lowercase letter, or digit, except the last character, which cannot be a dash.",
@@ -9577,7 +9599,7 @@
                                                          :type "boolean"},
                                   :pscServiceAttachmentId {:description "[Output Only] An 128-bit global unique ID of the PSC service attachment.",
                                                            :$ref "Uint128"},
-                                  :consumerRejectLists {:description "Projects that are not allowed to connect to this service attachment. The project can be specified using its id or number.",
+                                  :consumerRejectLists {:description "Specifies a list of projects or networks that are not allowed to connect to this service attachment. The project can be specified using its project ID or project number and the network can be specified using its URL. A given service attachment can manage connections at either the project or network level. Therefore, both the reject and accept lists for a given service attachment must contain either only projects or only networks.",
                                                         :type "array",
                                                         :items {:type "string"}},
                                   :producerForwardingRule {:description "The URL of a forwarding rule with loadBalancingScheme INTERNAL* that is serving the endpoint identified by this service attachment.",
@@ -10375,6 +10397,9 @@
                          :type "object",
                          :properties {:description {:description "An optional description of this resource. Provide this property when you create the resource.",
                                                     :type "string"},
+                                      :allocatablePrefixLength {:description "The allocatable prefix length supported by this public delegated prefix. This field is optional and cannot be set for prefixes in DELEGATION mode. It cannot be set for IPv4 prefixes either, and it always defaults to 32.",
+                                                                :type "integer",
+                                                                :format "int32"},
                                       :creationTimestamp {:description "[Output Only] Creation timestamp in RFC3339 text format.",
                                                           :type "string"},
                                       :isLiveMigration {:description "If true, the prefix will be live migrated.",
@@ -10385,6 +10410,12 @@
                                              :type "string"},
                                       :ipCidrRange {:description "The IP address range, in CIDR format, represented by this public delegated prefix.",
                                                     :type "string"},
+                                      :mode {:description "The public delegated prefix mode for IPv6 only.",
+                                             :type "string",
+                                             :enumDescriptions ["The public delegated prefix is used for further sub-delegation only. Such prefixes cannot set allocatablePrefixLength."
+                                                                "The public delegated prefix is used for creating forwarding rules only. Such prefixes cannot set publicDelegatedSubPrefixes."],
+                                             :enum ["DELEGATION"
+                                                    "EXTERNAL_IPV6_FORWARDING_RULE_CREATION"]},
                                       :selfLink {:description "[Output Only] Server-defined URL for the resource.",
                                                  :type "string"},
                                       :byoipApiVersion {:description "[Output Only] The version of BYOIP API.",
@@ -11928,34 +11959,38 @@
                                                                                     :type "string"}}},
  :RouterInterface {:id "RouterInterface",
                    :type "object",
-                   :properties {:name {:description "Name of this interface entry. The name must be 1-63 characters long, and comply with RFC1035. Specifically, the name must be 1-63 characters long and match the regular expression `[a-z]([-a-z0-9]*[a-z0-9])?` which means the first character must be a lowercase letter, and all following characters must be a dash, lowercase letter, or digit, except the last character, which cannot be a dash.",
+                   :properties {:linkedVpnTunnel {:description "URI of the linked VPN tunnel, which must be in the same region as the router. Each interface can have one linked resource, which can be a VPN tunnel, an Interconnect attachment, or a subnetwork.",
+                                                  :type "string"},
+                                :redundantInterface {:description "Name of the interface that will be redundant with the current interface you are creating. The redundantInterface must belong to the same Cloud Router as the interface here. To establish the BGP session to a Router Appliance VM, you must create two BGP peers. The two BGP peers must be attached to two separate interfaces that are redundant with each other. The redundant_interface must be 1-63 characters long, and comply with RFC1035. Specifically, the redundant_interface must be 1-63 characters long and match the regular expression `[a-z]([-a-z0-9]*[a-z0-9])?` which means the first character must be a lowercase letter, and all following characters must be a dash, lowercase letter, or digit, except the last character, which cannot be a dash.",
+                                                     :pattern "[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?",
+                                                     :type "string"},
+                                :name {:description "Name of this interface entry. The name must be 1-63 characters long, and comply with RFC1035. Specifically, the name must be 1-63 characters long and match the regular expression `[a-z]([-a-z0-9]*[a-z0-9])?` which means the first character must be a lowercase letter, and all following characters must be a dash, lowercase letter, or digit, except the last character, which cannot be a dash.",
                                        :pattern "[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?",
                                        :annotations {:required ["compute.routers.insert"]},
                                        :type "string"},
-                                :linkedVpnTunnel {:description "URI of the linked VPN tunnel, which must be in the same region as the router. Each interface can have one linked resource, which can be a VPN tunnel, an Interconnect attachment, or a subnetwork.",
-                                                  :type "string"},
-                                :linkedInterconnectAttachment {:description "URI of the linked Interconnect attachment. It must be in the same region as the router. Each interface can have one linked resource, which can be a VPN tunnel, an Interconnect attachment, or a subnetwork.",
-                                                               :type "string"},
-                                :ipRange {:description "IP address and range of the interface. The IP range must be in the RFC3927 link-local IP address space. The value must be a CIDR-formatted string, for example: 169.254.0.1/30. NOTE: Do not truncate the address as it represents the IP address of the interface.",
-                                          :type "string"},
                                 :managementType {:description "[Output Only] The resource that configures and manages this interface. - MANAGED_BY_USER is the default value and can be managed directly by users. - MANAGED_BY_ATTACHMENT is an interface that is configured and managed by Cloud Interconnect, specifically, by an InterconnectAttachment of type PARTNER. Google automatically creates, updates, and deletes this type of interface when the PARTNER InterconnectAttachment is created, updated, or deleted. ",
                                                  :type "string",
                                                  :enumDescriptions ["The interface is automatically created for PARTNER type InterconnectAttachment, Google will automatically create/update/delete this interface when the PARTNER InterconnectAttachment is created/provisioned/deleted. This type of interface cannot be manually managed by user."
                                                                     "Default value, the interface is manually created and managed by user."],
                                                  :enum ["MANAGED_BY_ATTACHMENT"
                                                         "MANAGED_BY_USER"]},
+                                :ipVersion {:description "IP version of this interface.",
+                                            :type "string",
+                                            :enumDescriptions ["" ""],
+                                            :enum ["IPV4" "IPV6"]},
+                                :ipRange {:description "IP address and range of the interface. - For Internet Protocol version 4 (IPv4), the IP range must be in the RFC3927 link-local IP address space. The value must be a CIDR-formatted string, for example, 169.254.0.1/30. Note: Do not truncate the IP address, as it represents the IP address of the interface. - For Internet Protocol version 6 (IPv6), the value must be a unique local address (ULA) range from fdff:1::/64 with a mask length of 126 or less. This value should be a CIDR-formatted string, for example, fc00:0:1:1::1/112. Within the router's VPC, this IPv6 prefix will be reserved exclusively for this connection and cannot be used for any other purpose. ",
+                                          :type "string"},
                                 :privateIpAddress {:description "The regional private internal IP address that is used to establish BGP sessions to a VM instance acting as a third-party Router Appliance, such as a Next Gen Firewall, a Virtual Router, or an SD-WAN VM.",
                                                    :type "string"},
-                                :redundantInterface {:description "Name of the interface that will be redundant with the current interface you are creating. The redundantInterface must belong to the same Cloud Router as the interface here. To establish the BGP session to a Router Appliance VM, you must create two BGP peers. The two BGP peers must be attached to two separate interfaces that are redundant with each other. The redundant_interface must be 1-63 characters long, and comply with RFC1035. Specifically, the redundant_interface must be 1-63 characters long and match the regular expression `[a-z]([-a-z0-9]*[a-z0-9])?` which means the first character must be a lowercase letter, and all following characters must be a dash, lowercase letter, or digit, except the last character, which cannot be a dash.",
-                                                     :pattern "[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?",
-                                                     :type "string"},
+                                :linkedInterconnectAttachment {:description "URI of the linked Interconnect attachment. It must be in the same region as the router. Each interface can have one linked resource, which can be a VPN tunnel, an Interconnect attachment, or a subnetwork.",
+                                                               :type "string"},
                                 :subnetwork {:description "The URI of the subnetwork resource that this interface belongs to, which must be in the same region as the Cloud Router. When you establish a BGP session to a VM instance using this interface, the VM instance must belong to the same subnetwork as the subnetwork specified here.",
                                              :type "string"}}},
  :InstanceGroupManagerStatusStateful {:id "InstanceGroupManagerStatusStateful",
                                       :type "object",
                                       :properties {:hasStatefulConfig {:description "[Output Only] A bit indicating whether the managed instance group has stateful configuration, that is, if you have configured any items in a stateful policy or in per-instance configs. The group might report that it has no stateful configuration even when there is still some preserved state on a managed instance, for example, if you have deleted all PICs but not yet applied those deletions.",
                                                                        :type "boolean"},
-                                                   :perInstanceConfigs {:description "[Output Only] Status of per-instance configurations on the instance.",
+                                                   :perInstanceConfigs {:description "[Output Only] Status of per-instance configurations on the instances.",
                                                                         :$ref "InstanceGroupManagerStatusStatefulPerInstanceConfigs"}}},
  :SubnetworkAggregatedList {:id "SubnetworkAggregatedList",
                             :type "object",
@@ -12084,10 +12119,23 @@
  :PublicDelegatedPrefixPublicDelegatedSubPrefix {:id "PublicDelegatedPrefixPublicDelegatedSubPrefix",
                                                  :description "Represents a sub PublicDelegatedPrefix.",
                                                  :type "object",
-                                                 :properties {:name {:description "The name of the sub public delegated prefix.",
-                                                                     :type "string"},
-                                                              :description {:description "An optional description of this resource. Provide this property when you create the resource.",
+                                                 :properties {:description {:description "An optional description of this resource. Provide this property when you create the resource.",
                                                                             :type "string"},
+                                                              :allocatablePrefixLength {:description "The allocatable prefix length supported by this PublicDelegatedSubPrefix.",
+                                                                                        :type "integer",
+                                                                                        :format "int32"},
+                                                              :delegateeProject {:description "Name of the project scoping this PublicDelegatedSubPrefix.",
+                                                                                 :type "string"},
+                                                              :name {:description "The name of the sub public delegated prefix.",
+                                                                     :type "string"},
+                                                              :ipCidrRange {:description "The IP address range, in CIDR format, represented by this sub public delegated prefix.",
+                                                                            :type "string"},
+                                                              :mode {:description "The PublicDelegatedSubPrefix mode for IPv6 only.",
+                                                                     :type "string",
+                                                                     :enumDescriptions ["The public delegated prefix is used for further sub-delegation only. Such prefixes cannot set allocatablePrefixLength."
+                                                                                        "The public delegated prefix is used for creating forwarding rules only. Such prefixes cannot set publicDelegatedSubPrefixes."],
+                                                                     :enum ["DELEGATION"
+                                                                            "EXTERNAL_IPV6_FORWARDING_RULE_CREATION"]},
                                                               :region {:description "[Output Only] The region of the sub public delegated prefix if it is regional. If absent, the sub prefix is global.",
                                                                        :type "string"},
                                                               :status {:description "[Output Only] The status of the sub public delegated prefix.",
@@ -12096,10 +12144,6 @@
                                                                                           ""],
                                                                        :enum ["ACTIVE"
                                                                               "INACTIVE"]},
-                                                              :ipCidrRange {:description "The IP address range, in CIDR format, represented by this sub public delegated prefix.",
-                                                                            :type "string"},
-                                                              :delegateeProject {:description "Name of the project scoping this PublicDelegatedSubPrefix.",
-                                                                                 :type "string"},
                                                               :isAddress {:description "Whether the sub prefix is delegated to create Address resources in the delegatee project.",
                                                                           :type "boolean"}}},
  :InterconnectAttachmentConfigurationConstraintsBgpPeerASNRange {:id "InterconnectAttachmentConfigurationConstraintsBgpPeerASNRange",
@@ -13832,7 +13876,7 @@
                         :bindingId {:description "This is deprecated and has no effect. Do not use.",
                                     :type "string"}}},
  :AllocationSpecificSKUReservation {:id "AllocationSpecificSKUReservation",
-                                    :description "This reservation type allows to pre allocate specific instance configuration. Next ID: 6",
+                                    :description "This reservation type allows to pre allocate specific instance configuration.",
                                     :type "object",
                                     :properties {:instanceProperties {:description "The instance properties for the reservation.",
                                                                       :$ref "AllocationSpecificSKUAllocationReservedInstanceProperties"},
@@ -15859,11 +15903,11 @@
                                    :type "string"},
                             :description {:description "An optional description of this resource. Provide this property when you create the resource.",
                                           :type "string"},
-                            :defaultService {:description "The full or partial URL to the BackendService resource. This URL is used if none of the pathRules or routeRules defined by this PathMatcher are matched. For example, the following are all valid URLs to a BackendService resource: - https://www.googleapis.com/compute/v1/projects/project /global/backendServices/backendService - compute/v1/projects/project/global/backendServices/backendService - global/backendServices/backendService If defaultRouteAction is also specified, advanced routing actions, such as URL rewrites, take effect before sending the request to the backend. However, if defaultService is specified, defaultRouteAction cannot contain any weightedBackendServices. Conversely, if defaultRouteAction specifies any weightedBackendServices, defaultService must not be specified. Only one of defaultService, defaultUrlRedirect , or defaultRouteAction.weightedBackendService must be set. Authorization requires one or more of the following Google IAM permissions on the specified resource default_service: - compute.backendBuckets.use - compute.backendServices.use ",
+                            :defaultService {:description "The full or partial URL to the BackendService resource. This URL is used if none of the pathRules or routeRules defined by this PathMatcher are matched. For example, the following are all valid URLs to a BackendService resource: - https://www.googleapis.com/compute/v1/projects/project /global/backendServices/backendService - compute/v1/projects/project/global/backendServices/backendService - global/backendServices/backendService If defaultRouteAction is also specified, advanced routing actions, such as URL rewrites, take effect before sending the request to the backend. However, if defaultService is specified, defaultRouteAction cannot contain any weightedBackendServices. Conversely, if defaultRouteAction specifies any weightedBackendServices, defaultService must not be specified. If defaultService is specified, then set either defaultUrlRedirect or defaultRouteAction.weightedBackendService. Don't set both. Authorization requires one or more of the following Google IAM permissions on the specified resource default_service: - compute.backendBuckets.use - compute.backendServices.use ",
                                              :type "string"},
-                            :defaultRouteAction {:description "defaultRouteAction takes effect when none of the pathRules or routeRules match. The load balancer performs advanced routing actions, such as URL rewrites and header transformations, before forwarding the request to the selected backend. If defaultRouteAction specifies any weightedBackendServices, defaultService must not be set. Conversely if defaultService is set, defaultRouteAction cannot contain any weightedBackendServices. Only one of defaultRouteAction or defaultUrlRedirect must be set. URL maps for classic Application Load Balancers only support the urlRewrite action within a path matcher's defaultRouteAction.",
+                            :defaultRouteAction {:description "defaultRouteAction takes effect when none of the pathRules or routeRules match. The load balancer performs advanced routing actions, such as URL rewrites and header transformations, before forwarding the request to the selected backend. If defaultRouteAction specifies any weightedBackendServices, defaultService must not be set. Conversely if defaultService is set, defaultRouteAction cannot contain any weightedBackendServices. If defaultRouteAction is specified, don't set defaultUrlRedirect. If defaultRouteAction.weightedBackendServices is specified, don't set defaultService. URL maps for classic Application Load Balancers only support the urlRewrite action within a path matcher's defaultRouteAction.",
                                                  :$ref "HttpRouteAction"},
-                            :defaultUrlRedirect {:description "When none of the specified pathRules or routeRules match, the request is redirected to a URL specified by defaultUrlRedirect. If defaultUrlRedirect is specified, defaultService or defaultRouteAction must not be set. Not supported when the URL map is bound to a target gRPC proxy.",
+                            :defaultUrlRedirect {:description "When none of the specified pathRules or routeRules match, the request is redirected to a URL specified by defaultUrlRedirect. If defaultUrlRedirect is specified, then set either defaultService or defaultRouteAction. Don't set both. Not supported when the URL map is bound to a target gRPC proxy.",
                                                  :$ref "HttpRedirectAction"},
                             :pathRules {:description "The list of path rules. Use this list instead of routeRules when routing based on simple path matching is all that's required. The order by which path rules are specified does not matter. Matches are always done on the longest-path-first basis. For example: a pathRule with a path /a/b/c/* will match before /a/b/* irrespective of the order in which those paths appear in this list. Within a given pathMatcher, only one of pathRules or routeRules must be set.",
                                         :type "array",
@@ -15878,7 +15922,7 @@
                         :type "object",
                         :properties {:description {:description "An optional description of this resource. Provide this property when you create the resource.",
                                                    :type "string"},
-                                     :networkEndpointType {:description "Type of network endpoints in this network endpoint group. Can be one of GCE_VM_IP, GCE_VM_IP_PORT, NON_GCP_PRIVATE_IP_PORT, INTERNET_FQDN_PORT, INTERNET_IP_PORT, SERVERLESS, PRIVATE_SERVICE_CONNECT.",
+                                     :networkEndpointType {:description "Type of network endpoints in this network endpoint group. Can be one of GCE_VM_IP, GCE_VM_IP_PORT, NON_GCP_PRIVATE_IP_PORT, INTERNET_FQDN_PORT, INTERNET_IP_PORT, SERVERLESS, PRIVATE_SERVICE_CONNECT, GCE_VM_IP_PORTMAP.",
                                                            :type "string",
                                                            :enumDescriptions ["The network endpoint is represented by an IP address."
                                                                               "The network endpoint is represented by IP address and port pair."
@@ -17413,6 +17457,13 @@
                                                            :type "string"},
                                                      :startTime {:description "User provided timestamp on or after which this key is valid.",
                                                                  :type "string"}}},
+ :NodeGroupsPerformMaintenanceRequest {:id "NodeGroupsPerformMaintenanceRequest",
+                                       :type "object",
+                                       :properties {:nodes {:description "[Required] List of nodes affected by the call.",
+                                                            :type "array",
+                                                            :items {:type "string"}},
+                                                    :startTime {:description "The start time of the schedule. The timestamp is an RFC3339 string.",
+                                                                :type "string"}}},
  :Reservation {:id "Reservation",
                :description "Represents a reservation resource. A reservation ensures that capacity is held in a specific zone even if the reserved VMs are not running. For more information, read Reserving zonal resources.",
                :type "object",
@@ -17852,7 +17903,7 @@
                                                                                            :type "string"}}}}}}}},
  :PacketMirroringFilter {:id "PacketMirroringFilter",
                          :type "object",
-                         :properties {:cidrRanges {:description "One or more IPv4 or IPv6 CIDR ranges that apply as filter on the source (ingress) or destination (egress) IP in the IP header. If no ranges are specified, all IPv4 traffic that matches the specified IPProtocols is mirrored. If neither cidrRanges nor IPProtocols is specified, all IPv4 traffic is mirrored. To mirror all IPv4 and IPv6 traffic, use \"0.0.0.0/0,::/0\". Note: Support for IPv6 traffic is in preview.",
+                         :properties {:cidrRanges {:description "One or more IPv4 or IPv6 CIDR ranges that apply as filters on the source (ingress) or destination (egress) IP in the IP header. If no ranges are specified, all IPv4 traffic that matches the specified IPProtocols is mirrored. If neither cidrRanges nor IPProtocols is specified, all IPv4 traffic is mirrored. To mirror all IPv4 and IPv6 traffic, use \"0.0.0.0/0,::/0\".",
                                                    :type "array",
                                                    :items {:type "string"}},
                                       :IPProtocols {:description "Protocols that apply as filter on mirrored traffic. If no protocols are specified, all traffic that matches the specified CIDR ranges is mirrored. If neither cidrRanges nor IPProtocols is specified, all IPv4 traffic is mirrored.",
@@ -18091,14 +18142,14 @@
                                            :properties {:policy {:description "The chosen location policy.",
                                                                  :type "string",
                                                                  :enumDescriptions ["Store snapshot in the same region as with the originating disk. No additional parameters are needed."
-                                                                                    "Store snapshot to the nearest multi region GCS bucket, relative to the originating disk. No additional parameters are needed."
+                                                                                    "Store snapshot in the nearest multi region Cloud Storage bucket, relative to the originating disk. No additional parameters are needed."
                                                                                     "Store snapshot in the specific locations, as specified by the user. The list of regions to store must be defined under the `locations` field."
                                                                                     ""],
                                                                  :enum ["LOCAL_REGION"
                                                                         "NEAREST_MULTI_REGION"
                                                                         "SPECIFIC_LOCATIONS"
                                                                         "STORAGE_LOCATION_POLICY_UNSPECIFIED"]},
-                                                        :locations {:description "When the policy is SPECIFIC_LOCATIONS, snapshots will be stored in the locations listed in this field. Keys are GCS bucket locations.",
+                                                        :locations {:description "When the policy is SPECIFIC_LOCATIONS, snapshots will be stored in the locations listed in this field. Keys are Cloud Storage bucket locations. Only one location can be specified.",
                                                                     :type "object",
                                                                     :additionalProperties {:$ref "SnapshotSettingsStorageLocationSettingsStorageLocationPreference"}}}},
  :HealthCheck {:id "HealthCheck",
@@ -18250,6 +18301,103 @@
                               :type "string"},
                        :selfLink {:description "[Output Only] Server-defined URL for the resource.",
                                   :type "string"},
+                       :quotaStatusWarning {:description "[Output Only] Warning of fetching the `quotas` field for this region. This field is populated only if fetching of the `quotas` field fails.",
+                                            :type "object",
+                                            :properties {:code {:description "[Output Only] A warning code, if applicable. For example, Compute Engine returns NO_RESULTS_ON_PAGE if there are no results in the response.",
+                                                                :type "string",
+                                                                :enumDescriptions ["Warning about failed cleanup of transient changes made by a failed operation."
+                                                                                   "A link to a deprecated resource was created."
+                                                                                   "When deploying and at least one of the resources has a type marked as deprecated"
+                                                                                   "The user created a boot disk that is larger than image size."
+                                                                                   "When deploying and at least one of the resources has a type marked as experimental"
+                                                                                   "Warning that is present in an external api call"
+                                                                                   "Warning that value of a field has been overridden. Deprecated unused field."
+                                                                                   "The operation involved use of an injected kernel, which is deprecated."
+                                                                                   "A WEIGHTED_MAGLEV backend service is associated with a health check that is not of type HTTP/HTTPS/HTTP2."
+                                                                                   "When deploying a deployment with a exceedingly large number of resources"
+                                                                                   "Resource can't be retrieved due to list overhead quota exceed which captures the amount of resources filtered out by user-defined list filter."
+                                                                                   "A resource depends on a missing type"
+                                                                                   "The route's nextHopIp address is not assigned to an instance on the network."
+                                                                                   "The route's next hop instance cannot ip forward."
+                                                                                   "The route's nextHopInstance URL refers to an instance that does not have an ipv6 interface on the same network as the route."
+                                                                                   "The route's nextHopInstance URL refers to an instance that does not exist."
+                                                                                   "The route's nextHopInstance URL refers to an instance that is not on the same network as the route."
+                                                                                   "The route's next hop instance does not have a status of RUNNING."
+                                                                                   "Error which is not critical. We decided to continue the process despite the mentioned error."
+                                                                                   "No results are present on a particular list page."
+                                                                                   "Success is reported, but some results may be missing due to errors"
+                                                                                   "The user attempted to use a resource that requires a TOS they have not accepted."
+                                                                                   "Warning that a resource is in use."
+                                                                                   "One or more of the resources set to auto-delete could not be deleted because they were in use."
+                                                                                   "When a resource schema validation is ignored."
+                                                                                   "Instance template used in instance group manager is valid as such, but its application does not make a lot of sense, because it allows only single instance in instance group."
+                                                                                   "When undeclared properties in the schema are present"
+                                                                                   "A given scope cannot be reached."],
+                                                                :enumDeprecated [false
+                                                                                 false
+                                                                                 false
+                                                                                 false
+                                                                                 false
+                                                                                 false
+                                                                                 true
+                                                                                 false
+                                                                                 false
+                                                                                 false
+                                                                                 false
+                                                                                 false
+                                                                                 false
+                                                                                 false
+                                                                                 false
+                                                                                 false
+                                                                                 false
+                                                                                 false
+                                                                                 false
+                                                                                 false
+                                                                                 false
+                                                                                 false
+                                                                                 false
+                                                                                 false
+                                                                                 false
+                                                                                 false
+                                                                                 false
+                                                                                 false],
+                                                                :enum ["CLEANUP_FAILED"
+                                                                       "DEPRECATED_RESOURCE_USED"
+                                                                       "DEPRECATED_TYPE_USED"
+                                                                       "DISK_SIZE_LARGER_THAN_IMAGE_SIZE"
+                                                                       "EXPERIMENTAL_TYPE_USED"
+                                                                       "EXTERNAL_API_WARNING"
+                                                                       "FIELD_VALUE_OVERRIDEN"
+                                                                       "INJECTED_KERNELS_DEPRECATED"
+                                                                       "INVALID_HEALTH_CHECK_FOR_DYNAMIC_WIEGHTED_LB"
+                                                                       "LARGE_DEPLOYMENT_WARNING"
+                                                                       "LIST_OVERHEAD_QUOTA_EXCEED"
+                                                                       "MISSING_TYPE_DEPENDENCY"
+                                                                       "NEXT_HOP_ADDRESS_NOT_ASSIGNED"
+                                                                       "NEXT_HOP_CANNOT_IP_FORWARD"
+                                                                       "NEXT_HOP_INSTANCE_HAS_NO_IPV6_INTERFACE"
+                                                                       "NEXT_HOP_INSTANCE_NOT_FOUND"
+                                                                       "NEXT_HOP_INSTANCE_NOT_ON_NETWORK"
+                                                                       "NEXT_HOP_NOT_RUNNING"
+                                                                       "NOT_CRITICAL_ERROR"
+                                                                       "NO_RESULTS_ON_PAGE"
+                                                                       "PARTIAL_SUCCESS"
+                                                                       "REQUIRED_TOS_AGREEMENT"
+                                                                       "RESOURCE_IN_USE_BY_OTHER_RESOURCE_WARNING"
+                                                                       "RESOURCE_NOT_DELETED"
+                                                                       "SCHEMA_VALIDATION_IGNORED"
+                                                                       "SINGLE_INSTANCE_PROPERTY_TEMPLATE"
+                                                                       "UNDECLARED_PROPERTIES"
+                                                                       "UNREACHABLE"]},
+                                                         :message {:description "[Output Only] A human-readable description of the warning code.",
+                                                                   :type "string"},
+                                                         :data {:description "[Output Only] Metadata about this warning in key: value format. For example: \"data\": [ { \"key\": \"scope\", \"value\": \"zones/us-east1-d\" } ",
+                                                                :type "array",
+                                                                :items {:type "object",
+                                                                        :properties {:key {:description "[Output Only] A key that provides more detail on the warning being returned. For example, for warnings where there are no results in a list request for a particular zone, this key might be scope and the key value might be the zone name. Other examples might be a key indicating a deprecated resource and a suggested replacement, or a warning about invalid network settings (for example, if an instance attempts to perform IP forwarding but is not enabled for IP forwarding).",
+                                                                                           :type "string"},
+                                                                                     :value {:description "[Output Only] A warning data value corresponding to the key.",
+                                                                                             :type "string"}}}}}},
                        :quotas {:description "[Output Only] Quotas assigned to this region.",
                                 :type "array",
                                 :items {:$ref "Quota"}},
@@ -18414,21 +18562,6 @@
                                                                                               :type "string"},
                                                                                         :value {:description "[Output Only] A warning data value corresponding to the key.",
                                                                                                 :type "string"}}}}}}}},
- :AuthorizationLoggingOptions {:id "AuthorizationLoggingOptions",
-                               :description "This is deprecated and has no effect. Do not use.",
-                               :type "object",
-                               :properties {:permissionType {:description "This is deprecated and has no effect. Do not use.",
-                                                             :type "string",
-                                                             :enumDescriptions ["This is deprecated and has no effect. Do not use."
-                                                                                "This is deprecated and has no effect. Do not use."
-                                                                                "This is deprecated and has no effect. Do not use."
-                                                                                "This is deprecated and has no effect. Do not use."
-                                                                                "This is deprecated and has no effect. Do not use."],
-                                                             :enum ["ADMIN_READ"
-                                                                    "ADMIN_WRITE"
-                                                                    "DATA_READ"
-                                                                    "DATA_WRITE"
-                                                                    "PERMISSION_TYPE_UNSPECIFIED"]}}},
  :ResourcePolicyResourceStatusInstanceSchedulePolicyStatus {:id "ResourcePolicyResourceStatusInstanceSchedulePolicyStatus",
                                                             :type "object",
                                                             :properties {:nextRunStartTime {:description "[Output Only] The next time the schedule is planned to run. The actual time might be slightly different. The timestamp is an RFC3339 string.",
@@ -18558,7 +18691,7 @@
  :AccessConfig {:id "AccessConfig",
                 :description "An access configuration attached to an instance's network interface. Only one access config per instance is supported.",
                 :type "object",
-                :properties {:publicPtrDomainName {:description "The DNS domain name for the public PTR record. You can set this field only if the `setPublicPtr` field is enabled in accessConfig. If this field is unspecified in ipv6AccessConfig, a default PTR record will be createc for first IP in associated external IPv6 range.",
+                :properties {:publicPtrDomainName {:description "The DNS domain name for the public PTR record. You can set this field only if the `setPublicPtr` field is enabled in accessConfig. If this field is unspecified in ipv6AccessConfig, a default PTR record will be created for first IP in associated external IPv6 range.",
                                                    :type "string"},
                              :name {:description "The name of this access configuration. In accessConfigs (IPv4), the default and recommended name is External NAT, but you can use any arbitrary string, such as My external IP or Network Access. In ipv6AccessConfigs, the recommend name is External IPv6.",
                                     :type "string"},
@@ -19728,7 +19861,7 @@
                                                            "USE_SERVING_PORT"]},
                                 :host {:description "The value of the host header in the HTTP health check request. If left empty (default value), the host header is set to the destination IP address to which health check packets are sent. The destination IP address depends on the type of load balancer. For details, see: https://cloud.google.com/load-balancing/docs/health-check-concepts#hc-packet-dest",
                                        :type "string"},
-                                :requestPath {:description "The request path of the HTTP health check request. The default value is /.",
+                                :requestPath {:description "The request path of the HTTP health check request. The default value is /. Must comply with RFC3986.",
                                               :type "string"},
                                 :proxyHeader {:description "Specifies the type of proxy header to append before sending data to the backend, either NONE or PROXY_V1. The default is NONE.",
                                               :type "string",
@@ -21412,9 +21545,7 @@
                                                                         "This is deprecated and has no effect. Do not use."],
                                                      :enum ["ADMIN_ACTIVITY"
                                                             "DATA_ACCESS"
-                                                            "UNSPECIFIED_LOG_NAME"]},
-                                           :authorizationLoggingOptions {:description "This is deprecated and has no effect. Do not use.",
-                                                                         :$ref "AuthorizationLoggingOptions"}}},
+                                                            "UNSPECIFIED_LOG_NAME"]}}},
  :BackendServiceLocalityLoadBalancingPolicyConfig {:id "BackendServiceLocalityLoadBalancingPolicyConfig",
                                                    :description "Container for either a built-in LB policy supported by gRPC or Envoy or a custom one implemented by the end user.",
                                                    :type "object",
@@ -22882,7 +23013,7 @@
                                                             "USE_SERVING_PORT"]},
                                  :host {:description "The value of the host header in the HTTPS health check request. If left empty (default value), the host header is set to the destination IP address to which health check packets are sent. The destination IP address depends on the type of load balancer. For details, see: https://cloud.google.com/load-balancing/docs/health-check-concepts#hc-packet-dest",
                                         :type "string"},
-                                 :requestPath {:description "The request path of the HTTPS health check request. The default value is /.",
+                                 :requestPath {:description "The request path of the HTTPS health check request. The default value is /. Must comply with RFC3986.",
                                                :type "string"},
                                  :proxyHeader {:description "Specifies the type of proxy header to append before sending data to the backend, either NONE or PROXY_V1. The default is NONE.",
                                                :type "string",
@@ -23930,7 +24061,7 @@
                                    :type "string"},
                           :domain {:description "The logical grouping to which the \"reason\" belongs. The error domain is typically the registered service name of the tool or product that generates the error. Example: \"pubsub.googleapis.com\". If the error is generated by some common infrastructure, the error domain must be a globally unique value that identifies the infrastructure. For Google API infrastructure, the error domain is \"googleapis.com\".",
                                    :type "string"},
-                          :metadatas {:description "Additional structured details about this error. Keys should match /[a-zA-Z0-9-_]/ and be limited to 64 characters in length. When identifying the current value of an exceeded limit, the units should be contained in the key, not the value. For example, rather than {\"instanceLimit\": \"100/request\"}, should be returned as, {\"instanceLimitPerRequest\": \"100\"}, if the client exceeds the number of instances that can be created in a single (batch) request.",
+                          :metadatas {:description "Additional structured details about this error. Keys must match /a-z+/ but should ideally be lowerCamelCase. Also they must be limited to 64 characters in length. When identifying the current value of an exceeded limit, the units should be contained in the key, not the value. For example, rather than {\"instanceLimit\": \"100/request\"}, should be returned as, {\"instanceLimitPerRequest\": \"100\"}, if the client exceeds the number of instances that can be created in a single (batch) request.",
                                       :type "object",
                                       :additionalProperties {:type "string"}}}},
  :InstanceGroupAggregatedList {:id "InstanceGroupAggregatedList",
@@ -24687,9 +24818,13 @@
                                                                     :type "string"},
                                           :statusReason {:description "Indicates why particular status was returned.",
                                                          :type "string",
-                                                         :enumDescriptions ["Indicates internal problems with configuration of MD5 authentication. This particular reason can only be returned when md5AuthEnabled is true and status is DOWN."
+                                                         :enumDescriptions ["BGP peer disabled because it requires IPv4 but the underlying connection is IPv6-only."
+                                                                            "BGP peer disabled because it requires IPv6 but the underlying connection is IPv4-only."
+                                                                            "Indicates internal problems with configuration of MD5 authentication. This particular reason can only be returned when md5AuthEnabled is true and status is DOWN."
                                                                             ""],
-                                                         :enum ["MD5_AUTH_INTERNAL_PROBLEM"
+                                                         :enum ["IPV4_PEER_ON_IPV6_ONLY_CONNECTION"
+                                                                "IPV6_PEER_ON_IPV4_ONLY_CONNECTION"
+                                                                "MD5_AUTH_INTERNAL_PROBLEM"
                                                                 "STATUS_REASON_UNSPECIFIED"]},
                                           :state {:description "The state of the BGP session. For a list of possible values for this field, see BGP session states.",
                                                   :type "string"},
@@ -24705,7 +24840,7 @@
                                                           "UP"]},
                                           :md5AuthEnabled {:description "Informs whether MD5 authentication is enabled on this BGP peer.",
                                                            :type "boolean"},
-                                          :enableIpv6 {:description "Enable IPv6 traffic over BGP Peer. If not specified, it is disabled by default.",
+                                          :enableIpv6 {:description "Enable IPv6 traffic over BGP Peer. It is enabled by default if the peerIpAddress is version 6.",
                                                        :type "boolean"},
                                           :ipAddress {:description "IP address of the local BGP interface.",
                                                       :type "string"},
@@ -24714,7 +24849,13 @@
                                                              :format "uint32"},
                                           :advertisedRoutes {:description "Routes that were advertised to the remote BGP peer",
                                                              :type "array",
-                                                             :items {:$ref "Route"}}}},
+                                                             :items {:$ref "Route"}},
+                                          :peerIpv4NexthopAddress {:description "IPv4 address of the remote BGP interface.",
+                                                                   :type "string"},
+                                          :enableIpv4 {:description "Enable IPv4 traffic over BGP Peer. It is enabled by default if the peerIpAddress is version 4.",
+                                                       :type "boolean"},
+                                          :ipv4NexthopAddress {:description "IPv4 address of the local BGP interface.",
+                                                               :type "string"}}},
  :Help {:id "Help",
         :description "Provides links to documentation or for performing an out of band action. For example, if a quota check failed with an error indicating the calling project hasn't enabled the accessed service, this can contain a URL pointing directly to the right place in the developer console to flip the bit.",
         :type "object",
@@ -26146,7 +26287,7 @@
                                                             "USE_SERVING_PORT"]},
                                  :host {:description "The value of the host header in the HTTP/2 health check request. If left empty (default value), the host header is set to the destination IP address to which health check packets are sent. The destination IP address depends on the type of load balancer. For details, see: https://cloud.google.com/load-balancing/docs/health-check-concepts#hc-packet-dest",
                                         :type "string"},
-                                 :requestPath {:description "The request path of the HTTP/2 health check request. The default value is /.",
+                                 :requestPath {:description "The request path of the HTTP/2 health check request. The default value is /. Must comply with RFC3986.",
                                                :type "string"},
                                  :proxyHeader {:description "Specifies the type of proxy header to append before sending data to the backend, either NONE or PROXY_V1. The default is NONE.",
                                                :type "string",
@@ -27220,6 +27361,8 @@
                                                   ""
                                                   ""
                                                   ""
+                                                  ""
+                                                  ""
                                                   ""],
                                :enum ["A2_CPUS"
                                       "AFFINITY_GROUPS"
@@ -27363,6 +27506,7 @@
                                       "SNAPSHOTS"
                                       "SSD_TOTAL_GB"
                                       "SSL_CERTIFICATES"
+                                      "SSL_POLICIES"
                                       "STATIC_ADDRESSES"
                                       "STATIC_BYOIP_ADDRESSES"
                                       "STATIC_EXTERNAL_IPV6_ADDRESS_RANGES"
@@ -27380,6 +27524,7 @@
                                       "TPU_LITE_PODSLICE_V5"
                                       "TPU_PODSLICE_V4"
                                       "URL_MAPS"
+                                      "VARIABLE_IPV6_PUBLIC_DELEGATED_PREFIXES"
                                       "VPN_GATEWAYS"
                                       "VPN_TUNNELS"
                                       "XPN_SERVICE_PROJECTS"]},
@@ -28088,7 +28233,9 @@
                                                                                                           :type "string"}}}}}}}},
  :NodeGroupNode {:id "NodeGroupNode",
                  :type "object",
-                 :properties {:cpuOvercommitType {:description "CPU overcommit.",
+                 :properties {:upcomingMaintenance {:description "[Output Only] The information about an upcoming maintenance event.",
+                                                    :$ref "UpcomingMaintenance"},
+                              :cpuOvercommitType {:description "CPU overcommit.",
                                                   :type "string",
                                                   :enumDescriptions [""
                                                                      ""
@@ -29012,6 +29159,8 @@
                                                     "PREMIUM"
                                                     "STANDARD"
                                                     "STANDARD_OVERRIDES_FIXED_STANDARD"]},
+                               :ipCollection {:description "Resource reference of a PublicDelegatedPrefix. The PDP must be a sub-PDP in EXTERNAL_IPV6_FORWARDING_RULE_CREATION mode. Use one of the following formats to specify a sub-PDP when creating an IPv6 NetLB forwarding rule using BYOIP: Full resource URL, as in https://www.googleapis.com/compute/v1/projects/project_id/regions/region /publicDelegatedPrefixes/sub-pdp-name Partial URL, as in: - projects/project_id/regions/region/publicDelegatedPrefixes/sub-pdp-name - regions/region/publicDelegatedPrefixes/sub-pdp-name ",
+                                              :type "string"},
                                :isMirroringCollector {:description "Indicates whether or not this load balancer can be used as a collector for packet mirroring. To prevent mirroring loops, instances behind this load balancer will not have their traffic mirrored even if a PacketMirroring rule applies to them. This can only be set to true for load balancers that have their loadBalancingScheme set to INTERNAL.",
                                                       :type "boolean"},
                                :allPorts {:description "The ports, portRange, and allPorts fields are mutually exclusive. Only packets addressed to ports in the specified range will be forwarded to the backends configured with this forwarding rule. The allPorts field has the following limitations: - It requires that the forwarding rule IPProtocol be TCP, UDP, SCTP, or L3_DEFAULT. - It's applicable only to the following products: internal passthrough Network Load Balancers, backend service-based external passthrough Network Load Balancers, and internal and external protocol forwarding. - Set this field to true to allow packets addressed to any port or packets lacking destination port information (for example, UDP fragments after the first fragment) to be forwarded to the backends configured with this forwarding rule. The L3_DEFAULT protocol requires allPorts be set to true. ",
@@ -29422,7 +29571,7 @@
                                            :type "string"},
                                 :region {:description "[Output Only] URI of the region where the packetMirroring resides.",
                                          :type "string"},
-                                :filter {:description "Filter for mirrored traffic. If unspecified, all traffic is mirrored.",
+                                :filter {:description "Filter for mirrored traffic. If unspecified, all IPv4 traffic is mirrored.",
                                          :$ref "PacketMirroringFilter"},
                                 :priority {:description "The priority of applying this configuration. Priority is used to break ties in cases where there is more than one matching rule. In the case of two rules that apply for a given Instance, the one with the lowest-numbered priority value wins. Default value is 1000. Valid range is 0 through 65535.",
                                            :type "integer",

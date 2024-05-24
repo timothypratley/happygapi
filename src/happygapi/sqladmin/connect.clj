@@ -1,7 +1,7 @@
 (ns happygapi.sqladmin.connect
   "Cloud SQL Admin API: connect.
   API for Cloud SQL database instance management
-  See: https://developers.google.com/cloud-sql/api/reference/rest/v1/connect"
+  See: https://developers.google.com/cloud-sql/docs/reference/rest/v1/connect"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

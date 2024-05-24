@@ -1,7 +1,7 @@
 (ns happygapi.doubleclickbidmanager.queries
   "DoubleClick Bid Manager API: queries.
   DoubleClick Bid Manager API allows users to manage and create campaigns and reports.
-  See: https://developers.google.com/bid-manager/api/reference/rest/v2/queries"
+  See: https://developers.google.com/bid-manager/docs/reference/rest/v2/queries"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

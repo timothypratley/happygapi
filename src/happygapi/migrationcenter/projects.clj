@@ -1,7 +1,7 @@
 (ns happygapi.migrationcenter.projects
   "Migration Center API: projects.
   A unified platform that helps you accelerate your end-to-end cloud journey from your current on-premises or cloud environments to Google Cloud.
-  See: https://cloud.google.com/migration-centerapi/reference/rest/v1/projects"
+  See: https://cloud.google.com/migration-centerdocs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -433,7 +433,8 @@
                  :labels {},
                  :attributes {},
                  :performanceSamples [PerformanceSample],
-                 :traceToken string}]}
+                 :traceToken string,
+                 :collectionType string}]}
   
   Reports a set of frames."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -1654,6 +1655,209 @@
   Optional parameters: requestId
   
   Deletes a Report."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://migrationcenter.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-discoveryClients-create$
+  "https://cloud.google.com/migration-centerapi/reference/rest/v1/projects/locations/discoveryClients/create
+  
+  Required parameters: parent
+  
+  Optional parameters: discoveryClientId, requestId
+  
+  Body: 
+  
+  {:description string,
+   :serviceAccount string,
+   :labels {},
+   :errors [{:code integer, :message string, :details [{}]}],
+   :heartbeatTime string,
+   :displayName string,
+   :name string,
+   :createTime string,
+   :state string,
+   :source string,
+   :updateTime string,
+   :ttl string,
+   :expireTime string,
+   :signalsEndpoint string,
+   :version string}
+  
+  Creates a new discovery client."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://migrationcenter.googleapis.com/"
+     "v1/{+parent}/discoveryClients"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-discoveryClients-get$
+  "https://cloud.google.com/migration-centerapi/reference/rest/v1/projects/locations/discoveryClients/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets the details of a discovery client."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://migrationcenter.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-discoveryClients-list$
+  "https://cloud.google.com/migration-centerapi/reference/rest/v1/projects/locations/discoveryClients/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageSize, pageToken, filter, orderBy
+  
+  Lists all the discovery clients in a given project and location."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://migrationcenter.googleapis.com/"
+     "v1/{+parent}/discoveryClients"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-discoveryClients-patch$
+  "https://cloud.google.com/migration-centerapi/reference/rest/v1/projects/locations/discoveryClients/patch
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask, requestId
+  
+  Body: 
+  
+  {:description string,
+   :serviceAccount string,
+   :labels {},
+   :errors [{:code integer, :message string, :details [{}]}],
+   :heartbeatTime string,
+   :displayName string,
+   :name string,
+   :createTime string,
+   :state string,
+   :source string,
+   :updateTime string,
+   :ttl string,
+   :expireTime string,
+   :signalsEndpoint string,
+   :version string}
+  
+  Updates a discovery client."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://migrationcenter.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-discoveryClients-sendHeartbeat$
+  "https://cloud.google.com/migration-centerapi/reference/rest/v1/projects/locations/discoveryClients/sendHeartbeat
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:version string,
+   :errors [{:code integer, :message string, :details [{}]}]}
+  
+  Sends a discovery client heartbeat. Healthy clients are expected to send heartbeats regularly (normally every few minutes)."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://migrationcenter.googleapis.com/"
+     "v1/{+name}:sendHeartbeat"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-discoveryClients-delete$
+  "https://cloud.google.com/migration-centerapi/reference/rest/v1/projects/locations/discoveryClients/delete
+  
+  Required parameters: name
+  
+  Optional parameters: requestId
+  
+  Deletes a discovery client."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}

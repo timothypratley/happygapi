@@ -1,7 +1,7 @@
 (ns happygapi.analyticshub.organizations
   "Analytics Hub API: organizations.
   Exchange data and analytics assets securely and efficiently.
-  See: https://cloud.google.com/bigquery/docs/analytics-hub-introductionapi/reference/rest/v1/organizations"
+  See: https://cloud.google.com/bigquery/docs/analytics-hub-introductiondocs/reference/rest/v1/organizations"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

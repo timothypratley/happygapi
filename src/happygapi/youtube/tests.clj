@@ -1,7 +1,7 @@
 (ns happygapi.youtube.tests
   "YouTube Data API v3: tests.
   The YouTube Data API v3 is an API that provides access to YouTube data, such as videos, playlists, and channels.
-  See: https://developers.google.com/youtube/api/reference/rest/v3/tests"
+  See: https://developers.google.com/youtube/docs/reference/rest/v3/tests"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -15,7 +15,7 @@
   
   Body: 
   
-  {:id string, :gaia string, :featuredPart boolean, :snippet {}}
+  {:snippet {}, :gaia string, :featuredPart boolean, :id string}
   
   POST method."
   {:scopes ["https://www.googleapis.com/auth/youtube.readonly"]}

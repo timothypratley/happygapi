@@ -1,7 +1,7 @@
 (ns happygapi.storage.defaultObjectAccessControls
   "Cloud Storage JSON API: defaultObjectAccessControls.
   Stores and retrieves potentially large, immutable data objects.
-  See: https://developers.google.com/storage/docs/json_api/api/reference/rest/v1/defaultObjectAccessControls"
+  See: https://developers.google.com/storage/docs/json_api/docs/reference/rest/v1/defaultObjectAccessControls"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

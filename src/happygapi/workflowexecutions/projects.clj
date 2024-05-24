@@ -1,7 +1,7 @@
 (ns happygapi.workflowexecutions.projects
   "Workflow Executions API: projects.
   Execute workflows created with Workflows API.
-  See: https://cloud.google.com/workflowsapi/reference/rest/v1/projects"
+  See: https://cloud.google.com/workflowsdocs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

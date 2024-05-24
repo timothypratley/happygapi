@@ -1,7 +1,7 @@
 (ns happygapi.clouddeploy.projects
   "Cloud Deploy API: projects.
   
-  See: https://cloud.google.com/deploy/api/reference/rest/v1/projects"
+  See: https://cloud.google.com/deploy/docs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -1351,7 +1351,8 @@
                        :workerPool string,
                        :serviceAccount string,
                        :artifactStorage string,
-                       :executionTimeout string}],
+                       :executionTimeout string,
+                       :verbose boolean}],
    :annotations {},
    :anthosCluster {:membership string},
    :deployParameters {}}
@@ -1405,7 +1406,8 @@
                        :workerPool string,
                        :serviceAccount string,
                        :artifactStorage string,
-                       :executionTimeout string}],
+                       :executionTimeout string,
+                       :verbose boolean}],
    :annotations {},
    :anthosCluster {:membership string},
    :deployParameters {}}

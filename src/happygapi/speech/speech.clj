@@ -1,7 +1,7 @@
 (ns happygapi.speech.speech
   "Cloud Speech-to-Text API: speech.
   Converts audio to text by applying powerful neural network models.
-  See: https://cloud.google.com/speech-to-text/docs/quickstart-protocolapi/reference/rest/v1/speech"
+  See: https://cloud.google.com/speech-to-text/docs/quickstart-protocoldocs/reference/rest/v1/speech"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

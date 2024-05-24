@@ -1,7 +1,7 @@
 (ns happygapi.compute.regionNotificationEndpoints
   "Compute Engine API: regionNotificationEndpoints.
   Creates and runs virtual machines on Google Cloud Platform. 
-  See: https://cloud.google.com/compute/api/reference/rest/v1/regionNotificationEndpoints"
+  See: https://cloud.google.com/compute/docs/reference/rest/v1/regionNotificationEndpoints"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

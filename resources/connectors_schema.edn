@@ -530,7 +530,21 @@
                                     :type "array",
                                     :items {:$ref "Field"}},
                            :jsonSchema {:description "JsonSchema representation of this entity's schema",
-                                        :$ref "JsonSchema"}}},
+                                        :$ref "JsonSchema"},
+                           :operations {:type "array",
+                                        :items {:type "string",
+                                                :enumDescriptions ["Operation unspecified."
+                                                                   "This operation means entity type supports LIST method."
+                                                                   "This operation means entity type supports GET method."
+                                                                   "This operation means entity type supports CREATE method."
+                                                                   "This operation means entity type supports UPDATE method."
+                                                                   "This operation means entity type supports DELETE method."],
+                                                :enum ["OPERATION_UNSPECIFIED"
+                                                       "LIST"
+                                                       "GET"
+                                                       "CREATE"
+                                                       "UPDATE"
+                                                       "DELETE"]}}}},
  :CheckReadinessResponse {:id "CheckReadinessResponse",
                           :description "Response containing status of the connector for readiness prober.",
                           :type "object",
@@ -585,7 +599,7 @@
                                        :type "array",
                                        :items {:$ref "Schedule"}}}},
  :MaintenancePolicy {:id "MaintenancePolicy",
-                     :description "LINT.IfChange Defines policies to service maintenance events.",
+                     :description "Defines policies to service maintenance events.",
                      :type "object",
                      :properties {:name {:description "Required. MaintenancePolicy name using the form: `projects/{project_id}/locations/{location_id}/maintenancePolicies/{maintenance_policy_id}` where {project_id} refers to a GCP consumer project ID, {location_id} refers to a GCP region/zone, {maintenance_policy_id} must be 1-63 characters long and match the regular expression `[a-z0-9]([-a-z0-9]*[a-z0-9])?`.",
                                          :type "string"},

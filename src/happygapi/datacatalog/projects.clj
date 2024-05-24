@@ -1,7 +1,7 @@
 (ns happygapi.datacatalog.projects
   "Google Cloud Data Catalog API: projects.
   A fully managed and highly scalable data discovery and metadata management service. 
-  See: https://cloud.google.com/data-catalog/docs/api/reference/rest/v1/projects"
+  See: https://cloud.google.com/data-catalog/docs/docs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

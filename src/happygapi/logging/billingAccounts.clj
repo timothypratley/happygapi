@@ -1,7 +1,7 @@
 (ns happygapi.logging.billingAccounts
   "Cloud Logging API: billingAccounts.
   Writes log entries and manages your Cloud Logging configuration.
-  See: https://cloud.google.com/logging/docs/api/reference/rest/v2/billingAccounts"
+  See: https://cloud.google.com/logging/docs/docs/reference/rest/v2/billingAccounts"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

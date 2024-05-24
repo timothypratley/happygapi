@@ -1,46 +1,32 @@
 (ns happygapi.policysimulator.projects
   "Policy Simulator API: projects.
    Policy Simulator is a collection of endpoints for creating, running, and viewing a Replay. A `Replay` is a type of simulation that lets you see how your members' access to resources might change if you changed your IAM policy. During a `Replay`, Policy Simulator re-evaluates, or replays, past access attempts under both the current policy and your proposed policy, and compares those results to determine how your members' access might change under the proposed policy.
-  See: https://cloud.google.com/iam/docs/simulating-accessapi/reference/rest/v1/projects"
+  See: https://cloud.google.com/iam/docs/simulating-accessdocs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn locations-replays-create$
-  "https://cloud.google.com/iam/docs/simulating-accessapi/reference/rest/v1/projects/locations/replays/create
+(defn locations-orgPolicyViolationsPreviews-operations-get$
+  "https://cloud.google.com/iam/docs/simulating-accessapi/reference/rest/v1/projects/locations/orgPolicyViolationsPreviews/operations/get
   
-  Required parameters: parent
+  Required parameters: name
   
   Optional parameters: none
   
-  Body: 
-  
-  {:state string,
-   :name string,
-   :resultsSummary {:differenceCount integer,
-                    :newestDate GoogleTypeDate,
-                    :logCount integer,
-                    :errorCount integer,
-                    :unchangedCount integer,
-                    :oldestDate GoogleTypeDate},
-   :config {:policyOverlay {}, :logSource string}}
-  
-  Creates and starts a Replay using the given ReplayConfig."
+  Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/post
+   (http/get
     (util/get-url
      "https://policysimulator.googleapis.com/"
-     "v1/{+parent}/replays"
-     #{:parent}
+     "v1/{+name}"
+     #{:name}
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -72,23 +58,63 @@
       :as :json}
      auth))))
 
-(defn locations-replays-results-list$
-  "https://cloud.google.com/iam/docs/simulating-accessapi/reference/rest/v1/projects/locations/replays/results/list
+(defn locations-replays-create$
+  "https://cloud.google.com/iam/docs/simulating-accessapi/reference/rest/v1/projects/locations/replays/create
   
   Required parameters: parent
   
-  Optional parameters: pageToken, pageSize
+  Optional parameters: none
   
-  Lists the results of running a Replay."
+  Body: 
+  
+  {:config {:logSource string, :policyOverlay {}},
+   :state string,
+   :name string,
+   :resultsSummary {:logCount integer,
+                    :newestDate GoogleTypeDate,
+                    :oldestDate GoogleTypeDate,
+                    :errorCount integer,
+                    :unchangedCount integer,
+                    :differenceCount integer}}
+  
+  Creates and starts a Replay using the given ReplayConfig."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://policysimulator.googleapis.com/"
+     "v1/{+parent}/replays"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-replays-operations-list$
+  "https://cloud.google.com/iam/docs/simulating-accessapi/reference/rest/v1/projects/locations/replays/operations/list
+  
+  Required parameters: name
+  
+  Optional parameters: pageToken, pageSize, filter
+  
+  Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns `UNIMPLEMENTED`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://policysimulator.googleapis.com/"
-     "v1/{+parent}/results"
-     #{:parent}
+     "v1/{+name}"
+     #{:name}
      parameters)
     (merge-with
      merge
@@ -124,49 +150,23 @@
       :as :json}
      auth))))
 
-(defn locations-replays-operations-list$
-  "https://cloud.google.com/iam/docs/simulating-accessapi/reference/rest/v1/projects/locations/replays/operations/list
+(defn locations-replays-results-list$
+  "https://cloud.google.com/iam/docs/simulating-accessapi/reference/rest/v1/projects/locations/replays/results/list
   
-  Required parameters: name
+  Required parameters: parent
   
-  Optional parameters: pageSize, pageToken, filter
+  Optional parameters: pageSize, pageToken
   
-  Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns `UNIMPLEMENTED`."
+  Lists the results of running a Replay."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://policysimulator.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-orgPolicyViolationsPreviews-operations-get$
-  "https://cloud.google.com/iam/docs/simulating-accessapi/reference/rest/v1/projects/locations/orgPolicyViolationsPreviews/operations/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://policysimulator.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
+     "v1/{+parent}/results"
+     #{:parent}
      parameters)
     (merge-with
      merge

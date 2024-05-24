@@ -1,7 +1,7 @@
 (ns happygapi.drive.drives
   "Google Drive API: drives.
   The Google Drive API allows clients to access resources from Google Drive.
-  See: https://developers.google.com/drive/api/reference/rest/v3/drives"
+  See: https://developers.google.com/drive/docs/reference/rest/v3/drives"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -255,7 +255,7 @@
    :colorRgb string,
    :backgroundImageLink string}
   
-  Updates the metadate for a shared drive."
+  Updates the metadata for a shared drive."
   {:scopes ["https://www.googleapis.com/auth/drive"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:driveId})]}

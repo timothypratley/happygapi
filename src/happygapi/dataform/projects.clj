@@ -1,7 +1,7 @@
 (ns happygapi.dataform.projects
   "Dataform API: projects.
   Service to develop, version control, and operationalize SQL pipelines in BigQuery.
-  See: https://cloud.google.com/dataform/docsapi/reference/rest/v1beta1/projects"
+  See: https://cloud.google.com/dataform/docsdocs/reference/rest/v1beta1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -165,7 +165,9 @@
                        :defaultBranch string,
                        :authenticationTokenSecretVersion string,
                        :sshAuthenticationConfig SshAuthenticationConfig,
-                       :tokenStatus string}}
+                       :tokenStatus string},
+   :kmsKeyName string,
+   :dataEncryptionState {:kmsKeyVersionName string}}
   
   Updates a single Repository."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -243,7 +245,9 @@
                        :defaultBranch string,
                        :authenticationTokenSecretVersion string,
                        :sshAuthenticationConfig SshAuthenticationConfig,
-                       :tokenStatus string}}
+                       :tokenStatus string},
+   :kmsKeyName string,
+   :dataEncryptionState {:kmsKeyVersionName string}}
   
   Creates a new Repository in a given project and location."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -787,7 +791,7 @@
   
   Body: 
   
-  {:name string}
+  {:name string, :dataEncryptionState {:kmsKeyVersionName string}}
   
   Creates a new Workspace in a given Repository."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -1255,14 +1259,15 @@
   
   {:name string,
    :gitCommitish string,
-   :codeCompilationConfig {:defaultDatabase string,
-                           :defaultSchema string,
+   :codeCompilationConfig {:defaultNotebookRuntimeOptions NotebookRuntimeOptions,
+                           :defaultDatabase string,
                            :defaultLocation string,
-                           :assertionSchema string,
-                           :vars {},
                            :databaseSuffix string,
+                           :defaultSchema string,
+                           :tablePrefix string,
+                           :assertionSchema string,
                            :schemaSuffix string,
-                           :tablePrefix string},
+                           :vars {}},
    :cronSchedule string,
    :timeZone string,
    :recentScheduledReleaseRecords [{:releaseTime string,
@@ -1303,14 +1308,15 @@
   
   {:name string,
    :gitCommitish string,
-   :codeCompilationConfig {:defaultDatabase string,
-                           :defaultSchema string,
+   :codeCompilationConfig {:defaultNotebookRuntimeOptions NotebookRuntimeOptions,
+                           :defaultDatabase string,
                            :defaultLocation string,
-                           :assertionSchema string,
-                           :vars {},
                            :databaseSuffix string,
+                           :defaultSchema string,
+                           :tablePrefix string,
+                           :assertionSchema string,
                            :schemaSuffix string,
-                           :tablePrefix string},
+                           :vars {}},
    :cronSchedule string,
    :timeZone string,
    :recentScheduledReleaseRecords [{:releaseTime string,
@@ -1371,7 +1377,7 @@
   
   Required parameters: parent
   
-  Optional parameters: pageSize, pageToken, filter
+  Optional parameters: pageSize, pageToken, orderBy, filter
   
   Lists CompilationResults in a given Repository."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -1427,24 +1433,26 @@
   
   Body: 
   
-  {:name string,
-   :gitCommitish string,
+  {:dataformCoreVersion string,
    :workspace string,
-   :releaseConfig string,
-   :codeCompilationConfig {:defaultDatabase string,
-                           :defaultSchema string,
-                           :defaultLocation string,
-                           :assertionSchema string,
-                           :vars {},
-                           :databaseSuffix string,
-                           :schemaSuffix string,
-                           :tablePrefix string},
-   :resolvedGitCommitSha string,
-   :dataformCoreVersion string,
    :compilationErrors [{:message string,
                         :stack string,
                         :path string,
-                        :actionTarget Target}]}
+                        :actionTarget Target}],
+   :name string,
+   :codeCompilationConfig {:defaultNotebookRuntimeOptions NotebookRuntimeOptions,
+                           :defaultDatabase string,
+                           :defaultLocation string,
+                           :databaseSuffix string,
+                           :defaultSchema string,
+                           :tablePrefix string,
+                           :assertionSchema string,
+                           :schemaSuffix string,
+                           :vars {}},
+   :releaseConfig string,
+   :gitCommitish string,
+   :dataEncryptionState {:kmsKeyVersionName string},
+   :resolvedGitCommitSha string}
   
   Creates a new CompilationResult in a given project and location."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -1731,7 +1739,8 @@
                       :serviceAccount string},
    :state string,
    :invocationTiming {:startTime string, :endTime string},
-   :resolvedCompilationResult string}
+   :resolvedCompilationResult string,
+   :dataEncryptionState {:kmsKeyVersionName string}}
   
   Creates a new WorkflowInvocation in a given Repository."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -1829,6 +1838,64 @@
      "https://dataform.googleapis.com/"
      "v1beta1/{+name}:query"
      #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-repositories-commentThreads-setIamPolicy$
+  "https://cloud.google.com/dataform/docsapi/reference/rest/v1beta1/projects/locations/repositories/commentThreads/setIamPolicy
+  
+  Required parameters: resource
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:policy {:version integer, :bindings [Binding], :etag string}}
+  
+  Sets the access control policy on the specified resource. Replaces any existing policy. Can return `NOT_FOUND`, `INVALID_ARGUMENT`, and `PERMISSION_DENIED` errors."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://dataform.googleapis.com/"
+     "v1beta1/{+resource}:setIamPolicy"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-repositories-commentThreads-getIamPolicy$
+  "https://cloud.google.com/dataform/docsapi/reference/rest/v1beta1/projects/locations/repositories/commentThreads/getIamPolicy
+  
+  Required parameters: resource
+  
+  Optional parameters: options.requestedPolicyVersion
+  
+  Gets the access control policy for a resource. Returns an empty policy if the resource exists and does not have a policy set."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://dataform.googleapis.com/"
+     "v1beta1/{+resource}:getIamPolicy"
+     #{:resource}
      parameters)
     (merge-with
      merge

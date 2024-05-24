@@ -1,7 +1,7 @@
 (ns happygapi.compute.forwardingRules
   "Compute Engine API: forwardingRules.
   Creates and runs virtual machines on Google Cloud Platform. 
-  See: https://cloud.google.com/compute/api/reference/rest/v1/forwardingRules"
+  See: https://cloud.google.com/compute/docs/reference/rest/v1/forwardingRules"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -127,6 +127,7 @@
    :metadataFilters [{:filterMatchCriteria string,
                       :filterLabels [MetadataFilterLabelMatch]}],
    :networkTier string,
+   :ipCollection string,
    :isMirroringCollector boolean,
    :allPorts boolean,
    :pscConnectionStatus string,
@@ -260,6 +261,7 @@
    :metadataFilters [{:filterMatchCriteria string,
                       :filterLabels [MetadataFilterLabelMatch]}],
    :networkTier string,
+   :ipCollection string,
    :isMirroringCollector boolean,
    :allPorts boolean,
    :pscConnectionStatus string,

@@ -489,7 +489,7 @@
                                              :packageName {:description "The package name of the app that's out of compliance. If not set, then this condition matches any package name.",
                                                            :type "string"}}},
  :ExtensionConfig {:id "ExtensionConfig",
-                   :description "Configuration to enable an app as an extension app, with the capability of interacting with Android Device Policy offline. For Android versions 13 and above, extension apps are exempt from battery restrictions so will not be placed into the restricted App Standby Bucket (https://developer.android.com/topic/performance/appstandby#restricted-bucket). Extensions apps are also protected against users clearing their data or force-closing the application, although admins can continue to use the clear app data command (https://developer.android.com/management/reference/rest/v1/enterprises.devices/issueCommand#CommandType) on extension apps if needed for Android 13 and above.",
+                   :description "Configuration to enable an app as an extension app, with the capability of interacting with Android Device Policy offline. For Android versions 13 and above, extension apps are exempt from battery restrictions so will not be placed into the restricted App Standby Bucket (https://developer.android.com/topic/performance/appstandby#restricted-bucket). Extensions apps are also protected against users clearing their data or force-closing the application, although admins can continue to use the clear app data command on extension apps if needed for Android 13 and above.",
                    :type "object",
                    :properties {:signingKeyFingerprintsSha256 {:description "Hex-encoded SHA-256 hash of the signing certificate of the extension app. Only hexadecimal string representations of 64 characters are valid.If not specified, the signature for the corresponding package name is obtained from the Play Store instead.If this list is empty, the signature of the extension app on the device must match the signature obtained from the Play Store for the app to be able to communicate with Android Device Policy.If this list is not empty, the signature of the extension app on the device must match one of the entries in this list for the app to be able to communicate with Android Device Policy.In production use cases, it is recommended to leave this empty.",
                                                                :type "array",
@@ -535,9 +535,9 @@
  :BatchUsageLogEvents {:id "BatchUsageLogEvents",
                        :description "Batched event logs of events from the device.",
                        :type "object",
-                       :properties {:device {:description "The name of the device in the form ‘enterprises/{enterpriseId}/devices/{deviceId}’",
+                       :properties {:device {:description "If present, the name of the device in the form ‘enterprises/{enterpriseId}/devices/{deviceId}’",
                                              :type "string"},
-                                    :user {:description "The resource name of the user that owns this device in the form ‘enterprises/{enterpriseId}/users/{userId}’.",
+                                    :user {:description "If present, the resource name of the user that owns this device in the form ‘enterprises/{enterpriseId}/users/{userId}’.",
                                            :type "string"},
                                     :retrievalTime {:description "The device timestamp when the batch of events were collected from the device.",
                                                     :type "string",
@@ -825,7 +825,8 @@
                                            :format "google-duration"},
                                 :qrCode {:description "A JSON string whose UTF-8 representation can be used to generate a QR code to enroll a device with this enrollment token. To enroll a device using NFC, the NFC record must contain a serialized java.util.Properties representation of the properties in the JSON.",
                                          :type "string"},
-                                :user {:description "The user associated with this enrollment token. If it's specified when the enrollment token is created and the user does not exist, the user will be created. This field must not contain personally identifiable information. Only the account_identifier field needs to be set.",
+                                :user {:description "This field is deprecated and the value is ignored.",
+                                       :deprecated true,
                                        :$ref "User"},
                                 :policyName {:description "The name of the policy initially applied to the enrolled device, in the form enterprises/{enterpriseId}/policies/{policyId}. If not specified, the policy_name for the device’s user is applied. If user_name is also not specified, enterprises/{enterpriseId}/policies/default is applied by default. When updating this field, you can specify only the policyId as long as the policyId doesn’t contain any slashes. The rest of the policy name will be inferred.",
                                              :type "string"},
@@ -872,6 +873,11 @@
                                                :type "string"},
                                   :volumeLabel {:description "Volume label. Redacted to empty string on organization-owned managed profile devices.",
                                                 :type "string"}}},
+ :WifiSsid {:id "WifiSsid",
+            :description "Represents a Wi-Fi SSID.",
+            :type "object",
+            :properties {:wifiSsid {:description "Required. Wi-Fi SSID represented as a string.",
+                                    :type "string"}}},
  :AppProcessInfo {:id "AppProcessInfo",
                   :description "Information about a process. It contains process name, start time, app Uid, app Pid, seinfo tag, hash of the base APK.",
                   :type "object",
@@ -1223,7 +1229,7 @@
                                                                   "SECURITY_LOGS"
                                                                   "NETWORK_ACTIVITY_LOGS"]}}}},
  :SystemUpdate {:id "SystemUpdate",
-                :description "Configuration for managing system updates",
+                :description "Configuration for managing system updatesNote: Google Play system updates (https://source.android.com/docs/core/ota/modular-system) (also called Mainline updates) are automatically downloaded but require a device reboot to be installed. Refer to the mainline section in Manage system updates (https://developer.android.com/work/dpc/system-updates#mainline) for further details.",
                 :type "object",
                 :properties {:type {:description "The type of system update to configure.",
                                     :type "string",
@@ -1355,6 +1361,20 @@
                                                               :items {:$ref "MigrationToken"}},
                                             :nextPageToken {:description "A token, which can be sent as page_token to retrieve the next page. If this field is omitted, there are no subsequent pages.",
                                                             :type "string"}}},
+ :WifiSsidPolicy {:id "WifiSsidPolicy",
+                  :description "Restrictions on which Wi-Fi SSIDs the device can connect to. Note that this does not affect which networks can be configured on the device. Supported on company-owned devices running Android 13 and above.",
+                  :type "object",
+                  :properties {:wifiSsidPolicyType {:description "Type of the Wi-Fi SSID policy to be applied.",
+                                                    :type "string",
+                                                    :enumDescriptions ["Defaults to WIFI_SSID_DENYLIST. wifiSsids must not be set. There are no restrictions on which SSID the device can connect to."
+                                                                       "The device cannot connect to any Wi-Fi network whose SSID is in wifiSsids, but can connect to other networks."
+                                                                       "The device can make Wi-Fi connections only to the SSIDs in wifiSsids. wifiSsids must not be empty. The device will not be able to connect to any other Wi-Fi network."],
+                                                    :enum ["WIFI_SSID_POLICY_TYPE_UNSPECIFIED"
+                                                           "WIFI_SSID_DENYLIST"
+                                                           "WIFI_SSID_ALLOWLIST"]},
+                               :wifiSsids {:description "Optional. List of Wi-Fi SSIDs that should be applied in the policy. This field must be non-empty when WifiSsidPolicyType is set to WIFI_SSID_ALLOWLIST. If this is set to a non-empty list, then a nonComplianceDetail detail with API_LEVEL is reported if the Android version is less than 13 and a nonComplianceDetail with MANAGEMENT_MODE is reported for non-company-owned devices.",
+                                           :type "array",
+                                           :items {:$ref "WifiSsid"}}}},
  :OncCertificateProvider {:id "OncCertificateProvider",
                           :description "This feature is not generally available.",
                           :type "object",
@@ -1651,7 +1671,7 @@
                                         :type "string",
                                         :format "int64"}}},
  :MigrationToken {:id "MigrationToken",
-                  :description "A token to initiate the migration of a device from being managed by a third-party DPC to being managed by Android Management API. A migration token is valid only for a single device.",
+                  :description "A token to initiate the migration of a device from being managed by a third-party DPC to being managed by Android Management API. A migration token is valid only for a single device. See the guide (https://developers.google.com/android/management/dpc-migration) for more details.",
                   :type "object",
                   :properties {:additionalData {:description "Immutable. Optional EMM-specified additional data. Once the device is migrated this will be populated in the migrationAdditionalData field of the Device resource. This must be at most 1024 characters.",
                                                 :type "string"},
@@ -1763,7 +1783,7 @@
                        :type "object",
                        :properties {:lostMessage {:description "The message displayed to the user when the device is in lost mode.",
                                                   :$ref "UserFacingMessage"},
-                                    :lostPhoneNumber {:description "The phone number displayed to the user when the device is in lost mode.",
+                                    :lostPhoneNumber {:description "The phone number that will be called when the device is in lost mode and the call owner button is tapped.",
                                                       :$ref "UserFacingMessage"},
                                     :lostEmailAddress {:description "The email address displayed to the user when the device is in lost mode.",
                                                        :type "string"},
@@ -2009,14 +2029,16 @@
                                                          "The device was deleted. This state is never returned by an API call, but is used in the final status report when the device acknowledges the deletion. If the device is deleted via the API call, this state is published to Pub/Sub. If the user deletes the work profile or resets the device, the device state will remain unknown to the server."
                                                          "The device is being provisioned. Newly enrolled devices are in this state until they have a policy applied."
                                                          "The device is lost. This state is only possible on organization-owned devices."
-                                                         "The device is preparing for migrating to Android Management API. No further action is needed for the migration to continue."],
+                                                         "The device is preparing for migrating to Android Management API. No further action is needed for the migration to continue."
+                                                         "This is a financed device that has been \"locked\" by the financing agent. This means certain policy settings have been applied which limit device functionality until the device has been \"unlocked\" by the financing agent. The device will continue to apply policy settings excluding those overridden by the financing agent. When the device is \"locked\", the state is reported in appliedState as DEACTIVATED_BY_DEVICE_FINANCE."],
                                       :enum ["DEVICE_STATE_UNSPECIFIED"
                                              "ACTIVE"
                                              "DISABLED"
                                              "DELETED"
                                              "PROVISIONING"
                                              "LOST"
-                                             "PREPARING_FOR_MIGRATION"]},
+                                             "PREPARING_FOR_MIGRATION"
+                                             "DEACTIVATED_BY_DEVICE_FINANCE"]},
                        :memoryInfo {:description "Memory information: contains information about device memory and storage.",
                                     :$ref "MemoryInfo"},
                        :networkInfo {:description "Device network information. This information is only available if networkInfoEnabled is true in the device's policy.",
@@ -2041,14 +2063,16 @@
                                                   "The device was deleted. This state is never returned by an API call, but is used in the final status report when the device acknowledges the deletion. If the device is deleted via the API call, this state is published to Pub/Sub. If the user deletes the work profile or resets the device, the device state will remain unknown to the server."
                                                   "The device is being provisioned. Newly enrolled devices are in this state until they have a policy applied."
                                                   "The device is lost. This state is only possible on organization-owned devices."
-                                                  "The device is preparing for migrating to Android Management API. No further action is needed for the migration to continue."],
+                                                  "The device is preparing for migrating to Android Management API. No further action is needed for the migration to continue."
+                                                  "This is a financed device that has been \"locked\" by the financing agent. This means certain policy settings have been applied which limit device functionality until the device has been \"unlocked\" by the financing agent. The device will continue to apply policy settings excluding those overridden by the financing agent. When the device is \"locked\", the state is reported in appliedState as DEACTIVATED_BY_DEVICE_FINANCE."],
                                :enum ["DEVICE_STATE_UNSPECIFIED"
                                       "ACTIVE"
                                       "DISABLED"
                                       "DELETED"
                                       "PROVISIONING"
                                       "LOST"
-                                      "PREPARING_FOR_MIGRATION"]},
+                                      "PREPARING_FOR_MIGRATION"
+                                      "DEACTIVATED_BY_DEVICE_FINANCE"]},
                        :apiLevel {:description "The API level of the Android platform version running on the device.",
                                   :type "integer",
                                   :format "int32"},
@@ -2330,7 +2354,7 @@
                                                    :enumDescriptions ["Unspecified. Defaults to AUTO_UPDATE_DEFAULT."
                                                                       "The default update mode.The app is automatically updated with low priority to minimize the impact on the user.The app is updated when all of the following constraints are met: The device is not actively used. The device is connected to an unmetered network. The device is charging. The app to be updated is not running in the foreground.The device is notified about a new update within 24 hours after it is published by the developer, after which the app is updated the next time the constraints above are met."
                                                                       "The app is not automatically updated for a maximum of 90 days after the app becomes out of date.90 days after the app becomes out of date, the latest available version is installed automatically with low priority (see AUTO_UPDATE_DEFAULT). After the app is updated it is not automatically updated again until 90 days after it becomes out of date again.The user can still manually update the app from the Play Store at any time."
-                                                                      "The app is updated as soon as possible. No constraints are applied.The device is notified immediately about a new update after it becomes available."],
+                                                                      "The app is updated as soon as possible. No constraints are applied.The device is notified as soon as possible about a new update after it becomes available."],
                                                    :enum ["AUTO_UPDATE_MODE_UNSPECIFIED"
                                                           "AUTO_UPDATE_DEFAULT"
                                                           "AUTO_UPDATE_POSTPONED"
@@ -2376,17 +2400,19 @@
  :ProvisioningInfo {:id "ProvisioningInfo",
                     :description "Information about a device that is available during setup.",
                     :type "object",
-                    :properties {:name {:description "The name of this resource in the form provisioningInfo/{provisioning_info}.",
+                    :properties {:serialNumber {:description "For corporate-owned devices, The device serial number.",
+                                                :type "string"},
+                                 :name {:description "The name of this resource in the form provisioningInfo/{provisioning_info}.",
                                         :type "string"},
-                                 :enterprise {:description "The name of the enterprise in the form enterprises/{enterprise}.",
-                                              :type "string"},
-                                 :brand {:description "The brand of the device. For example, Google.",
-                                         :type "string"},
-                                 :model {:description "The model of the device. For example, Asus Nexus 7.",
-                                         :type "string"},
+                                 :meid {:description "For corporate-owned devices, MEID number of the CDMA device. For example, A00000292788E1.",
+                                        :type "string"},
                                  :apiLevel {:description "The API level of the Android platform version running on the device.",
                                             :type "integer",
                                             :format "int32"},
+                                 :brand {:description "The brand of the device. For example, Google.",
+                                         :type "string"},
+                                 :imei {:description "For corporate-owned devices, IMEI number of the GSM device. For example, A1000031212.",
+                                        :type "string"},
                                  :managementMode {:description "The management mode of the device or profile.",
                                                   :type "string",
                                                   :enumDescriptions ["This value is disallowed."
@@ -2402,7 +2428,11 @@
                                                                 "Device is personally-owned."],
                                              :enum ["OWNERSHIP_UNSPECIFIED"
                                                     "COMPANY_OWNED"
-                                                    "PERSONALLY_OWNED"]}}},
+                                                    "PERSONALLY_OWNED"]},
+                                 :enterprise {:description "The name of the enterprise in the form enterprises/{enterprise}.",
+                                              :type "string"},
+                                 :model {:description "The model of the device. For example, Asus Nexus 7.",
+                                         :type "string"}}},
  :DeviceConnectivityManagement {:id "DeviceConnectivityManagement",
                                 :description "Covers controls for device connectivity such as Wi-Fi, USB data access, keyboard/mouse connections, and more.",
                                 :type "object",
@@ -2443,7 +2473,9 @@
                                                                  :enum ["TETHERING_SETTINGS_UNSPECIFIED"
                                                                         "ALLOW_ALL_TETHERING"
                                                                         "DISALLOW_WIFI_TETHERING"
-                                                                        "DISALLOW_ALL_TETHERING"]}}},
+                                                                        "DISALLOW_ALL_TETHERING"]},
+                                             :wifiSsidPolicy {:description "Restrictions on which Wi-Fi SSIDs the device can connect to. Note that this does not affect which networks can be configured on the device. Supported on company-owned devices running Android 13 and above.",
+                                                              :$ref "WifiSsidPolicy"}}},
  :PersistentPreferredActivity {:id "PersistentPreferredActivity",
                                :description "A default activity for handling intents that match a particular intent filter. Note: To set up a kiosk, use InstallType to KIOSK rather than use persistent preferred activities.",
                                :type "object",
@@ -2771,7 +2803,7 @@
                                              "LOCATION_USER_CHOICE"
                                              "LOCATION_ENFORCED"
                                              "LOCATION_DISABLED"]},
-                       :systemUpdate {:description "The system update policy, which controls how OS updates are applied. If the update type is WINDOWED, the update window will automatically apply to Play app updates as well.",
+                       :systemUpdate {:description "The system update policy, which controls how OS updates are applied. If the update type is WINDOWED, the update window will automatically apply to Play app updates as well.Note: Google Play system updates (https://source.android.com/docs/core/ota/modular-system) (also called Mainline updates) are automatically downloaded and require a device reboot to be installed. Refer to the mainline section in Manage system updates (https://developer.android.com/work/dpc/system-updates#mainline) for further details.",
                                       :$ref "SystemUpdate"},
                        :policyEnforcementRules {:description "Rules that define the behavior when a particular policy can not be applied on device",
                                                 :type "array",

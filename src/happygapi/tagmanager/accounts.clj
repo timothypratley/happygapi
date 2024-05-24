@@ -1,7 +1,7 @@
 (ns happygapi.tagmanager.accounts
   "Tag Manager API: accounts.
   This API allows clients to access and modify container and tag configuration.
-  See: https://developers.google.com/tag-managerapi/reference/rest/v2/accounts"
+  See: https://developers.google.com/tag-managerdocs/reference/rest/v2/accounts"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

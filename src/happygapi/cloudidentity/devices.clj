@@ -1,7 +1,7 @@
 (ns happygapi.cloudidentity.devices
   "Cloud Identity API: devices.
   API for provisioning and managing identity resources.
-  See: https://cloud.google.com/identity/api/reference/rest/v1/devices"
+  See: https://cloud.google.com/identity/docs/reference/rest/v1/devices"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -52,6 +52,7 @@
                                :verifyAppsEnabled boolean,
                                :hasPotentiallyHarmfulApps boolean},
    :enabledDeveloperOptions boolean,
+   :unifiedDeviceId string,
    :assetTag string,
    :managementState string,
    :model string}

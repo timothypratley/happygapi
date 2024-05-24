@@ -1,41 +1,10 @@
 (ns happygapi.area120tables.tables
   "Area120 Tables API: tables.
   
-  See: https://support.google.com/area120-tables/answer/10011390api/reference/rest/v1alpha1/tables"
+  See: https://support.google.com/area120-tables/answer/10011390docs/reference/rest/v1alpha1/tables"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
-
-(defn get$
-  "https://support.google.com/area120-tables/answer/10011390api/reference/rest/v1alpha1/tables/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets a table. Returns NOT_FOUND if the table does not exist."
-  {:scopes ["https://www.googleapis.com/auth/drive"
-            "https://www.googleapis.com/auth/drive.file"
-            "https://www.googleapis.com/auth/drive.readonly"
-            "https://www.googleapis.com/auth/spreadsheets"
-            "https://www.googleapis.com/auth/spreadsheets.readonly"
-            "https://www.googleapis.com/auth/tables"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://area120tables.googleapis.com/"
-     "v1alpha1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
 
 (defn list$
   "https://support.google.com/area120-tables/answer/10011390api/reference/rest/v1alpha1/tables/list
@@ -68,6 +37,37 @@
       :as :json}
      auth))))
 
+(defn get$
+  "https://support.google.com/area120-tables/answer/10011390api/reference/rest/v1alpha1/tables/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets a table. Returns NOT_FOUND if the table does not exist."
+  {:scopes ["https://www.googleapis.com/auth/drive"
+            "https://www.googleapis.com/auth/drive.file"
+            "https://www.googleapis.com/auth/drive.readonly"
+            "https://www.googleapis.com/auth/spreadsheets"
+            "https://www.googleapis.com/auth/spreadsheets.readonly"
+            "https://www.googleapis.com/auth/tables"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://area120tables.googleapis.com/"
+     "v1alpha1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn rows-batchUpdate$
   "https://support.google.com/area120-tables/answer/10011390api/reference/rest/v1alpha1/tables/rows/batchUpdate
   
@@ -77,7 +77,7 @@
   
   Body: 
   
-  {:requests [{:updateMask string, :row Row, :view string}]}
+  {:requests [{:updateMask string, :view string, :row Row}]}
   
   Updates multiple rows."
   {:scopes ["https://www.googleapis.com/auth/drive"
@@ -92,6 +92,41 @@
      "https://area120tables.googleapis.com/"
      "v1alpha1/{+parent}/rows:batchUpdate"
      #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn rows-patch$
+  "https://support.google.com/area120-tables/answer/10011390api/reference/rest/v1alpha1/tables/rows/patch
+  
+  Required parameters: name
+  
+  Optional parameters: updateMask, view
+  
+  Body: 
+  
+  {:values {}, :updateTime string, :name string, :createTime string}
+  
+  Updates a row."
+  {:scopes ["https://www.googleapis.com/auth/drive"
+            "https://www.googleapis.com/auth/drive.file"
+            "https://www.googleapis.com/auth/spreadsheets"
+            "https://www.googleapis.com/auth/tables"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://area120tables.googleapis.com/"
+     "v1alpha1/{+name}"
+     #{:name}
      parameters)
     (merge-with
      merge
@@ -139,7 +174,7 @@
   
   Required parameters: parent
   
-  Optional parameters: view, filter, orderBy, pageSize, pageToken
+  Optional parameters: orderBy, pageSize, filter, view, pageToken
   
   Lists rows in a table. Returns NOT_FOUND if the table does not exist."
   {:scopes ["https://www.googleapis.com/auth/drive"
@@ -165,47 +200,18 @@
       :as :json}
      auth))))
 
-(defn rows-delete$
-  "https://support.google.com/area120-tables/answer/10011390api/reference/rest/v1alpha1/tables/rows/delete
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Deletes a row."
-  {:scopes ["https://www.googleapis.com/auth/drive"
-            "https://www.googleapis.com/auth/drive.file"
-            "https://www.googleapis.com/auth/spreadsheets"
-            "https://www.googleapis.com/auth/tables"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/delete
-    (util/get-url
-     "https://area120tables.googleapis.com/"
-     "v1alpha1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn rows-create$
-  "https://support.google.com/area120-tables/answer/10011390api/reference/rest/v1alpha1/tables/rows/create
+(defn rows-batchCreate$
+  "https://support.google.com/area120-tables/answer/10011390api/reference/rest/v1alpha1/tables/rows/batchCreate
   
   Required parameters: parent
   
-  Optional parameters: view
+  Optional parameters: none
   
   Body: 
   
-  {:values {}, :createTime string, :updateTime string, :name string}
+  {:requests [{:parent string, :view string, :row Row}]}
   
-  Creates a row."
+  Creates multiple rows."
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.file"
             "https://www.googleapis.com/auth/spreadsheets"
@@ -216,7 +222,7 @@
    (http/post
     (util/get-url
      "https://area120tables.googleapis.com/"
-     "v1alpha1/{+parent}/rows"
+     "v1alpha1/{+parent}/rows:batchCreate"
      #{:parent}
      parameters)
     (merge-with
@@ -264,18 +270,18 @@
       :as :json}
      auth))))
 
-(defn rows-batchCreate$
-  "https://support.google.com/area120-tables/answer/10011390api/reference/rest/v1alpha1/tables/rows/batchCreate
+(defn rows-create$
+  "https://support.google.com/area120-tables/answer/10011390api/reference/rest/v1alpha1/tables/rows/create
   
   Required parameters: parent
   
-  Optional parameters: none
+  Optional parameters: view
   
   Body: 
   
-  {:requests [{:parent string, :view string, :row Row}]}
+  {:values {}, :updateTime string, :name string, :createTime string}
   
-  Creates multiple rows."
+  Creates a row."
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.file"
             "https://www.googleapis.com/auth/spreadsheets"
@@ -286,7 +292,7 @@
    (http/post
     (util/get-url
      "https://area120tables.googleapis.com/"
-     "v1alpha1/{+parent}/rows:batchCreate"
+     "v1alpha1/{+parent}/rows"
      #{:parent}
      parameters)
     (merge-with
@@ -299,26 +305,22 @@
       :as :json}
      auth))))
 
-(defn rows-patch$
-  "https://support.google.com/area120-tables/answer/10011390api/reference/rest/v1alpha1/tables/rows/patch
+(defn rows-delete$
+  "https://support.google.com/area120-tables/answer/10011390api/reference/rest/v1alpha1/tables/rows/delete
   
   Required parameters: name
   
-  Optional parameters: view, updateMask
+  Optional parameters: none
   
-  Body: 
-  
-  {:values {}, :createTime string, :updateTime string, :name string}
-  
-  Updates a row."
+  Deletes a row."
   {:scopes ["https://www.googleapis.com/auth/drive"
             "https://www.googleapis.com/auth/drive.file"
             "https://www.googleapis.com/auth/spreadsheets"
             "https://www.googleapis.com/auth/tables"]}
-  [auth parameters body]
+  [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/patch
+   (http/delete
     (util/get-url
      "https://area120tables.googleapis.com/"
      "v1alpha1/{+name}"
@@ -326,9 +328,7 @@
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

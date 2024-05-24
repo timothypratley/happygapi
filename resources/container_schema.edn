@@ -228,6 +228,11 @@
                                                             :type "boolean"},
                                       :bulletinId {:description "The ID of the bulletin corresponding to the vulnerability.",
                                                    :type "string"}}},
+ :ContainerdConfig {:id "ContainerdConfig",
+                    :description "ContainerdConfig contains configuration to customize containerd.",
+                    :type "object",
+                    :properties {:privateRegistryAccessConfig {:description "PrivateRegistryAccessConfig is used to configure access configuration for private container registries.",
+                                                               :$ref "PrivateRegistryAccessConfig"}}},
  :StatusCondition {:id "StatusCondition",
                    :description "StatusCondition describes why a cluster or a node pool has a certain status (e.g., ERROR or DEGRADED).",
                    :type "object",
@@ -354,7 +359,7 @@
                                                  :$ref "DNSConfig"},
                               :desiredParentProductConfig {:description "The desired parent product config for the cluster.",
                                                            :$ref "ParentProductConfig"},
-                              :desiredPrivateClusterConfig {:description "The desired private cluster configuration.",
+                              :desiredPrivateClusterConfig {:description "The desired private cluster configuration. master_global_access_config is the only field that can be changed via this field. See also ClusterUpdate.desired_enable_private_endpoint for modifying other fields within PrivateClusterConfig.",
                                                             :$ref "PrivateClusterConfig"},
                               :desiredGcfsConfig {:description "The desired GCFS config for the cluster",
                                                   :$ref "GcfsConfig"},
@@ -372,6 +377,8 @@
                                                       :$ref "ReleaseChannel"},
                               :desiredSecurityPostureConfig {:description "Enable/Disable Security Posture API features for the cluster.",
                                                              :$ref "SecurityPostureConfig"},
+                              :desiredContainerdConfig {:description "The desired containerd config for the cluster.",
+                                                        :$ref "ContainerdConfig"},
                               :desiredEnableFqdnNetworkPolicy {:description "Enable/Disable FQDN Network Policy for the cluster.",
                                                                :type "boolean"},
                               :removedAdditionalPodRangesConfig {:description "The additional pod ranges that are to be removed from the cluster. The pod ranges specified here must have been specified earlier in the 'additional_pod_ranges_config' argument.",
@@ -394,6 +401,8 @@
                                                                       "PRIVATE_IPV6_GOOGLE_ACCESS_DISABLED"
                                                                       "PRIVATE_IPV6_GOOGLE_ACCESS_TO_GOOGLE"
                                                                       "PRIVATE_IPV6_GOOGLE_ACCESS_BIDIRECTIONAL"]},
+                              :desiredNodePoolAutoConfigKubeletConfig {:description "The desired node kubelet config for all auto-provisioned node pools in autopilot clusters and node auto-provisioning enabled clusters.",
+                                                                       :$ref "NodeKubeletConfig"},
                               :desiredServiceExternalIpsConfig {:description "ServiceExternalIPsConfig specifies the config for the use of Services with ExternalIPs field.",
                                                                 :$ref "ServiceExternalIPsConfig"},
                               :desiredEnablePrivateEndpoint {:description "Enable/Disable private endpoint for the cluster's master.",
@@ -404,6 +413,8 @@
                                                      :$ref "ShieldedNodes"},
                               :desiredAutopilotWorkloadPolicyConfig {:description "The desired workload policy configuration for the autopilot cluster.",
                                                                      :$ref "WorkloadPolicyConfig"},
+                              :desiredNodeKubeletConfig {:description "The desired node kubelet config for the cluster.",
+                                                         :$ref "NodeKubeletConfig"},
                               :desiredInTransitEncryptionConfig {:description "Specify the details of in-transit encryption.",
                                                                  :type "string",
                                                                  :enumDescriptions ["Unspecified, will be inferred as default - IN_TRANSIT_ENCRYPTION_UNSPECIFIED."
@@ -775,7 +786,9 @@
                                                    "CLUSTER_SCOPE"
                                                    "VPC_SCOPE"]},
                           :clusterDnsDomain {:description "cluster_dns_domain is the suffix used for all cluster service records.",
-                                             :type "string"}}},
+                                             :type "string"},
+                          :additiveVpcScopeDnsDomain {:description "Optional. The domain used in Additive VPC scope.",
+                                                      :type "string"}}},
  :ServerConfig {:id "ServerConfig",
                 :description "Kubernetes Engine service configuration.",
                 :type "object",
@@ -819,7 +832,9 @@
                                                                 "CGROUP_MODE_V2 specifies to use cgroupv2 for the cgroup configuration on the node image."],
                                              :enum ["CGROUP_MODE_UNSPECIFIED"
                                                     "CGROUP_MODE_V1"
-                                                    "CGROUP_MODE_V2"]}}},
+                                                    "CGROUP_MODE_V2"]},
+                                :hugepages {:description "Optional. Amounts for 2M and 1G hugepages",
+                                            :$ref "HugepagesConfig"}}},
  :MonitoringComponentConfig {:id "MonitoringComponentConfig",
                              :description "MonitoringComponentConfig is cluster monitoring component configuration.",
                              :type "object",
@@ -836,7 +851,9 @@
                                                                                         "Pod"
                                                                                         "DaemonSet"
                                                                                         "Deployment"
-                                                                                        "Statefulset"],
+                                                                                        "Statefulset"
+                                                                                        "CADVISOR"
+                                                                                        "KUBELET"],
                                                                      :enum ["COMPONENT_UNSPECIFIED"
                                                                             "SYSTEM_COMPONENTS"
                                                                             "APISERVER"
@@ -847,7 +864,9 @@
                                                                             "POD"
                                                                             "DAEMONSET"
                                                                             "DEPLOYMENT"
-                                                                            "STATEFULSET"]}}}},
+                                                                            "STATEFULSET"
+                                                                            "CADVISOR"
+                                                                            "KUBELET"]}}}},
  :NodeAffinity {:id "NodeAffinity",
                 :description "Specifies the NodeAffinity key, values, and affinity operator according to [shared sole tenant node group affinities](https://cloud.google.com/compute/docs/nodes/sole-tenant-nodes#node_affinity_and_anti-affinity).",
                 :type "object",
@@ -951,10 +970,12 @@
                                              :type "string",
                                              :enumDescriptions ["Default value not specified."
                                                                 "Disables Security Posture features on the cluster."
-                                                                "Applies Security Posture features on the cluster."],
+                                                                "Applies Security Posture features on the cluster."
+                                                                "Applies the Security Posture off cluster Enterprise level features."],
                                              :enum ["MODE_UNSPECIFIED"
                                                     "DISABLED"
-                                                    "BASIC"]},
+                                                    "BASIC"
+                                                    "ENTERPRISE"]},
                                       :vulnerabilityMode {:description "Sets which mode to use for vulnerability scanning.",
                                                           :type "string",
                                                           :enumDescriptions ["Default value not specified."
@@ -1115,7 +1136,7 @@
                                                         "ADVANCED_DATAPATH"]},
                               :enableCiliumClusterwideNetworkPolicy {:description "Whether CiliumClusterwideNetworkPolicy is enabled on this cluster.",
                                                                      :type "boolean"},
-                              :inTransitEncryptionConfig {:description "Specify the details of in-transit encryption.",
+                              :inTransitEncryptionConfig {:description "Specify the details of in-transit encryption. Now named inter-node transparent encryption.",
                                                           :type "string",
                                                           :enumDescriptions ["Unspecified, will be inferred as default - IN_TRANSIT_ENCRYPTION_UNSPECIFIED."
                                                                              "In-transit encryption is disabled."
@@ -1275,7 +1296,9 @@
                            :type "object",
                            :properties {:threadsPerCore {:description "The number of threads per physical core. To disable simultaneous multithreading (SMT) set this to 1. If unset, the maximum number of threads supported per core by the underlying processor is assumed.",
                                                          :type "string",
-                                                         :format "int64"}}},
+                                                         :format "int64"},
+                                        :enableNestedVirtualization {:description "Whether or not to enable nested virtualization (defaults to false).",
+                                                                     :type "boolean"}}},
  :RangeInfo {:id "RangeInfo",
              :description "RangeInfo contains the range name and the range utilization by this cluster.",
              :type "object",
@@ -1499,9 +1522,11 @@
                                  :gpuSharingStrategy {:description "The type of GPU sharing strategy to enable on the GPU node.",
                                                       :type "string",
                                                       :enumDescriptions ["Default value."
-                                                                         "GPUs are time-shared between containers."],
+                                                                         "GPUs are time-shared between containers."
+                                                                         "GPUs are shared between containers with NVIDIA MPS."],
                                                       :enum ["GPU_SHARING_STRATEGY_UNSPECIFIED"
-                                                             "TIME_SHARING"]}}},
+                                                             "TIME_SHARING"
+                                                             "MPS"]}}},
  :Autopilot {:id "Autopilot",
              :description "Autopilot is the configuration for Autopilot settings on the cluster.",
              :type "object",
@@ -1638,6 +1663,14 @@
                                     :values {:description "Corresponds to the label value(s) of reservation resource(s).",
                                              :type "array",
                                              :items {:type "string"}}}},
+ :PrivateRegistryAccessConfig {:id "PrivateRegistryAccessConfig",
+                               :description "PrivateRegistryAccessConfig contains access configuration for private container registries.",
+                               :type "object",
+                               :properties {:enabled {:description "Private registry access is enabled.",
+                                                      :type "boolean"},
+                                            :certificateAuthorityDomainConfig {:description "Private registry access configuration.",
+                                                                               :type "array",
+                                                                               :items {:$ref "CertificateAuthorityDomainConfig"}}}},
  :PlacementPolicy {:id "PlacementPolicy",
                    :description "PlacementPolicy defines the placement policy used by the node pool.",
                    :type "object",
@@ -1691,6 +1724,9 @@
                                      :$ref "NodeConfig"},
                         :masterAuthorizedNetworksConfig {:description "The configuration options for master authorized networks feature.",
                                                          :$ref "MasterAuthorizedNetworksConfig"},
+                        :satisfiesPzi {:description "Output only. Reserved for future use.",
+                                       :readOnly true,
+                                       :type "boolean"},
                         :zone {:description "[Output only] The name of the Google Compute Engine [zone](https://cloud.google.com/compute/docs/zones#available) in which the cluster resides. This field is deprecated, use location instead.",
                                :deprecated true,
                                :type "string"},
@@ -1763,6 +1799,9 @@
                         :resourceLabels {:description "The resource labels for the cluster to use to annotate any related Google Compute Engine resources.",
                                          :type "object",
                                          :additionalProperties {:type "string"}},
+                        :satisfiesPzs {:description "Output only. Reserved for future use.",
+                                       :readOnly true,
+                                       :type "boolean"},
                         :securityPostureConfig {:description "Enable/Disable Security Posture API features for the cluster.",
                                                 :$ref "SecurityPostureConfig"},
                         :status {:description "[Output only] The current status of this cluster.",
@@ -2048,6 +2087,14 @@
                                                 :items {:type "string"}},
                                     :name {:description "The name (project, location, cluster) of the cluster to set locations. Specified in the format `projects/*/locations/*/clusters/*`.",
                                            :type "string"}}},
+ :CertificateAuthorityDomainConfig {:id "CertificateAuthorityDomainConfig",
+                                    :description "CertificateAuthorityDomainConfig configures one or more fully qualified domain names (FQDN) to a specific certificate.",
+                                    :type "object",
+                                    :properties {:fqdns {:description "List of fully qualified domain names (FQDN). Specifying port is supported. Wilcards are NOT supported. Examples: - my.customdomain.com - 10.0.1.2:5000",
+                                                         :type "array",
+                                                         :items {:type "string"}},
+                                                 :gcpSecretManagerCertificateConfig {:description "Google Secret Manager (GCP) certificate configuration.",
+                                                                                     :$ref "GCPSecretManagerCertificateConfig"}}},
  :MasterAuth {:id "MasterAuth",
               :description "The authentication information for accessing the master endpoint. Authentication can be done using HTTP basic auth or using client certificates.",
               :type "object",
@@ -2149,7 +2196,11 @@
                       :properties {:gcfsConfig {:description "GCFS (Google Container File System, also known as Riptide) options.",
                                                 :$ref "GcfsConfig"},
                                    :loggingConfig {:description "Logging configuration for node pools.",
-                                                   :$ref "NodePoolLoggingConfig"}}},
+                                                   :$ref "NodePoolLoggingConfig"},
+                                   :containerdConfig {:description "Parameters for containerd customization.",
+                                                      :$ref "ContainerdConfig"},
+                                   :nodeKubeletConfig {:description "NodeKubeletConfig controls the defaults for new node-pools. Currently only `insecure_kubelet_readonly_port_enabled` can be set here.",
+                                                       :$ref "NodeKubeletConfig"}}},
  :GatewayAPIConfig {:id "GatewayAPIConfig",
                     :description "GatewayAPIConfig contains the desired config of Gateway API on this cluster.",
                     :type "object",
@@ -2263,16 +2314,26 @@
                                                    :$ref "GcfsConfig"},
                                       :workloadMetadataConfig {:description "The desired workload metadata config for the node pool.",
                                                                :$ref "WorkloadMetadataConfig"},
+                                      :containerdConfig {:description "The desired containerd config for nodes in the node pool. Initiates an upgrade operation that recreates the nodes with the new config.",
+                                                         :$ref "ContainerdConfig"},
                                       :fastSocket {:description "Enable or disable NCCL fast socket for the node pool.",
                                                    :$ref "FastSocket"},
                                       :windowsNodeConfig {:description "Parameters that can be configured on Windows nodes.",
                                                           :$ref "WindowsNodeConfig"},
                                       :nodeVersion {:description "Required. The Kubernetes version to change the nodes to (typically an upgrade). Users may specify either explicit versions offered by Kubernetes Engine or version aliases, which have the following behavior: - \"latest\": picks the highest valid Kubernetes version - \"1.X\": picks the highest valid patch+gke.N patch in the 1.X version - \"1.X.Y\": picks the highest valid gke.N patch in the 1.X.Y version - \"1.X.Y-gke.N\": picks an explicit Kubernetes version - \"-\": picks the Kubernetes master version",
                                                     :type "string"},
+                                      :accelerators {:description "A list of hardware accelerators to be attached to each node. See https://cloud.google.com/compute/docs/gpus for more information about support for GPUs.",
+                                                     :type "array",
+                                                     :items {:$ref "AcceleratorConfig"}},
                                       :gvnic {:description "Enable or disable gvnic on the node pool.",
                                               :$ref "VirtualNIC"},
                                       :upgradeSettings {:description "Upgrade settings control disruption and speed of the upgrade.",
                                                         :$ref "UpgradeSettings"}}},
+ :GCPSecretManagerCertificateConfig {:id "GCPSecretManagerCertificateConfig",
+                                     :description "GCPSecretManagerCertificateConfig configures a secret from [Google Secret Manager](https://cloud.google.com/secret-manager).",
+                                     :type "object",
+                                     :properties {:secretUri {:description "Secret URI, in the form \"projects/$PROJECT_ID/secrets/$SECRET_NAME/versions/$VERSION\". Version can be fixed (e.g. \"2\") or \"latest\"",
+                                                              :type "string"}}},
  :NodeLabels {:id "NodeLabels",
               :description "Collection of node-level [Kubernetes labels](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels).",
               :type "object",
@@ -2426,6 +2487,8 @@
                                         :$ref "GcfsConfig"},
                            :workloadMetadataConfig {:description "The workload metadata configuration for this node.",
                                                     :$ref "WorkloadMetadataConfig"},
+                           :containerdConfig {:description "Parameters for containerd customization.",
+                                              :$ref "ContainerdConfig"},
                            :fastSocket {:description "Enable or disable NCCL fast socket for the node pool.",
                                         :$ref "FastSocket"},
                            :metadata {:description "The metadata key/value pairs assigned to instances in the cluster. Keys must conform to the regexp `[a-zA-Z0-9-_]+` and be less than 128 bytes in length. These are reflected as part of a URL in the metadata server. Additionally, to avoid ambiguity, keys must not conflict with any other metadata keys for the project or be one of the reserved keys: - \"cluster-location\" - \"cluster-name\" - \"cluster-uid\" - \"configure-sh\" - \"containerd-configure-sh\" - \"enable-os-login\" - \"gci-ensure-gke-docker\" - \"gci-metrics-enabled\" - \"gci-update-strategy\" - \"instance-template\" - \"kube-env\" - \"startup-script\" - \"user-data\" - \"disable-address-manager\" - \"windows-startup-script-ps1\" - \"common-psm1\" - \"k8s-node-setup-psm1\" - \"install-ssh-psm1\" - \"user-profile-psm1\" Values are free-form strings, and only have meaning as interpreted by the image running in the instance. The only restriction placed on them is that each value's size must be less than or equal to 32 KB. The total size of all keys and values must be less than 512 KB.",
@@ -2540,7 +2603,18 @@
                       :properties {:networkTags {:description "The list of instance tags applied to all nodes. Tags are used to identify valid sources or targets for network firewalls and are specified by the client during cluster creation. Each tag within the list must comply with RFC1035.",
                                                  :$ref "NetworkTags"},
                                    :resourceManagerTags {:description "Resource manager tag keys and values to be attached to the nodes for managing Compute Engine firewalls using Network Firewall Policies.",
-                                                         :$ref "ResourceManagerTags"}}},
+                                                         :$ref "ResourceManagerTags"},
+                                   :nodeKubeletConfig {:description "NodeKubeletConfig controls the defaults for autoprovisioned node-pools. Currently only `insecure_kubelet_readonly_port_enabled` can be set here.",
+                                                       :$ref "NodeKubeletConfig"}}},
+ :HugepagesConfig {:id "HugepagesConfig",
+                   :description "Hugepages amount in both 2m and 1g size",
+                   :type "object",
+                   :properties {:hugepageSize2m {:description "Optional. Amount of 2M hugepages",
+                                                 :type "integer",
+                                                 :format "int32"},
+                                :hugepageSize1g {:description "Optional. Amount of 1G hugepages",
+                                                 :type "integer",
+                                                 :format "int32"}}},
  :LoggingVariantConfig {:id "LoggingVariantConfig",
                         :description "LoggingVariantConfig specifies the behaviour of the logging component.",
                         :type "object",

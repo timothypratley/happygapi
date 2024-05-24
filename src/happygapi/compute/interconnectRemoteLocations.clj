@@ -1,7 +1,7 @@
 (ns happygapi.compute.interconnectRemoteLocations
   "Compute Engine API: interconnectRemoteLocations.
   Creates and runs virtual machines on Google Cloud Platform. 
-  See: https://cloud.google.com/compute/api/reference/rest/v1/interconnectRemoteLocations"
+  See: https://cloud.google.com/compute/docs/reference/rest/v1/interconnectRemoteLocations"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

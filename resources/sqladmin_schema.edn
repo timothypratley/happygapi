@@ -40,6 +40,7 @@
                                                                       "The database major version is MySQL 8.0 and the minor version is 38."
                                                                       "The database major version is MySQL 8.0 and the minor version is 39."
                                                                       "The database major version is MySQL 8.0 and the minor version is 40."
+                                                                      "The database version is MySQL 8.4."
                                                                       "The database version is SQL Server 2019 Standard."
                                                                       "The database version is SQL Server 2019 Enterprise."
                                                                       "The database version is SQL Server 2019 Express."
@@ -70,6 +71,7 @@
                                                                     false
                                                                     false
                                                                     true
+                                                                    false
                                                                     false
                                                                     false
                                                                     false
@@ -122,6 +124,7 @@
                                                           "MYSQL_8_0_38"
                                                           "MYSQL_8_0_39"
                                                           "MYSQL_8_0_40"
+                                                          "MYSQL_8_4"
                                                           "SQLSERVER_2019_STANDARD"
                                                           "SQLSERVER_2019_ENTERPRISE"
                                                           "SQLSERVER_2019_EXPRESS"
@@ -134,7 +137,7 @@
                                                :deprecated true,
                                                :type "string",
                                                :format "int64"},
-                                 :replicationCluster {:description "Optional. The pair of a primary instance and disaster recovery (DR) replica. A DR replica is a cross-region replica that you designate for failover in the event that the primary instance has regional failure.",
+                                 :replicationCluster {:description "Optional. A primary instance and disaster recovery (DR) replica pair. A DR replica is a cross-region replica that you designate for failover in the event that the primary instance experiences regional failure. Only applicable to MySQL.",
                                                       :$ref "ReplicationCluster"},
                                  :instanceType {:description "The instance type.",
                                                 :type "string",
@@ -225,7 +228,7 @@
                                  :pscServiceAttachmentLink {:description "Output only. The link to service attachment of PSC instance.",
                                                             :readOnly true,
                                                             :type "string"},
-                                 :geminiConfig {:description "Gemini configuration.",
+                                 :geminiConfig {:description "Gemini instance configuration.",
                                                 :$ref "GeminiInstanceConfig"},
                                  :failoverReplica {:description "The name and status of the failover replica.",
                                                    :type "object",
@@ -233,7 +236,7 @@
                                                                        :type "string"},
                                                                 :available {:description "The availability status of the failover replica. A false status indicates that the failover replica is out of sync. The primary instance can only failover to the failover replica when the status is true.",
                                                                             :type "boolean"}}},
-                                 :satisfiesPzs {:description "The status indicating if instance satisfiesPzs. Reserved for future use.",
+                                 :satisfiesPzs {:description "This status indicates whether the instance satisfies PZS. The status is reserved for future use.",
                                                 :type "boolean"},
                                  :dnsName {:description "Output only. The dns name of the instance.",
                                            :readOnly true,
@@ -349,7 +352,7 @@
                                               :type "boolean"},
                                 :privateNetwork {:description "The resource link for the VPC network from which the Cloud SQL instance is accessible for private IP. For example, `/projects/myProject/global/networks/default`. This setting can be updated, but it cannot be removed after it is set.",
                                                  :type "string"},
-                                :requireSsl {:description "Use `ssl_mode` instead for MySQL and PostgreSQL. SQL Server uses this flag. Whether SSL/TLS connections over IP are enforced. If set to false, then allow both non-SSL/non-TLS and SSL/TLS connections. For SSL/TLS connections, the client certificate won't be verified. If set to true, then only allow connections encrypted with SSL/TLS and with valid client certificates. If you want to enforce SSL/TLS without enforcing the requirement for valid client certificates, then use the `ssl_mode` flag instead of the `require_ssl` flag.",
+                                :requireSsl {:description "Use `ssl_mode` instead. Whether SSL/TLS connections over IP are enforced. If set to false, then allow both non-SSL/non-TLS and SSL/TLS connections. For SSL/TLS connections, the client certificate won't be verified. If set to true, then only allow connections encrypted with SSL/TLS and with valid client certificates. If you want to enforce SSL/TLS without enforcing the requirement for valid client certificates, then use the `ssl_mode` flag instead of the `require_ssl` flag.",
                                              :type "boolean"},
                                 :authorizedNetworks {:description "The list of external networks that are allowed to connect to the instance using the IP. In 'CIDR' notation, also known as 'slash' notation (for example: `157.197.200.0/24`).",
                                                      :type "array",
@@ -358,12 +361,12 @@
                                                    :type "string"},
                                 :enablePrivatePathForGoogleCloudServices {:description "Controls connectivity to private IP instances from Google services, such as BigQuery.",
                                                                           :type "boolean"},
-                                :sslMode {:description "Specify how SSL/TLS is enforced in database connections. MySQL and PostgreSQL use the `ssl_mode` flag. If you must use the `require_ssl` flag for backward compatibility, then only the following value pairs are valid: * `ssl_mode=ALLOW_UNENCRYPTED_AND_ENCRYPTED` and `require_ssl=false` * `ssl_mode=ENCRYPTED_ONLY` and `require_ssl=false` * `ssl_mode=TRUSTED_CLIENT_CERTIFICATE_REQUIRED` and `require_ssl=true` The value of `ssl_mode` gets priority over the value of `require_ssl`. For example, for the pair `ssl_mode=ENCRYPTED_ONLY` and `require_ssl=false`, the `ssl_mode=ENCRYPTED_ONLY` means only accept SSL connections, while the `require_ssl=false` means accept both non-SSL and SSL connections. MySQL and PostgreSQL databases respect `ssl_mode` in this case and accept only SSL connections. SQL Server uses the `require_ssl` flag. You can set the value for this flag to `true` or `false`.",
+                                :sslMode {:description "Specify how SSL/TLS is enforced in database connections. If you must use the `require_ssl` flag for backward compatibility, then only the following value pairs are valid: For PostgreSQL and MySQL: * `ssl_mode=ALLOW_UNENCRYPTED_AND_ENCRYPTED` and `require_ssl=false` * `ssl_mode=ENCRYPTED_ONLY` and `require_ssl=false` * `ssl_mode=TRUSTED_CLIENT_CERTIFICATE_REQUIRED` and `require_ssl=true` For SQL Server: * `ssl_mode=ALLOW_UNENCRYPTED_AND_ENCRYPTED` and `require_ssl=false` * `ssl_mode=ENCRYPTED_ONLY` and `require_ssl=true` The value of `ssl_mode` has priority over the value of `require_ssl`. For example, for the pair `ssl_mode=ENCRYPTED_ONLY` and `require_ssl=false`, `ssl_mode=ENCRYPTED_ONLY` means accept only SSL connections, while `require_ssl=false` means accept both non-SSL and SSL connections. In this case, MySQL and PostgreSQL databases respect `ssl_mode` and accepts only SSL connections.",
                                           :type "string",
                                           :enumDescriptions ["The SSL mode is unknown."
-                                                             "Allow non-SSL/non-TLS and SSL/TLS connections. For SSL/TLS connections, the client certificate won't be verified. When this value is used, the legacy `require_ssl` flag must be false or cleared to avoid the conflict between values of two flags."
-                                                             "Only allow connections encrypted with SSL/TLS. When this value is used, the legacy `require_ssl` flag must be false or cleared to avoid the conflict between values of two flags."
-                                                             "Only allow connections encrypted with SSL/TLS and with valid client certificates. When this value is used, the legacy `require_ssl` flag must be true or cleared to avoid the conflict between values of two flags. PostgreSQL clients or users that connect using IAM database authentication must use either the [Cloud SQL Auth Proxy](https://cloud.google.com/sql/docs/postgres/connect-auth-proxy) or [Cloud SQL Connectors](https://cloud.google.com/sql/docs/postgres/connect-connectors) to enforce client identity verification."],
+                                                             "Allow non-SSL/non-TLS and SSL/TLS connections. For SSL connections to MySQL and PostgreSQL, the client certificate isn't verified. When this value is used, the legacy `require_ssl` flag must be false or cleared to avoid a conflict between the values of the two flags."
+                                                             "Only allow connections encrypted with SSL/TLS. For SSL connections to MySQL and PostgreSQL, the client certificate isn't verified. When this value is used, the legacy `require_ssl` flag must be false or cleared to avoid a conflict between the values of the two flags."
+                                                             "Only allow connections encrypted with SSL/TLS and with valid client certificates. When this value is used, the legacy `require_ssl` flag must be true or cleared to avoid the conflict between values of two flags. PostgreSQL clients or users that connect using IAM database authentication must use either the [Cloud SQL Auth Proxy](https://cloud.google.com/sql/docs/postgres/connect-auth-proxy) or [Cloud SQL Connectors](https://cloud.google.com/sql/docs/postgres/connect-connectors) to enforce client identity verification. Only applicable to MySQL and PostgreSQL. Not applicable to SQL Server."],
                                           :enum ["SSL_MODE_UNSPECIFIED"
                                                  "ALLOW_UNENCRYPTED_AND_ENCRYPTED"
                                                  "ENCRYPTED_ONLY"
@@ -477,6 +480,7 @@
                                                                      "The database major version is MySQL 8.0 and the minor version is 38."
                                                                      "The database major version is MySQL 8.0 and the minor version is 39."
                                                                      "The database major version is MySQL 8.0 and the minor version is 40."
+                                                                     "The database version is MySQL 8.4."
                                                                      "The database version is SQL Server 2019 Standard."
                                                                      "The database version is SQL Server 2019 Enterprise."
                                                                      "The database version is SQL Server 2019 Express."
@@ -507,6 +511,7 @@
                                                                    false
                                                                    false
                                                                    true
+                                                                   false
                                                                    false
                                                                    false
                                                                    false
@@ -559,6 +564,7 @@
                                                          "MYSQL_8_0_38"
                                                          "MYSQL_8_0_39"
                                                          "MYSQL_8_0_40"
+                                                         "MYSQL_8_4"
                                                          "SQLSERVER_2019_STANDARD"
                                                          "SQLSERVER_2019_ENTERPRISE"
                                                          "SQLSERVER_2019_EXPRESS"
@@ -648,15 +654,15 @@
                                                                                       :type "boolean"},
                                                               :mysqlSyncConfig {:description "Optional. MySQL-specific settings for start external sync.",
                                                                                 :$ref "MySqlSyncConfig"},
-                                                              :migrationType {:description "Optional. MigrationType decides if the migration is a physical file based migration or logical migration",
+                                                              :migrationType {:description "Optional. MigrationType configures the migration to use physical files or logical dump files. If not set, then the logical dump file configuration is used. Valid values are `LOGICAL` or `PHYSICAL`. Only applicable to MySQL.",
                                                                               :type "string",
-                                                                              :enumDescriptions ["Default value is logical migration"
-                                                                                                 "Logical Migrations"
-                                                                                                 "Physical file based Migrations"],
+                                                                              :enumDescriptions ["Default value is a logical dump file-based migration"
+                                                                                                 "Logical dump file-based migration"
+                                                                                                 "Physical file-based migration"],
                                                                               :enum ["MIGRATION_TYPE_UNSPECIFIED"
                                                                                      "LOGICAL"
                                                                                      "PHYSICAL"]},
-                                                              :syncParallelLevel {:description "Optional. Parallel level for initial data sync. Currently only applicable for PostgreSQL.",
+                                                              :syncParallelLevel {:description "Optional. Parallel level for initial data sync. Only applicable for PostgreSQL.",
                                                                                   :type "string",
                                                                                   :enumDescriptions ["Unknown sync parallel level. Will be defaulted to OPTIMAL."
                                                                                                      "Minimal parallel level."
@@ -751,10 +757,13 @@
                                                              "Recovers logs from an instance's old data disk."
                                                              "Performs auto-restart of an HA-enabled Cloud SQL database for auto recovery."
                                                              "Re-encrypts CMEK instances with latest key version."
-                                                             "Switches over to replica instance from primary."
+                                                             "Switches the roles of the primary and replica pair. The target instance should be the replica."
                                                              "Acquire a lease for the setup of SQL Server Reporting Services (SSRS)."
                                                              "Release a lease for the setup of SQL Server Reporting Services (SSRS)."
-                                                             "Reconfigures old primary after a promote replica operation. Effect of a promote operation to the old primary is executed in this operation, asynchronously from the promote replica operation executed to the replica."],
+                                                             "Reconfigures old primary after a promote replica operation. Effect of a promote operation to the old primary is executed in this operation, asynchronously from the promote replica operation executed to the replica."
+                                                             "Indicates that the instance, its read replicas, and its cascading replicas are in maintenance. Maintenance typically gets initiated on groups of replicas first, followed by the primary instance. For each instance, maintenance typically causes the instance to be unavailable for 1-3 minutes."
+                                                             "Indicates that the instance (and any of its replicas) are currently in maintenance. This is initiated as a self-service request by using SSM. Maintenance typically causes the instance to be unavailable for 1-3 minutes."
+                                                             "Switches a primary instance to a replica. This operation runs as part of a switchover operation to the original primary instance."],
                                           :enumDeprecated [false
                                                            false
                                                            false
@@ -788,6 +797,9 @@
                                                            true
                                                            true
                                                            true
+                                                           false
+                                                           false
+                                                           false
                                                            false
                                                            false
                                                            false
@@ -838,7 +850,10 @@
                                                  "SWITCHOVER"
                                                  "ACQUIRE_SSRS_LEASE"
                                                  "RELEASE_SSRS_LEASE"
-                                                 "RECONFIGURE_OLD_PRIMARY"]},
+                                                 "RECONFIGURE_OLD_PRIMARY"
+                                                 "CLUSTER_MAINTENANCE"
+                                                 "SELF_SERVICE_MAINTENANCE"
+                                                 "SWITCHOVER_TO_REPLICA"]},
                           :importContext {:description "The context for import operation, if applicable.",
                                           :$ref "ImportContext"}}},
  :DatabasesListResponse {:id "DatabasesListResponse",
@@ -1114,14 +1129,14 @@
                                                        :type "boolean"},
                                     :startTime {:description "Start time for the daily backup configuration in UTC timezone in the 24 hour format - `HH:MM`.",
                                                 :type "string"},
-                                    :transactionalLogStorageState {:description "Output only. This value contains the storage location of transactional logs for the database for point-in-time recovery.",
+                                    :transactionalLogStorageState {:description "Output only. This value contains the storage location of transactional logs used to perform point-in-time recovery (PITR) for the database.",
                                                                    :readOnly true,
                                                                    :type "string",
                                                                    :enumDescriptions ["Unspecified."
-                                                                                      "The transaction logs for the instance are stored on a data disk."
-                                                                                      "The transaction logs for the instance are switching from being stored on a data disk to being stored in Cloud Storage."
-                                                                                      "The transaction logs for the instance are now stored in Cloud Storage. Previously, they were stored on a data disk."
-                                                                                      "The transaction logs for the instance are stored in Cloud Storage."],
+                                                                                      "The transaction logs used for PITR for the instance are stored on a data disk."
+                                                                                      "The transaction logs used for PITR for the instance are switching from being stored on a data disk to being stored in Cloud Storage. Only applicable to MySQL."
+                                                                                      "The transaction logs used for PITR for the instance are now stored in Cloud Storage. Previously, they were stored on a data disk. Only applicable to MySQL."
+                                                                                      "The transaction logs used for PITR for the instance are stored in Cloud Storage. Only applicable to MySQL and PostgreSQL."],
                                                                    :enum ["TRANSACTIONAL_LOG_STORAGE_STATE_UNSPECIFIED"
                                                                           "DISK"
                                                                           "SWITCHING_TO_CLOUD_STORAGE"
@@ -1370,6 +1385,7 @@
                                                             "The database major version is MySQL 8.0 and the minor version is 38."
                                                             "The database major version is MySQL 8.0 and the minor version is 39."
                                                             "The database major version is MySQL 8.0 and the minor version is 40."
+                                                            "The database version is MySQL 8.4."
                                                             "The database version is SQL Server 2019 Standard."
                                                             "The database version is SQL Server 2019 Enterprise."
                                                             "The database version is SQL Server 2019 Express."
@@ -1400,6 +1416,7 @@
                                                           false
                                                           false
                                                           true
+                                                          false
                                                           false
                                                           false
                                                           false
@@ -1452,6 +1469,7 @@
                                                 "MYSQL_8_0_38"
                                                 "MYSQL_8_0_39"
                                                 "MYSQL_8_0_40"
+                                                "MYSQL_8_4"
                                                 "SQLSERVER_2019_STANDARD"
                                                 "SQLSERVER_2019_ENTERPRISE"
                                                 "SQLSERVER_2019_EXPRESS"
@@ -1605,11 +1623,11 @@
                                                                                 "MIN"
                                                                                 "OPTIMAL"
                                                                                 "MAX"]},
-                                                     :migrationType {:description "Optional. MigrationType decides if the migration is a physical file based migration or logical migration.",
+                                                     :migrationType {:description "Optional. MigrationType configures the migration to use physical files or logical dump files. If not set, then the logical dump file configuration is used. Valid values are `LOGICAL` or `PHYSICAL`. Only applicable to MySQL.",
                                                                      :type "string",
-                                                                     :enumDescriptions ["Default value is logical migration"
-                                                                                        "Logical Migrations"
-                                                                                        "Physical file based Migrations"],
+                                                                     :enumDescriptions ["Default value is a logical dump file-based migration"
+                                                                                        "Logical dump file-based migration"
+                                                                                        "Physical file-based migration"],
                                                                      :enum ["MIGRATION_TYPE_UNSPECIFIED"
                                                                             "LOGICAL"
                                                                             "PHYSICAL"]}}},
@@ -2014,13 +2032,23 @@
                                                                        :type "string",
                                                                        :format "google-datetime"},
                                                               :stopAtMark {:description "Optional. The marked transaction where the import should stop. This field is equivalent to the STOPATMARK keyword and applies to Cloud SQL for SQL Server only.",
-                                                                           :type "string"}}}}},
+                                                                           :type "string"}}},
+                              :sqlImportOptions {:description "Optional. Options for importing data from SQL statements.",
+                                                 :type "object",
+                                                 :properties {:threads {:description "Optional. The number of threads to use for parallel import.",
+                                                                        :type "integer",
+                                                                        :format "int32"},
+                                                              :parallel {:description "Optional. Whether or not the import should be parallel.",
+                                                                         :type "boolean"}}}}},
  :ReplicationCluster {:id "ReplicationCluster",
-                      :description "Primary-DR replica pair",
+                      :description "A primary instance and disaster recovery (DR) replica pair. A DR replica is a cross-region replica that you designate for failover in the event that the primary instance experiences regional failure. Only applicable to MySQL.",
                       :type "object",
-                      :properties {:failoverDrReplicaName {:description "Optional. If the instance is a primary instance, then this field identifies the disaster recovery (DR) replica. A DR replica is an optional configuration for Enterprise Plus edition instances. If the instance is a read replica, then the field is not set. Users can set this field to set a designated DR replica for a primary. Removing this field removes the DR replica.",
+                      :properties {:psaWriteEndpoint {:description "Output only. If set, it indicates this instance has a private service access (PSA) dns endpoint that is pointing to the primary instance of the cluster. If this instance is the primary, the dns should be pointing to this instance. After Switchover or Replica failover, this DNS endpoint points to the promoted instance. This is a read-only field, returned to the user as information. This field can exist even if a standalone instance does not yet have a replica, or had a DR replica that was deleted.",
+                                                      :readOnly true,
+                                                      :type "string"},
+                                   :failoverDrReplicaName {:description "Optional. If the instance is a primary instance, then this field identifies the disaster recovery (DR) replica. A DR replica is an optional configuration for Enterprise Plus edition instances. If the instance is a read replica, then the field is not set. Set this field to a replica name to designate a DR replica for a primary instance. Remove the replica name to remove the DR replica designation.",
                                                            :type "string"},
-                                   :drReplica {:description "Output only. read-only field that indicates if the replica is a dr_replica; not set for a primary.",
+                                   :drReplica {:description "Output only. Read-only field that indicates whether the replica is a DR replica. This field is not set if the instance is a primary instance.",
                                                :readOnly true,
                                                :type "boolean"}}},
  :SqlScheduledMaintenance {:id "SqlScheduledMaintenance",
@@ -2239,24 +2267,24 @@
                           :properties {:demoteContext {:description "Required. Contains details about the demote operation.",
                                                        :$ref "DemoteContext"}}},
  :GeminiInstanceConfig {:id "GeminiInstanceConfig",
-                        :description "Gemini configuration.",
+                        :description "Gemini instance configuration.",
                         :type "object",
-                        :properties {:entitled {:description "Output only. Whether gemini is enabled.",
+                        :properties {:entitled {:description "Output only. Whether Gemini is enabled.",
                                                 :readOnly true,
                                                 :type "boolean"},
-                                     :googleVacuumMgmtEnabled {:description "Output only. Whether vacuum management is enabled.",
+                                     :googleVacuumMgmtEnabled {:description "Output only. Whether the vacuum management is enabled.",
                                                                :readOnly true,
                                                                :type "boolean"},
-                                     :oomSessionCancelEnabled {:description "Output only. Whether oom session cancel is enabled.",
+                                     :oomSessionCancelEnabled {:description "Output only. Whether canceling the out-of-memory (OOM) session is enabled.",
                                                                :readOnly true,
                                                                :type "boolean"},
-                                     :activeQueryEnabled {:description "Output only. Whether active query is enabled.",
+                                     :activeQueryEnabled {:description "Output only. Whether the active query is enabled.",
                                                           :readOnly true,
                                                           :type "boolean"},
-                                     :indexAdvisorEnabled {:description "Output only. Whether index advisor is enabled.",
+                                     :indexAdvisorEnabled {:description "Output only. Whether the index advisor is enabled.",
                                                            :readOnly true,
                                                            :type "boolean"},
-                                     :flagRecommenderEnabled {:description "Output only. Whether flag recommender is enabled.",
+                                     :flagRecommenderEnabled {:description "Output only. Whether the flag recommender is enabled.",
                                                               :readOnly true,
                                                               :type "boolean"}}},
  :BackupReencryptionConfig {:id "BackupReencryptionConfig",

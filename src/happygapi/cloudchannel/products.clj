@@ -1,7 +1,7 @@
 (ns happygapi.cloudchannel.products
   "Cloud Channel API: products.
   The Cloud Channel API enables Google Cloud partners to have a single unified resale platform and APIs across all of Google Cloud including GCP, Workspace, Maps and Chrome.
-  See: https://cloud.google.com/channelapi/reference/rest/v1/products"
+  See: https://cloud.google.com/channeldocs/reference/rest/v1/products"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

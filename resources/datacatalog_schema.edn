@@ -17,12 +17,18 @@
                                                                                               "The Model is uploaded by automl training pipeline."
                                                                                               "The Model is uploaded by user or custom training pipeline."
                                                                                               "The Model is registered and sync'ed from BigQuery ML."
-                                                                                              "The Model is saved or tuned from Model Garden."],
+                                                                                              "The Model is saved or tuned from Model Garden."
+                                                                                              "The Model is saved or tuned from Genie."
+                                                                                              "The Model is uploaded by text embedding finetuning pipeline."
+                                                                                              "The Model is saved or tuned from Marketplace."],
                                                                            :enum ["MODEL_SOURCE_TYPE_UNSPECIFIED"
                                                                                   "AUTOML"
                                                                                   "CUSTOM"
                                                                                   "BQML"
-                                                                                  "MODEL_GARDEN"]},
+                                                                                  "MODEL_GARDEN"
+                                                                                  "GENIE"
+                                                                                  "CUSTOM_TEXT_EMBEDDING"
+                                                                                  "MARKETPLACE"]},
                                                               :copy {:description "If this Model is copy of another Model. If true then source_type pertains to the original.",
                                                                      :type "boolean"}}},
  :GoogleCloudDatacatalogV1BigQueryTableSpec {:id "GoogleCloudDatacatalogV1BigQueryTableSpec",

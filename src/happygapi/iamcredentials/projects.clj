@@ -1,7 +1,7 @@
 (ns happygapi.iamcredentials.projects
   "IAM Service Account Credentials API: projects.
   Creates short-lived credentials for impersonating IAM service accounts. Disabling this API also disables the IAM API (iam.googleapis.com). However, enabling this API doesn't enable the IAM API. 
-  See: https://cloud.google.com/iam/docs/creating-short-lived-service-account-credentialsapi/reference/rest/v1/projects"
+  See: https://cloud.google.com/iam/docs/creating-short-lived-service-account-credentialsdocs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

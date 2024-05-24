@@ -1,7 +1,7 @@
 (ns happygapi.bigquery.tabledata
   "BigQuery API: tabledata.
   A data platform for customers to create, manage, share and query data.
-  See: https://cloud.google.com/bigquery/api/reference/rest/v2/tabledata"
+  See: https://cloud.google.com/bigquery/docs/reference/rest/v2/tabledata"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

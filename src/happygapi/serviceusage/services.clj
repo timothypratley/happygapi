@@ -1,39 +1,60 @@
 (ns happygapi.serviceusage.services
   "Service Usage API: services.
   Enables services that service consumers want to use on Google Cloud Platform, lists the available or enabled services, or disables services that service consumers no longer use.
-  See: https://cloud.google.com/service-usage/api/reference/rest/v1/services"
+  See: https://cloud.google.com/service-usage/docs/reference/rest/v1/services"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn enable$
-  "https://cloud.google.com/service-usage/api/reference/rest/v1/services/enable
+(defn get$
+  "https://cloud.google.com/service-usage/api/reference/rest/v1/services/get
   
   Required parameters: name
   
   Optional parameters: none
   
-  Body: 
-  
-  {}
-  
-  Enable a service so that it can be used with a project."
+  Returns the service configuration and enabled state for a given service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/service.management"]}
-  [auth parameters body]
+            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
+  [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/post
+   (http/get
     (util/get-url
      "https://serviceusage.googleapis.com/"
-     "v1/{+name}:enable"
+     "v1/{+name}"
      #{:name}
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn batchGet$
+  "https://cloud.google.com/service-usage/api/reference/rest/v1/services/batchGet
+  
+  Required parameters: parent
+  
+  Optional parameters: names
+  
+  Returns the service configurations and enabled states for a given list of services."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://serviceusage.googleapis.com/"
+     "v1/{+parent}/services:batchGet"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -99,55 +120,34 @@
       :as :json}
      auth))))
 
-(defn get$
-  "https://cloud.google.com/service-usage/api/reference/rest/v1/services/get
+(defn enable$
+  "https://cloud.google.com/service-usage/api/reference/rest/v1/services/enable
   
   Required parameters: name
   
   Optional parameters: none
   
-  Returns the service configuration and enabled state for a given service."
+  Body: 
+  
+  {}
+  
+  Enable a service so that it can be used with a project."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
-  [auth parameters]
+            "https://www.googleapis.com/auth/service.management"]}
+  [auth parameters body]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/get
+   (http/post
     (util/get-url
      "https://serviceusage.googleapis.com/"
-     "v1/{+name}"
+     "v1/{+name}:enable"
      #{:name}
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn batchGet$
-  "https://cloud.google.com/service-usage/api/reference/rest/v1/services/batchGet
-  
-  Required parameters: parent
-  
-  Optional parameters: names
-  
-  Returns the service configurations and enabled states for a given list of services."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://serviceusage.googleapis.com/"
-     "v1/{+parent}/services:batchGet"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

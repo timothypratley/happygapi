@@ -1,50 +1,50 @@
-{:ListDatabaseInstancesResponse {:properties {:nextPageToken {:type "string",
-                                                              :description "If the result list is too large to fit in a single response, then a token is returned. If the string is empty, then this response is the last page of results. This token can be used in a subsequent call to `ListDatabaseInstances` to find the next group of database instances. Page tokens are short-lived and should not be persisted."},
-                                              :instances {:description "List of each DatabaseInstance that is in the parent Firebase project.",
-                                                          :items {:$ref "DatabaseInstance"},
-                                                          :type "array"}},
-                                 :id "ListDatabaseInstancesResponse",
-                                 :type "object",
-                                 :description "The response from the ListDatabaseInstances method."},
- :ReenableDatabaseInstanceRequest {:id "ReenableDatabaseInstanceRequest",
-                                   :type "object",
-                                   :description "The request sent to the ReenableDatabaseInstance method.",
-                                   :properties {}},
- :UndeleteDatabaseInstanceRequest {:description "The request sent to UndeleteDatabaseInstance method.",
-                                   :type "object",
-                                   :properties {},
-                                   :id "UndeleteDatabaseInstanceRequest"},
- :DisableDatabaseInstanceRequest {:properties {},
-                                  :id "DisableDatabaseInstanceRequest",
-                                  :type "object",
-                                  :description "The request sent to the DisableDatabaseInstance method."},
- :DatabaseInstance {:properties {:type {:enumDescriptions ["Unknown state, likely the result of an error on the backend. This is only used for distinguishing unset values."
-                                                           "The default database that is provisioned when a project is created."
-                                                           "A database that the user created."],
-                                        :description "Immutable. The database instance type. On creation only USER_DATABASE is allowed, which is also the default when omitted.",
-                                        :enum ["DATABASE_INSTANCE_TYPE_UNSPECIFIED"
-                                               "DEFAULT_DATABASE"
-                                               "USER_DATABASE"],
-                                        :type "string"},
-                                 :project {:type "string",
-                                           :description "Output only. The resource name of the project this instance belongs to. For example: `projects/{project-number}`.",
-                                           :readOnly true},
-                                 :name {:description "The fully qualified resource name of the database instance, in the form: `projects/{project-number}/locations/{location-id}/instances/{database-id}`.",
-                                        :type "string"},
-                                 :state {:enumDescriptions ["Unspecified state, likely the result of an error on the backend. This is only used for distinguishing unset values."
-                                                            "The normal and active state."
-                                                            "The database is in a disabled state. It can be re-enabled later."
-                                                            "The database is in a deleted state."],
-                                         :type "string",
+{:DatabaseInstance {:description "Representation of a Realtime Database instance. Details on interacting with contents of a DatabaseInstance can be found at: https://firebase.google.com/docs/database/rest/start.",
+                    :type "object",
+                    :properties {:state {:type "string",
+                                         :description "Output only. The database's lifecycle state. Read-only.",
                                          :enum ["LIFECYCLE_STATE_UNSPECIFIED"
                                                 "ACTIVE"
                                                 "DISABLED"
                                                 "DELETED"],
-                                         :readOnly true,
-                                         :description "Output only. The database's lifecycle state. Read-only."},
-                                 :databaseUrl {:type "string",
-                                               :readOnly true,
-                                               :description "Output only. Output Only. The globally unique hostname of the database."}},
-                    :description "Representation of a Realtime Database instance. Details on interacting with contents of a DatabaseInstance can be found at: https://firebase.google.com/docs/database/rest/start.",
-                    :id "DatabaseInstance",
-                    :type "object"}}
+                                         :enumDescriptions ["Unspecified state, likely the result of an error on the backend. This is only used for distinguishing unset values."
+                                                            "The normal and active state."
+                                                            "The database is in a disabled state. It can be re-enabled later."
+                                                            "The database is in a deleted state."],
+                                         :readOnly true},
+                                 :type {:type "string",
+                                        :description "Immutable. The database instance type. On creation only USER_DATABASE is allowed, which is also the default when omitted.",
+                                        :enum ["DATABASE_INSTANCE_TYPE_UNSPECIFIED"
+                                               "DEFAULT_DATABASE"
+                                               "USER_DATABASE"],
+                                        :enumDescriptions ["Unknown state, likely the result of an error on the backend. This is only used for distinguishing unset values."
+                                                           "The default database that is provisioned when a project is created."
+                                                           "A database that the user created."]},
+                                 :name {:type "string",
+                                        :description "The fully qualified resource name of the database instance, in the form: `projects/{project-number}/locations/{location-id}/instances/{database-id}`."},
+                                 :databaseUrl {:readOnly true,
+                                               :description "Output only. Output Only. The globally unique hostname of the database.",
+                                               :type "string"},
+                                 :project {:description "Output only. The resource name of the project this instance belongs to. For example: `projects/{project-number}`.",
+                                           :readOnly true,
+                                           :type "string"}},
+                    :id "DatabaseInstance"},
+ :DisableDatabaseInstanceRequest {:type "object",
+                                  :id "DisableDatabaseInstanceRequest",
+                                  :properties {},
+                                  :description "The request sent to the DisableDatabaseInstance method."},
+ :ListDatabaseInstancesResponse {:id "ListDatabaseInstancesResponse",
+                                 :type "object",
+                                 :properties {:instances {:items {:$ref "DatabaseInstance"},
+                                                          :type "array",
+                                                          :description "List of each DatabaseInstance that is in the parent Firebase project."},
+                                              :nextPageToken {:type "string",
+                                                              :description "If the result list is too large to fit in a single response, then a token is returned. If the string is empty, then this response is the last page of results. This token can be used in a subsequent call to `ListDatabaseInstances` to find the next group of database instances. Page tokens are short-lived and should not be persisted."}},
+                                 :description "The response from the ListDatabaseInstances method."},
+ :UndeleteDatabaseInstanceRequest {:type "object",
+                                   :id "UndeleteDatabaseInstanceRequest",
+                                   :properties {},
+                                   :description "The request sent to UndeleteDatabaseInstance method."},
+ :ReenableDatabaseInstanceRequest {:type "object",
+                                   :id "ReenableDatabaseInstanceRequest",
+                                   :properties {},
+                                   :description "The request sent to the ReenableDatabaseInstance method."}}

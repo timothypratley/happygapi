@@ -26,7 +26,9 @@
                                                           :type "string"},
                                        :enrolledServices {:description "A list of Google Cloud Services for which the given resource has Access Approval enrolled. Access requests for the resource given by name against any of these services contained here will be required to have explicit approval. If name refers to an organization, enrollment can be done for individual services. If name refers to a folder or project, enrollment can only be done on an all or nothing basis. If a cloud_product is repeated in this list, the first entry will be honored and all following entries will be discarded. A maximum of 10 enrolled services will be enforced, to be expanded as the set of supported services is expanded.",
                                                           :type "array",
-                                                          :items {:$ref "EnrolledService"}}}},
+                                                          :items {:$ref "EnrolledService"}},
+                                       :requireCustomerVisibleJustification {:description "Optional. A setting to require approval request justifications to be customer visible.",
+                                                                             :type "boolean"}}},
  :AccessApprovalServiceAccount {:id "AccessApprovalServiceAccount",
                                 :description "Access Approval service account related to a project/folder/organization.",
                                 :type "object",
@@ -188,6 +190,7 @@
                                                                       "ECDSA on the NIST P-256 curve with a SHA256 digest. Other hash functions can also be used: https://cloud.google.com/kms/docs/create-validate-signatures#ecdsa_support_for_other_hash_algorithms"
                                                                       "ECDSA on the NIST P-384 curve with a SHA384 digest. Other hash functions can also be used: https://cloud.google.com/kms/docs/create-validate-signatures#ecdsa_support_for_other_hash_algorithms"
                                                                       "ECDSA on the non-NIST secp256k1 curve. This curve is only supported for HSM protection level. Other hash functions can also be used: https://cloud.google.com/kms/docs/create-validate-signatures#ecdsa_support_for_other_hash_algorithms"
+                                                                      "EdDSA on the Curve25519 in pure mode (taking data as input)."
                                                                       "HMAC-SHA256 signing with a 256 bit key."
                                                                       "HMAC-SHA1 signing with a 160 bit key."
                                                                       "HMAC-SHA384 signing with a 384 bit key."
@@ -223,6 +226,7 @@
                                                           "EC_SIGN_P256_SHA256"
                                                           "EC_SIGN_P384_SHA384"
                                                           "EC_SIGN_SECP256K1_SHA256"
+                                                          "EC_SIGN_ED25519"
                                                           "HMAC_SHA256"
                                                           "HMAC_SHA1"
                                                           "HMAC_SHA384"

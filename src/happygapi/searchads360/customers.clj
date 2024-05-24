@@ -1,7 +1,7 @@
 (ns happygapi.searchads360.customers
   "Search Ads 360 Reporting API: customers.
   The Search Ads 360 API allows developers to automate downloading reports from Search Ads 360.
-  See: https://developers.google.com/search-ads/reportingapi/reference/rest/v0/customers"
+  See: https://developers.google.com/search-ads/reportingdocs/reference/rest/v0/customers"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

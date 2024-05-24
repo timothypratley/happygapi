@@ -1,101 +1,122 @@
-{:AppAccessRiskVerdict {:properties {:playOrSystemApps {:type "string",
-                                                        :description "Required. App access risk verdict related to apps that are not installed by the Google Play Store, and are not preloaded on the system image by the device manufacturer.",
+{:AppAccessRiskVerdict {:properties {:playOrSystemApps {:enumDescriptions ["Risk type is unknown."
+                                                                           "App access risk was not evaluated because a requirement was missed, such as the device not being trusted enough."
+                                                                           "No apps under this field are installed on the device. This is only valid for the other apps field."
+                                                                           "One or more apps under this field are installed on the device."
+                                                                           "Apps under this field are running that could be used to read or capture inputs and outputs of the requesting app, such as screen recording apps."
+                                                                           "Apps under this field are running that could be used to control the device and inputs and outputs of the requesting app, such as remote controlling apps."],
+                                                        :deprecated true,
+                                                        :type "string",
+                                                        :description "Deprecated: this field will be removed, please use apps_detected instead. App access risk verdict related to apps that are not installed by the Google Play Store, and are not preloaded on the system image by the device manufacturer.",
                                                         :enum ["UNKNOWN"
                                                                "UNEVALUATED"
                                                                "NOT_INSTALLED"
                                                                "INSTALLED"
                                                                "CAPTURING"
-                                                               "CONTROLLING"],
-                                                        :enumDescriptions ["Risk type is unknown."
-                                                                           "App access risk was not evaluated because a requirement was missed, such as the device not being trusted enough."
-                                                                           "No apps under this field are installed on the device. This is only valid for the other apps field."
-                                                                           "One or more apps under this field are installed on the device."
-                                                                           "Apps under this field are running that could be used to read or capture inputs and outputs of the requesting app, such as screen recording apps."
-                                                                           "Apps under this field are running that could be used to control the device and inputs and outputs of the requesting app, such as remote controlling apps."]},
-                                     :otherApps {:description "Required. App access risk verdict related to apps that are not installed by Google Play, and are not preloaded on the system image by the device manufacturer.",
+                                                               "CONTROLLING"]},
+                                     :appsDetected {:description "List of detected app types signalled for App Access Risk.",
+                                                    :type "array",
+                                                    :items {:type "string",
+                                                            :enumDescriptions ["Apps detected is unspecified."
+                                                                               "One or more apps is installed by Google Play or preloaded on the system partition by the device manufacturer."
+                                                                               "One or more apps installed by Google Play or preloaded on the device is running that could be used to read or capture the requesting app, such as a screen recording app."
+                                                                               "One or more apps installed by Google Play or preloaded on the device is running that could be used to display overlays over the requesting app."
+                                                                               "One or more apps installed by Google Play or preloaded on the device is running that could be used to control the device, such as a remote support app."
+                                                                               "One or more unknown apps is installed, that were not installed by Google Play or preloaded on the system partition by the device manufacturer."
+                                                                               "One or more unknown apps, which were not installed by Google Play or preloaded on the device, is running that could be used to read or capture the requesting app, such as a screen recording app."
+                                                                               "One or more unknown apps, which were not installed by Google Play or preloaded on the device, is running that could be used to display overlays over the requesting app."
+                                                                               "One or more unknown apps, which were not installed by Google Play or preloaded on the device, is running that could be used to control the device, such as a remote support app."],
+                                                            :enum ["APPS_DETECTED_UNSPECIFIED"
+                                                                   "KNOWN_INSTALLED"
+                                                                   "KNOWN_CAPTURING"
+                                                                   "KNOWN_OVERLAYS"
+                                                                   "KNOWN_CONTROLLING"
+                                                                   "UNKNOWN_INSTALLED"
+                                                                   "UNKNOWN_CAPTURING"
+                                                                   "UNKNOWN_OVERLAYS"
+                                                                   "UNKNOWN_CONTROLLING"]}},
+                                     :otherApps {:description "Deprecated: this field will be removed, please use apps_detected instead. App access risk verdict related to apps that are not installed by Google Play, and are not preloaded on the system image by the device manufacturer.",
                                                  :enumDescriptions ["Risk type is unknown."
                                                                     "App access risk was not evaluated because a requirement was missed, such as the device not being trusted enough."
                                                                     "No apps under this field are installed on the device. This is only valid for the other apps field."
                                                                     "One or more apps under this field are installed on the device."
                                                                     "Apps under this field are running that could be used to read or capture inputs and outputs of the requesting app, such as screen recording apps."
                                                                     "Apps under this field are running that could be used to control the device and inputs and outputs of the requesting app, such as remote controlling apps."],
-                                                 :type "string",
+                                                 :deprecated true,
                                                  :enum ["UNKNOWN"
                                                         "UNEVALUATED"
                                                         "NOT_INSTALLED"
                                                         "INSTALLED"
                                                         "CAPTURING"
-                                                        "CONTROLLING"]}},
+                                                        "CONTROLLING"],
+                                                 :type "string"}},
                         :description "Contains signals about others apps on the device which could be used to access or control the requesting app.",
-                        :type "object",
-                        :id "AppAccessRiskVerdict"},
- :EnvironmentDetails {:id "EnvironmentDetails",
+                        :id "AppAccessRiskVerdict",
+                        :type "object"},
+ :EnvironmentDetails {:description "Contains information about the environment Play Integrity API runs in, e.g. Play Protect verdict.",
                       :type "object",
-                      :properties {:playProtectVerdict {:description "The evaluation of Play Protect verdict.",
+                      :properties {:appAccessRiskVerdict {:$ref "AppAccessRiskVerdict",
+                                                          :description "The evaluation of the App Access Risk verdicts."},
+                                   :playProtectVerdict {:enumDescriptions ["Play Protect verdict has not been set."
+                                                                           "Play Protect state was not evaluated. Device may not be trusted."
+                                                                           "Play Protect is on and no issues found."
+                                                                           "Play Protect is on but no scan has been performed yet. The device or Play Store app may have been reset."
+                                                                           "Play Protect is on and warnings found."
+                                                                           "Play Protect is on and high severity issues found."
+                                                                           "Play Protect is turned off. Turn on Play Protect."],
+                                                        :description "The evaluation of Play Protect verdict.",
+                                                        :type "string",
                                                         :enum ["PLAY_PROTECT_VERDICT_UNSPECIFIED"
                                                                "UNEVALUATED"
                                                                "NO_ISSUES"
                                                                "NO_DATA"
                                                                "MEDIUM_RISK"
                                                                "HIGH_RISK"
-                                                               "POSSIBLE_RISK"],
-                                                        :type "string",
-                                                        :enumDescriptions ["Play Protect verdict has not been set."
-                                                                           "Play Protect state was not evaluated. Device may not be trusted."
-                                                                           "Play Protect is on and no issues found."
-                                                                           "Play Protect is on but no scan has been performed yet. The device or Play Store app may have been reset."
-                                                                           "Play Protect is on and warnings found."
-                                                                           "Play Protect is on and high severity issues found."
-                                                                           "Play Protect is turned off. Turn on Play Protect."]},
-                                   :appAccessRiskVerdict {:$ref "AppAccessRiskVerdict",
-                                                          :description "The evaluation of the App Access Risk verdicts."}},
-                      :description "Contains information about the environment Play Integrity API runs in, e.g. Play Protect verdict."},
- :TestingDetails {:properties {:isTestingResponse {:type "boolean",
-                                                   :description "Required. Indicates that the information contained in this payload is a testing response that is statically overridden for a tester."}},
-                  :type "object",
+                                                               "POSSIBLE_RISK"]}},
+                      :id "EnvironmentDetails"},
+ :TestingDetails {:properties {:isTestingResponse {:description "Required. Indicates that the information contained in this payload is a testing response that is statically overridden for a tester.",
+                                                   :type "boolean"}},
+                  :description "Contains additional information generated for testing responses.",
                   :id "TestingDetails",
-                  :description "Contains additional information generated for testing responses."},
+                  :type "object"},
  :DecodeIntegrityTokenResponse {:id "DecodeIntegrityTokenResponse",
-                                :type "object",
                                 :properties {:tokenPayloadExternal {:$ref "TokenPayloadExternal",
                                                                     :description "Plain token payload generated from the decoded integrity token."}},
+                                :type "object",
                                 :description "Response containing the decoded integrity payload."},
- :TokenPayloadExternal {:description "Contains basic app information and integrity signals like device attestation and licensing details.",
-                        :id "TokenPayloadExternal",
-                        :properties {:accountDetails {:description "Required. Details about the Play Store account.",
+ :TokenPayloadExternal {:properties {:testingDetails {:$ref "TestingDetails",
+                                                      :description "Indicates that this payload is generated for testing purposes and contains any additional data that is linked with testing status."},
+                                     :accountDetails {:description "Required. Details about the Play Store account.",
                                                       :$ref "AccountDetails"},
-                                     :requestDetails {:description "Required. Details about the integrity request.",
-                                                      :$ref "RequestDetails"},
-                                     :deviceIntegrity {:$ref "DeviceIntegrity",
-                                                       :description "Required. Details about the device integrity."},
                                      :appIntegrity {:$ref "AppIntegrity",
                                                     :description "Required. Details about the application integrity."},
+                                     :deviceIntegrity {:$ref "DeviceIntegrity",
+                                                       :description "Required. Details about the device integrity."},
+                                     :requestDetails {:$ref "RequestDetails",
+                                                      :description "Required. Details about the integrity request."},
                                      :environmentDetails {:$ref "EnvironmentDetails",
-                                                          :description "Details of the environment Play Integrity API runs in."},
-                                     :testingDetails {:$ref "TestingDetails",
-                                                      :description "Indicates that this payload is generated for testing purposes and contains any additional data that is linked with testing status."}},
+                                                          :description "Details of the environment Play Integrity API runs in."}},
+                        :id "TokenPayloadExternal",
+                        :description "Contains basic app information and integrity signals like device attestation and licensing details.",
                         :type "object"},
- :DeviceIntegrity {:id "DeviceIntegrity",
-                   :type "object",
-                   :properties {:recentDeviceActivity {:description "Details about the device activity of the device the app is running on.",
-                                                       :$ref "RecentDeviceActivity"},
-                                :deviceRecognitionVerdict {:type "array",
+ :DeviceIntegrity {:properties {:deviceRecognitionVerdict {:type "array",
                                                            :description "Details about the integrity of the device the app is running on.",
-                                                           :items {:enum ["UNKNOWN"
-                                                                          "MEETS_BASIC_INTEGRITY"
-                                                                          "MEETS_DEVICE_INTEGRITY"
-                                                                          "MEETS_STRONG_INTEGRITY"
-                                                                          "MEETS_VIRTUAL_INTEGRITY"],
-                                                                   :type "string",
+                                                           :items {:type "string",
                                                                    :enumDescriptions ["Play does not have sufficient information to evaluate device integrity"
                                                                                       "App is running on a device that passes basic system integrity checks, but may not meet Android platform compatibility requirements and may not be approved to run Google Play services."
                                                                                       "App is running on GMS Android device with Google Play services."
                                                                                       "App is running on GMS Android device with Google Play services and has a strong guarantee of system integrity such as a hardware-backed keystore."
-                                                                                      "App is running on an Android emulator with Google Play services which meets core Android compatibility requirements."]}}},
-                   :description "Contains the device attestation information. Next tag: 4"},
+                                                                                      "App is running on an Android emulator with Google Play services which meets core Android compatibility requirements."],
+                                                                   :enum ["UNKNOWN"
+                                                                          "MEETS_BASIC_INTEGRITY"
+                                                                          "MEETS_DEVICE_INTEGRITY"
+                                                                          "MEETS_STRONG_INTEGRITY"
+                                                                          "MEETS_VIRTUAL_INTEGRITY"]}},
+                                :recentDeviceActivity {:$ref "RecentDeviceActivity",
+                                                       :description "Details about the device activity of the device the app is running on."}},
+                   :description "Contains the device attestation information. Next tag: 4",
+                   :type "object",
+                   :id "DeviceIntegrity"},
  :AccountDetails {:id "AccountDetails",
-                  :type "object",
-                  :description "Contains the account information such as the licensing status for the user in the scope.",
                   :properties {:appLicensingVerdict {:enum ["UNKNOWN"
                                                             "LICENSED"
                                                             "UNLICENSED"
@@ -106,67 +127,66 @@
                                                                         "Licensing details were not evaluated since a necessary requirement was missed. For example DeviceIntegrity did not meet the minimum bar or the application was not a known Play version."],
                                                      :type "string",
                                                      :description "Required. Details about the licensing status of the user for the app in the scope."},
-                               :accountActivity {:description "(Restricted Access) Details about the account activity for the user in the scope.",
-                                                 :$ref "AccountActivity"}}},
- :AppIntegrity {:id "AppIntegrity",
-                :properties {:certificateSha256Digest {:description "The SHA256 hash of the requesting app's signing certificates (base64 web-safe encoded). Set iff app_recognition_verdict != UNEVALUATED.",
+                               :accountActivity {:$ref "AccountActivity",
+                                                 :description "(Restricted Access) Details about the account activity for the user in the scope."}},
+                  :description "Contains the account information such as the licensing status for the user in the scope.",
+                  :type "object"},
+ :AppIntegrity {:type "object",
+                :description "Contains the application integrity information.",
+                :id "AppIntegrity",
+                :properties {:packageName {:description "Package name of the application under attestation. Set iff app_recognition_verdict != UNEVALUATED.",
+                                           :type "string"},
+                             :certificateSha256Digest {:type "array",
                                                        :items {:type "string"},
-                                                       :type "array"},
-                             :versionCode {:description "Version code of the application. Set iff app_recognition_verdict != UNEVALUATED.",
-                                           :type "string",
-                                           :format "int64"},
-                             :appRecognitionVerdict {:enum ["UNKNOWN"
+                                                       :description "The SHA256 hash of the requesting app's signing certificates (base64 web-safe encoded). Set iff app_recognition_verdict != UNEVALUATED."},
+                             :appRecognitionVerdict {:description "Required. Details about the app recognition verdict",
+                                                     :enum ["UNKNOWN"
                                                             "PLAY_RECOGNIZED"
                                                             "UNRECOGNIZED_VERSION"
                                                             "UNEVALUATED"],
+                                                     :type "string",
                                                      :enumDescriptions ["Play does not have sufficient information to evaluate app integrity"
                                                                         "The app and certificate match the versions distributed by Play."
                                                                         "The certificate or package name does not match Google Play records."
-                                                                        "Application integrity was not evaluated since a necessary requirement was missed. For example DeviceIntegrity did not meet the minimum bar."],
-                                                     :type "string",
-                                                     :description "Required. Details about the app recognition verdict"},
-                             :packageName {:type "string",
-                                           :description "Package name of the application under attestation. Set iff app_recognition_verdict != UNEVALUATED."}},
-                :description "Contains the application integrity information.",
-                :type "object"},
- :RequestDetails {:properties {:timestampMillis {:type "string",
-                                                 :description "Required. Timestamp, in milliseconds, of the integrity application request.",
-                                                 :format "int64"},
+                                                                        "Application integrity was not evaluated since a necessary requirement was missed. For example DeviceIntegrity did not meet the minimum bar."]},
+                             :versionCode {:type "string",
+                                           :format "int64",
+                                           :description "Version code of the application. Set iff app_recognition_verdict != UNEVALUATED."}}},
+ :RequestDetails {:id "RequestDetails",
+                  :description "Contains the integrity request information.",
+                  :type "object",
+                  :properties {:timestampMillis {:format "int64",
+                                                 :type "string",
+                                                 :description "Required. Timestamp, in milliseconds, of the integrity application request."},
                                :nonce {:type "string",
                                        :description "Nonce that was provided in the request (which is base64 web-safe no-wrap)."},
-                               :requestHash {:description "Request hash that was provided in the request.",
-                                             :type "string"},
                                :requestPackageName {:description "Required. Application package name this attestation was requested for. Note: This field makes no guarantees or promises on the caller integrity. For details on application integrity, check application_integrity.",
-                                                    :type "string"}},
-                  :type "object",
-                  :id "RequestDetails",
-                  :description "Contains the integrity request information."},
- :AccountActivity {:properties {:activityLevel {:enum ["ACTIVITY_LEVEL_UNSPECIFIED"
-                                                       "UNEVALUATED"
-                                                       "UNUSUAL"
-                                                       "UNKNOWN"
-                                                       "TYPICAL_BASIC"
-                                                       "TYPICAL_STRONG"],
-                                                :type "string",
-                                                :enumDescriptions ["Activity level has not been set."
+                                                    :type "string"},
+                               :requestHash {:type "string",
+                                             :description "Request hash that was provided in the request."}}},
+ :AccountActivity {:type "object",
+                   :properties {:activityLevel {:enumDescriptions ["Activity level has not been set."
                                                                    "Account activity level is not evaluated."
                                                                    "Unusual activity for at least one of the user accounts on the device."
                                                                    "Insufficient activity to verify the user account on the device."
                                                                    "Typical activity for the user account or accounts on the device."
                                                                    "Typical for the user account or accounts on the device, with harder to replicate signals."],
-                                                :description "Required. Indicates the activity level of the account."}},
-                   :type "object",
-                   :description "(Restricted Access) Contains a signal helping apps differentiating between likely genuine and likely non-genuine user traffic.",
-                   :id "AccountActivity"},
- :DecodeIntegrityTokenRequest {:id "DecodeIntegrityTokenRequest",
-                               :type "object",
+                                                :description "Required. Indicates the activity level of the account.",
+                                                :type "string",
+                                                :enum ["ACTIVITY_LEVEL_UNSPECIFIED"
+                                                       "UNEVALUATED"
+                                                       "UNUSUAL"
+                                                       "UNKNOWN"
+                                                       "TYPICAL_BASIC"
+                                                       "TYPICAL_STRONG"]}},
+                   :id "AccountActivity",
+                   :description "(Restricted Access) Contains a signal helping apps differentiating between likely genuine and likely non-genuine user traffic."},
+ :DecodeIntegrityTokenRequest {:properties {:integrityToken {:description "Encoded integrity token.",
+                                                             :type "string"}},
                                :description "Request to decode the integrity token.",
-                               :properties {:integrityToken {:type "string",
-                                                             :description "Encoded integrity token."}}},
- :RecentDeviceActivity {:description "Recent device activity can help developers identify devices that have exhibited hyperactive attestation activity, which could be a sign of an attack or token farming.",
-                        :id "RecentDeviceActivity",
-                        :type "object",
-                        :properties {:deviceActivityLevel {:enum ["DEVICE_ACTIVITY_LEVEL_UNSPECIFIED"
+                               :type "object",
+                               :id "DecodeIntegrityTokenRequest"},
+ :RecentDeviceActivity {:properties {:deviceActivityLevel {:enum ["DEVICE_ACTIVITY_LEVEL_UNSPECIFIED"
                                                                   "UNEVALUATED"
                                                                   "LEVEL_1"
                                                                   "LEVEL_2"
@@ -179,4 +199,7 @@
                                                                               "Indicates the amount of used tokens. See the documentation for details."
                                                                               "Indicates the amount of used tokens. See the documentation for details."
                                                                               "Indicates the amount of used tokens. See the documentation for details."],
-                                                           :type "string"}}}}
+                                                           :type "string"}},
+                        :id "RecentDeviceActivity",
+                        :type "object",
+                        :description "Recent device activity can help developers identify devices that have exhibited hyperactive attestation activity, which could be a sign of an attack or token farming."}}

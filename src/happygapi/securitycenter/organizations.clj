@@ -1,7 +1,7 @@
 (ns happygapi.securitycenter.organizations
   "Security Command Center API: organizations.
   Security Command Center API provides access to temporal views of assets and findings within an organization.
-  See: https://cloud.google.com/security-command-centerapi/reference/rest/v1/organizations"
+  See: https://cloud.google.com/security-command-centerdocs/reference/rest/v1/organizations"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -750,6 +750,12 @@
                 :accessReviews [AccessReview],
                 :objects [Object]},
    :parent string,
+   :cloudArmor {:securityPolicy SecurityPolicy,
+                :requests Requests,
+                :adaptiveProtection AdaptiveProtection,
+                :attack Attack,
+                :threatVector string,
+                :duration string},
    :contacts {},
    :application {:baseUri string, :fullUri string},
    :backupDisasterRecovery {:applications [string],
@@ -797,6 +803,10 @@
                         :infoType string,
                         :infoTypeCount string,
                         :fullScan boolean},
+   :notebook {:name string,
+              :service string,
+              :lastAuthor string,
+              :notebookUpdateTime string},
    :parentDisplayName string,
    :indicator {:ipAddresses [string],
                :domains [string],
@@ -1042,6 +1052,12 @@
                 :accessReviews [AccessReview],
                 :objects [Object]},
    :parent string,
+   :cloudArmor {:securityPolicy SecurityPolicy,
+                :requests Requests,
+                :adaptiveProtection AdaptiveProtection,
+                :attack Attack,
+                :threatVector string,
+                :duration string},
    :contacts {},
    :application {:baseUri string, :fullUri string},
    :backupDisasterRecovery {:applications [string],
@@ -1089,6 +1105,10 @@
                         :infoType string,
                         :infoTypeCount string,
                         :fullScan boolean},
+   :notebook {:name string,
+              :service string,
+              :lastAuthor string,
+              :notebookUpdateTime string},
    :parentDisplayName string,
    :indicator {:ipAddresses [string],
                :domains [string],
@@ -1559,6 +1579,44 @@
       :as :json}
      auth))))
 
+(defn locations-muteConfigs-create$
+  "https://cloud.google.com/security-command-centerapi/reference/rest/v1/organizations/locations/muteConfigs/create
+  
+  Required parameters: parent
+  
+  Optional parameters: muteConfigId
+  
+  Body: 
+  
+  {:name string,
+   :displayName string,
+   :description string,
+   :filter string,
+   :createTime string,
+   :updateTime string,
+   :mostRecentEditor string}
+  
+  Creates a mute config."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://securitycenter.googleapis.com/"
+     "v1/{+parent}/muteConfigs"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn locations-muteConfigs-delete$
   "https://cloud.google.com/security-command-centerapi/reference/rest/v1/organizations/locations/muteConfigs/delete
   
@@ -1602,6 +1660,32 @@
      "https://securitycenter.googleapis.com/"
      "v1/{+name}"
      #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-muteConfigs-list$
+  "https://cloud.google.com/security-command-centerapi/reference/rest/v1/organizations/locations/muteConfigs/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageSize, pageToken
+  
+  Lists mute configs."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://securitycenter.googleapis.com/"
+     "v1/{+parent}"
+     #{:parent}
      parameters)
     (merge-with
      merge
@@ -2209,6 +2293,7 @@
    :resourceLabelsSelector {},
    :name string,
    :createTime string,
+   :cloudProvider string,
    :resourceType string,
    :scope string,
    :updateTime string,

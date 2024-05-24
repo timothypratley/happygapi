@@ -1,7 +1,7 @@
 (ns happygapi.dns.dnsKeys
   "Cloud DNS API: dnsKeys.
   
-  See: https://cloud.google.com/dns/docsapi/reference/rest/v1/dnsKeys"
+  See: https://cloud.google.com/dns/docsdocs/reference/rest/v1/dnsKeys"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

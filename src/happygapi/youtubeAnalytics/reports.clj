@@ -1,7 +1,7 @@
 (ns happygapi.youtubeAnalytics.reports
   "YouTube Analytics API: reports.
   Retrieves your YouTube Analytics data.
-  See: https://developers.google.com/youtube/analyticsapi/reference/rest/v2/reports"
+  See: https://developers.google.com/youtube/analyticsdocs/reference/rest/v2/reports"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

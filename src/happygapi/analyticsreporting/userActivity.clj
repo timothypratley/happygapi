@@ -1,7 +1,7 @@
 (ns happygapi.analyticsreporting.userActivity
   "Analytics Reporting API: userActivity.
   Accesses Analytics report data.
-  See: https://developers.google.com/analytics/devguides/reporting/core/v4/api/reference/rest/v4/userActivity"
+  See: https://developers.google.com/analytics/devguides/reporting/core/v4/docs/reference/rest/v4/userActivity"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

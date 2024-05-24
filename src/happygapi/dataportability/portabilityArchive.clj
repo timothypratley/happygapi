@@ -1,7 +1,7 @@
 (ns happygapi.dataportability.portabilityArchive
   "Data Portability API: portabilityArchive.
   The Data Portability API lets you build applications that request authorization from a user to move a copy of data from Google services into your application. This enables data portability and facilitates switching services.
-  See: https://developers.google.com/data-portabilityapi/reference/rest/v1/portabilityArchive"
+  See: https://developers.google.com/data-portabilitydocs/reference/rest/v1/portabilityArchive"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -18,8 +18,7 @@
   {:resources [string]}
   
   Initiates a new Archive job for the Portability API."
-  {:scopes ["https://www.googleapis.com/auth/dataportability.alerts.subscriptions"
-            "https://www.googleapis.com/auth/dataportability.businessmessaging.conversations"
+  {:scopes ["https://www.googleapis.com/auth/dataportability.businessmessaging.conversations"
             "https://www.googleapis.com/auth/dataportability.chrome.autofill"
             "https://www.googleapis.com/auth/dataportability.chrome.bookmarks"
             "https://www.googleapis.com/auth/dataportability.chrome.dictionary"
@@ -37,7 +36,6 @@
             "https://www.googleapis.com/auth/dataportability.maps.factual_contributions"
             "https://www.googleapis.com/auth/dataportability.maps.offering_contributions"
             "https://www.googleapis.com/auth/dataportability.maps.photos_videos"
-            "https://www.googleapis.com/auth/dataportability.maps.post_trip_feedback"
             "https://www.googleapis.com/auth/dataportability.maps.questions_answers"
             "https://www.googleapis.com/auth/dataportability.maps.reviews"
             "https://www.googleapis.com/auth/dataportability.maps.starred_places"

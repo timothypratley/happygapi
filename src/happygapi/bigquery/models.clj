@@ -1,7 +1,7 @@
 (ns happygapi.bigquery.models
   "BigQuery API: models.
   A data platform for customers to create, manage, share and query data.
-  See: https://cloud.google.com/bigquery/api/reference/rest/v2/models"
+  See: https://cloud.google.com/bigquery/docs/reference/rest/v2/models"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

@@ -1,7 +1,7 @@
 (ns happygapi.webrisk.hashes
   "Web Risk API: hashes.
   
-  See: https://cloud.google.com/web-risk/api/reference/rest/v1/hashes"
+  See: https://cloud.google.com/web-risk/docs/reference/rest/v1/hashes"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

@@ -1,7 +1,7 @@
 (ns happygapi.accessapproval.folders
   "Access Approval API: folders.
   An API for controlling access to data by Google personnel.
-  See: https://cloud.google.com/assured-workloads/access-approval/docsapi/reference/rest/v1/folders"
+  See: https://cloud.google.com/assured-workloads/access-approval/docsdocs/reference/rest/v1/folders"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -50,7 +50,8 @@
    :preferredRequestExpirationDays integer,
    :invalidKeyVersion boolean,
    :activeKeyVersion string,
-   :enrolledServices [{:cloudProduct string, :enrollmentLevel string}]}
+   :enrolledServices [{:cloudProduct string, :enrollmentLevel string}],
+   :requireCustomerVisibleJustification boolean}
   
   Updates the settings associated with a project, folder, or organization. Settings to update are determined by the value of field_mask."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}

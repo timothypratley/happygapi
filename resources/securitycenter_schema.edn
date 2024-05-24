@@ -44,6 +44,13 @@
                     :properties {:requestedPolicyVersion {:description "Optional. The maximum policy version that will be used to format the policy. Valid values are 0, 1, and 3. Requests specifying an invalid value will be rejected. Requests for policies with any conditional role bindings must specify version 3. Policies with no conditional role bindings may specify any valid value or leave the field unset. The policy in the response might use the policy version that you specified, or it might use a lower policy version. For example, if you specify version 3, but the policy has no conditional role bindings, the response uses version 1. To learn which resources support conditions in their IAM policies, see the [IAM documentation](https://cloud.google.com/iam/help/conditions/resource-policies).",
                                                           :type "integer",
                                                           :format "int32"}}},
+ :AwsAccount {:id "AwsAccount",
+              :description "An AWS account that is a member of an organization.",
+              :type "object",
+              :properties {:id {:description "The unique identifier (ID) of the account, containing exactly 12 digits.",
+                                :type "string"},
+                           :name {:description "The friendly name of this account.",
+                                  :type "string"}}},
  :GoogleCloudSecuritycenterV2Label {:id "GoogleCloudSecuritycenterV2Label",
                                     :description "Represents a generic name-value label. A label has separate name and value fields to support filtering with the `contains()` function. For more information, see [Filtering on array-type fields](https://cloud.google.com/security-command-center/docs/how-to-api-list-findings#array-contains-filtering).",
                                     :type "object",
@@ -108,6 +115,12 @@
                                                     :type "string"},
                                    :streamingConfig {:description "The config for triggering streaming-based notifications.",
                                                      :$ref "StreamingConfig"}}},
+ :AdaptiveProtection {:id "AdaptiveProtection",
+                      :description "Information about [Google Cloud Armor Adaptive Protection](https://cloud.google.com/armor/docs/cloud-armor-overview#google-cloud-armor-adaptive-protection).",
+                      :type "object",
+                      :properties {:confidence {:description "A score of 0 means that there is low confidence that the detected event is an actual attack. A score of 1 means that there is high confidence that the detected event is an attack. See the [Adaptive Protection documentation](https://cloud.google.com/armor/docs/adaptive-protection-overview#configure-alert-tuning) for further explanation.",
+                                                :type "number",
+                                                :format "double"}}},
  :GoogleCloudSecuritycenterV2IamBinding {:id "GoogleCloudSecuritycenterV2IamBinding",
                                          :description "Represents a particular IAM binding, which captures a member's role addition, removal, or state.",
                                          :type "object",
@@ -123,6 +136,21 @@
                                                              :type "string"},
                                                       :member {:description "A single identity requesting access for a Cloud Platform resource, for example, \"foo@google.com\".",
                                                                :type "string"}}},
+ :Requests {:id "Requests",
+            :description "Information about the requests relevant to the finding.",
+            :type "object",
+            :properties {:ratio {:description "For 'Increasing deny ratio', the ratio is the denied traffic divided by the allowed traffic. For 'Allowed traffic spike', the ratio is the allowed traffic in the short term divided by allowed traffic in the long term.",
+                                 :type "number",
+                                 :format "double"},
+                         :shortTermAllowed {:description "Allowed RPS (requests per second) in the short term.",
+                                            :type "integer",
+                                            :format "int32"},
+                         :longTermAllowed {:description "Allowed RPS (requests per second) over the long term.",
+                                           :type "integer",
+                                           :format "int32"},
+                         :longTermDenied {:description "Denied RPS (requests per second) over the long term.",
+                                          :type "integer",
+                                          :format "int32"}}},
  :GoogleCloudSecuritycenterV2SensitiveDataProtectionMapping {:id "GoogleCloudSecuritycenterV2SensitiveDataProtectionMapping",
                                                              :description "Resource value mapping for Sensitive Data Protection findings If any of these mappings have a resource value that is not unspecified, the resource_value field will be ignored when reading this configuration.",
                                                              :type "object",
@@ -168,6 +196,18 @@
              :type "object",
              :properties {:name {:description "The resource name of the org policy. Example: \"organizations/{organization_id}/policies/{constraint_name}\"",
                                  :type "string"}}},
+ :Notebook {:id "Notebook",
+            :description "Represents a Jupyter notebook IPYNB file, such as a [Colab Enterprise notebook](https://cloud.google.com/colab/docs/introduction) file, that is associated with a finding.",
+            :type "object",
+            :properties {:name {:description "The name of the notebook.",
+                                :type "string"},
+                         :service {:description "The source notebook service, for example, \"Colab Enterprise\".",
+                                   :type "string"},
+                         :lastAuthor {:description "The user ID of the latest author to modify the notebook.",
+                                      :type "string"},
+                         :notebookUpdateTime {:description "The most recent time the notebook was updated.",
+                                              :type "string",
+                                              :format "google-datetime"}}},
  :GroupAssetsResponse {:id "GroupAssetsResponse",
                        :description "Response message for grouping by assets.",
                        :type "object",
@@ -187,6 +227,12 @@
                                            :type "object",
                                            :properties {:name {:description "The name of the load balancer associated with the finding.",
                                                                :type "string"}}},
+ :GoogleCloudSecuritycenterV2AdaptiveProtection {:id "GoogleCloudSecuritycenterV2AdaptiveProtection",
+                                                 :description "Information about [Google Cloud Armor Adaptive Protection](https://cloud.google.com/armor/docs/cloud-armor-overview#google-cloud-armor-adaptive-protection).",
+                                                 :type "object",
+                                                 :properties {:confidence {:description "A score of 0 means that there is low confidence that the detected event is an actual attack. A score of 1 means that there is high confidence that the detected event is an attack. See the [Adaptive Protection documentation](https://cloud.google.com/armor/docs/adaptive-protection-overview#configure-alert-tuning) for further explanation.",
+                                                                           :type "number",
+                                                                           :format "double"}}},
  :GoogleCloudSecuritycenterV2YaraRuleSignature {:id "GoogleCloudSecuritycenterV2YaraRuleSignature",
                                                 :description "A signature corresponding to a YARA rule.",
                                                 :type "object",
@@ -217,6 +263,35 @@
                                 :policyDriftDetails {:description "The details about a change in an updated policy that violates the deployed posture.",
                                                      :type "array",
                                                      :items {:$ref "PolicyDriftDetails"}}}},
+ :ResourcePathNode {:id "ResourcePathNode",
+                    :description "A node within the resource path. Each node represents a resource within the resource hierarchy.",
+                    :type "object",
+                    :properties {:nodeType {:description "The type of resource this node represents.",
+                                            :type "string",
+                                            :enumDescriptions ["Node type is unspecified."
+                                                               "The node represents a Google Cloud organization."
+                                                               "The node represents a Google Cloud folder."
+                                                               "The node represents a Google Cloud project."
+                                                               "The node represents an AWS organization."
+                                                               "The node represents an AWS organizational unit."
+                                                               "The node represents an AWS account."
+                                                               "The node represents an Azure management group."
+                                                               "The node represents an Azure subscription."
+                                                               "The node represents an Azure resource group."],
+                                            :enum ["RESOURCE_PATH_NODE_TYPE_UNSPECIFIED"
+                                                   "GCP_ORGANIZATION"
+                                                   "GCP_FOLDER"
+                                                   "GCP_PROJECT"
+                                                   "AWS_ORGANIZATION"
+                                                   "AWS_ORGANIZATIONAL_UNIT"
+                                                   "AWS_ACCOUNT"
+                                                   "AZURE_MANAGEMENT_GROUP"
+                                                   "AZURE_SUBSCRIPTION"
+                                                   "AZURE_RESOURCE_GROUP"]},
+                                 :id {:description "The ID of the resource this node represents.",
+                                      :type "string"},
+                                 :displayName {:description "The display name of the resource this node represents.",
+                                               :type "string"}}},
  :LogEntry {:id "LogEntry",
             :description "An individual entry in a log.",
             :type "object",
@@ -269,6 +344,32 @@
                                                     :$ref "Position"},
                                             :end {:description "The end position of the error in the uploaded text version of the module. This field may be omitted if no specific position applies, or if one could not be computed..",
                                                   :$ref "Position"}}},
+ :AwsMetadata {:id "AwsMetadata",
+               :description "AWS metadata associated with the resource, only applicable if the finding's cloud provider is Amazon Web Services.",
+               :type "object",
+               :properties {:organization {:description "The AWS organization associated with the resource.",
+                                           :$ref "AwsOrganization"},
+                            :organizationalUnits {:description "A list of AWS organizational units associated with the resource, ordered from lowest level (closest to the account) to highest level.",
+                                                  :type "array",
+                                                  :items {:$ref "AwsOrganizationalUnit"}},
+                            :account {:description "The AWS account associated with the resource.",
+                                      :$ref "AwsAccount"}}},
+ :GoogleCloudSecuritycenterV2CloudArmor {:id "GoogleCloudSecuritycenterV2CloudArmor",
+                                         :description "Fields related to Google Cloud Armor findings.",
+                                         :type "object",
+                                         :properties {:securityPolicy {:description "Information about the [Google Cloud Armor security policy](https://cloud.google.com/armor/docs/security-policy-overview) relevant to the finding.",
+                                                                       :$ref "GoogleCloudSecuritycenterV2SecurityPolicy"},
+                                                      :requests {:description "Information about incoming requests evaluated by [Google Cloud Armor security policies](https://cloud.google.com/armor/docs/security-policy-overview).",
+                                                                 :$ref "GoogleCloudSecuritycenterV2Requests"},
+                                                      :adaptiveProtection {:description "Information about potential Layer 7 DDoS attacks identified by [Google Cloud Armor Adaptive Protection](https://cloud.google.com/armor/docs/adaptive-protection-overview).",
+                                                                           :$ref "GoogleCloudSecuritycenterV2AdaptiveProtection"},
+                                                      :attack {:description "Information about DDoS attack volume and classification.",
+                                                               :$ref "GoogleCloudSecuritycenterV2Attack"},
+                                                      :threatVector {:description "Distinguish between volumetric & protocol DDoS attack and application layer attacks. For example, \"L3_4\" for Layer 3 and Layer 4 DDoS attacks, or \"L_7\" for Layer 7 DDoS attacks.",
+                                                                     :type "string"},
+                                                      :duration {:description "Duration of attack from the start until the current moment (updated every 5 minutes).",
+                                                                 :type "string",
+                                                                 :format "google-duration"}}},
  :GoogleCloudSecuritycenterV2File {:id "GoogleCloudSecuritycenterV2File",
                                    :description "File information about the related binary/library used by an executable, or the script used by a script interpreter",
                                    :type "object",
@@ -410,6 +511,35 @@
                                                       :objects {:description "Kubernetes objects related to the finding.",
                                                                 :type "array",
                                                                 :items {:$ref "GoogleCloudSecuritycenterV2Object"}}}},
+ :GoogleCloudSecuritycenterV2ResourcePathNode {:id "GoogleCloudSecuritycenterV2ResourcePathNode",
+                                               :description "A node within the resource path. Each node represents a resource within the resource hierarchy.",
+                                               :type "object",
+                                               :properties {:nodeType {:description "The type of resource this node represents.",
+                                                                       :type "string",
+                                                                       :enumDescriptions ["Node type is unspecified."
+                                                                                          "The node represents a Google Cloud organization."
+                                                                                          "The node represents a Google Cloud folder."
+                                                                                          "The node represents a Google Cloud project."
+                                                                                          "The node represents an AWS organization."
+                                                                                          "The node represents an AWS organizational unit."
+                                                                                          "The node represents an AWS account."
+                                                                                          "The node represents an Azure management group."
+                                                                                          "The node represents an Azure subscription."
+                                                                                          "The node represents an Azure resource group."],
+                                                                       :enum ["RESOURCE_PATH_NODE_TYPE_UNSPECIFIED"
+                                                                              "GCP_ORGANIZATION"
+                                                                              "GCP_FOLDER"
+                                                                              "GCP_PROJECT"
+                                                                              "AWS_ORGANIZATION"
+                                                                              "AWS_ORGANIZATIONAL_UNIT"
+                                                                              "AWS_ACCOUNT"
+                                                                              "AZURE_MANAGEMENT_GROUP"
+                                                                              "AZURE_SUBSCRIPTION"
+                                                                              "AZURE_RESOURCE_GROUP"]},
+                                                            :id {:description "The ID of the resource this node represents.",
+                                                                 :type "string"},
+                                                            :displayName {:description "The display name of the resource this node represents.",
+                                                                          :type "string"}}},
  :GoogleCloudSecuritycenterV2NotificationMessage {:id "GoogleCloudSecuritycenterV2NotificationMessage",
                                                   :description "Cloud SCC's Notification",
                                                   :type "object",
@@ -419,6 +549,17 @@
                                                                          :$ref "GoogleCloudSecuritycenterV2Finding"},
                                                                :resource {:description "The Cloud resource tied to this notification's Finding.",
                                                                           :$ref "GoogleCloudSecuritycenterV2Resource"}}},
+ :Attack {:id "Attack",
+          :description "Information about DDoS attack volume and classification.",
+          :type "object",
+          :properties {:volumePps {:description "Total PPS (packets per second) volume of attack.",
+                                   :type "integer",
+                                   :format "int32"},
+                       :volumeBps {:description "Total BPS (bytes per second) volume of attack.",
+                                   :type "integer",
+                                   :format "int32"},
+                       :classification {:description "Type of attack, for example, 'SYN-flood', 'NTP-udp', or 'CHARGEN-udp'.",
+                                        :type "string"}}},
  :Container {:id "Container",
              :description "Container associated with the finding.",
              :type "object",
@@ -495,6 +636,13 @@
                                                                                 "A static mute config, which sets the static mute state of future matching findings to muted. Once the static mute state has been set, finding or config modifications will not affect the state."],
                                                              :enum ["MUTE_CONFIG_TYPE_UNSPECIFIED"
                                                                     "STATIC"]}}},
+ :GoogleCloudSecuritycenterV2Folder {:id "GoogleCloudSecuritycenterV2Folder",
+                                     :description "Message that contains the resource name and display name of a folder resource.",
+                                     :type "object",
+                                     :properties {:resourceFolder {:description "Full resource name of this folder. See: https://cloud.google.com/apis/design/resource_names#full_resource_name",
+                                                                   :type "string"},
+                                                  :resourceFolderDisplayName {:description "The user defined display name for this folder.",
+                                                                              :type "string"}}},
  :GoogleCloudSecuritycenterV1p1beta1Finding {:id "GoogleCloudSecuritycenterV1p1beta1Finding",
                                              :description "Security Command Center finding. A finding is a record of assessment data (security, risk, health or privacy) ingested into Security Command Center for presentation, notification, analysis, policy testing, and enforcement. For example, an XSS vulnerability in an App Engine application is a finding.",
                                              :type "object",
@@ -657,6 +805,13 @@
                                                             :type "string"},
                                           :name {:description "Full resource name of the finding.",
                                                  :type "string"}}},
+ :VulnerabilityCountBySeverity {:id "VulnerabilityCountBySeverity",
+                                :description "Vulnerability count by severity.",
+                                :type "object",
+                                :properties {:severityToFindingCount {:description "Key is the Severity enum.",
+                                                                      :type "object",
+                                                                      :additionalProperties {:type "string",
+                                                                                             :format "int64"}}}},
  :GoogleCloudSecuritycenterV2BigQueryExport {:id "GoogleCloudSecuritycenterV2BigQueryExport",
                                              :description "Configures how to deliver Findings to BigQuery Instance.",
                                              :type "object",
@@ -689,6 +844,17 @@
                                         :type "string"},
                                :destination {:description "The attack node uuid of the destination node.",
                                              :type "string"}}},
+ :GoogleCloudSecuritycenterV2Attack {:id "GoogleCloudSecuritycenterV2Attack",
+                                     :description "Information about DDoS attack volume and classification.",
+                                     :type "object",
+                                     :properties {:volumePps {:description "Total PPS (packets per second) volume of attack.",
+                                                              :type "integer",
+                                                              :format "int32"},
+                                                  :volumeBps {:description "Total BPS (bytes per second) volume of attack.",
+                                                              :type "integer",
+                                                              :format "int32"},
+                                                  :classification {:description "Type of attack, for example, 'SYN-flood', 'NTP-udp', or 'CHARGEN-udp'.",
+                                                                   :type "string"}}},
  :ProcessSignature {:id "ProcessSignature",
                     :description "Indicates what signature matched this process.",
                     :type "object",
@@ -728,12 +894,34 @@
  :GoogleCloudSecuritycenterV2Resource {:id "GoogleCloudSecuritycenterV2Resource",
                                        :description "Information related to the Google Cloud resource.",
                                        :type "object",
-                                       :properties {:name {:description "The full resource name of the resource. See: https://cloud.google.com/apis/design/resource_names#full_resource_name",
-                                                           :type "string"},
+                                       :properties {:service {:description "The service or resource provider associated with the resource.",
+                                                              :type "string"},
+                                                    :awsMetadata {:description "The AWS metadata associated with the finding.",
+                                                                  :$ref "GoogleCloudSecuritycenterV2AwsMetadata"},
                                                     :displayName {:description "The human readable name of the resource.",
                                                                   :type "string"},
+                                                    :name {:description "The full resource name of the resource. See: https://cloud.google.com/apis/design/resource_names#full_resource_name",
+                                                           :type "string"},
+                                                    :cloudProvider {:description "Indicates which cloud provider the finding is from.",
+                                                                    :type "string",
+                                                                    :enumDescriptions ["The cloud provider is unspecified."
+                                                                                       "The cloud provider is Google Cloud Platform."
+                                                                                       "The cloud provider is Amazon Web Services."
+                                                                                       "The cloud provider is Microsoft Azure."],
+                                                                    :enum ["CLOUD_PROVIDER_UNSPECIFIED"
+                                                                           "GOOGLE_CLOUD_PLATFORM"
+                                                                           "AMAZON_WEB_SERVICES"
+                                                                           "MICROSOFT_AZURE"]},
+                                                    :resourcePath {:description "Provides the path to the resource within the resource hierarchy.",
+                                                                   :$ref "GoogleCloudSecuritycenterV2ResourcePath"},
                                                     :type {:description "The full resource type of the resource.",
-                                                           :type "string"}}},
+                                                           :type "string"},
+                                                    :resourcePathString {:description "A string representation of the resource path. For Google Cloud, it has the format of organizations/{organization_id}/folders/{folder_id}/folders/{folder_id}/projects/{project_id} where there can be any number of folders. For AWS, it has the format of org/{organization_id}/ou/{organizational_unit_id}/ou/{organizational_unit_id}/account/{account_id} where there can be any number of organizational units. For Azure, it has the format of mg/{management_group_id}/mg/{management_group_id}/subscription/{subscription_id}/rg/{resource_group_name} where there can be any number of management groups.",
+                                                                         :type "string"},
+                                                    :gcpMetadata {:description "The GCP metadata associated with the finding.",
+                                                                  :$ref "GcpMetadata"},
+                                                    :location {:description "The region or location of the service (if applicable).",
+                                                               :type "string"}}},
  :SimulatedResource {:id "SimulatedResource",
                      :description "Manually constructed resource name. If the custom module evaluates against only the resource data, you can omit the `iam_policy_data` field. If it evaluates only the `iam_policy_data` field, you can omit the resource data.",
                      :type "object",
@@ -909,6 +1097,22 @@
                                                           :principal {:description "Output only. The service account that needs permission to create table and upload data to the BigQuery dataset.",
                                                                       :readOnly true,
                                                                       :type "string"}}},
+ :CloudArmor {:id "CloudArmor",
+              :description "Fields related to Google Cloud Armor findings.",
+              :type "object",
+              :properties {:securityPolicy {:description "Information about the [Google Cloud Armor security policy](https://cloud.google.com/armor/docs/security-policy-overview) relevant to the finding.",
+                                            :$ref "SecurityPolicy"},
+                           :requests {:description "Information about incoming requests evaluated by [Google Cloud Armor security policies](https://cloud.google.com/armor/docs/security-policy-overview).",
+                                      :$ref "Requests"},
+                           :adaptiveProtection {:description "Information about potential Layer 7 DDoS attacks identified by [Google Cloud Armor Adaptive Protection](https://cloud.google.com/armor/docs/adaptive-protection-overview).",
+                                                :$ref "AdaptiveProtection"},
+                           :attack {:description "Information about DDoS attack volume and classification.",
+                                    :$ref "Attack"},
+                           :threatVector {:description "Distinguish between volumetric & protocol DDoS attack and application layer attacks. For example, \"L3_4\" for Layer 3 and Layer 4 DDoS attacks, or \"L_7\" for Layer 7 DDoS attacks.",
+                                          :type "string"},
+                           :duration {:description "Duration of attack from the start until the current moment (updated every 5 minutes).",
+                                      :type "string",
+                                      :format "google-duration"}}},
  :Package {:id "Package",
            :description "Package is a generic definition of a package.",
            :type "object",
@@ -936,6 +1140,13 @@
                            :updateTime {:description "The time when the ticket was last updated, as reported by the ticket system.",
                                         :type "string",
                                         :format "google-datetime"}}},
+ :AwsOrganizationalUnit {:id "AwsOrganizationalUnit",
+                         :description "An Organizational Unit (OU) is a container of AWS accounts within a root of an organization. Policies that are attached to an OU apply to all accounts contained in that OU and in any child OUs.",
+                         :type "object",
+                         :properties {:id {:description "The unique identifier (ID) associated with this OU. The regex pattern for an organizational unit ID string requires \"ou-\" followed by from 4 to 32 lowercase letters or digits (the ID of the root that contains the OU). This string is followed by a second \"-\" dash and from 8 to 32 additional lowercase letters or digits. For example, \"ou-ab12-cd34ef56\".",
+                                           :type "string"},
+                                      :name {:description "The friendly name of the OU.",
+                                             :type "string"}}},
  :Database {:id "Database",
             :description "Represents database access information, such as queries. A database may be a sub-resource of an instance (as in the case of Cloud SQL instances or Cloud Spanner instances), or the database instance itself. Some database resources might not have the [full resource name](https://google.aip.dev/122#full-resource-names) populated because these resource types, such as Cloud SQL databases, are not yet supported by Cloud Asset Inventory. In these cases only the display name is provided.",
             :type "object",
@@ -952,6 +1163,15 @@
                                     :items {:type "string"}},
                          :version {:description "The version of the database, for example, POSTGRES_14. See [the complete list](https://cloud.google.com/sql/docs/mysql/admin-api/rest/v1/SqlDatabaseVersion).",
                                    :type "string"}}},
+ :SecurityPolicy {:id "SecurityPolicy",
+                  :description "Information about the [Google Cloud Armor security policy](https://cloud.google.com/armor/docs/security-policy-overview) relevant to the finding.",
+                  :type "object",
+                  :properties {:name {:description "The name of the Google Cloud Armor security policy, for example, \"my-security-policy\".",
+                                      :type "string"},
+                               :type {:description "The type of Google Cloud Armor security policy for example, 'backend security policy', 'edge security policy', 'network edge security policy', or 'always-on DDoS protection'.",
+                                      :type "string"},
+                               :preview {:description "Whether or not the associated rule or policy is in preview mode.",
+                                         :type "boolean"}}},
  :GoogleCloudSecuritycenterV2Reference {:id "GoogleCloudSecuritycenterV2Reference",
                                         :description "Additional Links",
                                         :type "object",
@@ -1002,12 +1222,20 @@
                       :type "object",
                       :properties {:name {:description "The compliance snapshot name. Format: //sources//complianceSnapshots/",
                                           :type "string"},
+                                   :cloudProvider {:description "The cloud provider for the compliance snapshot.",
+                                                   :type "string",
+                                                   :enumDescriptions ["The cloud provider is unspecified."
+                                                                      "The cloud provider is Google Cloud Platform."
+                                                                      "The cloud provider is Amazon Web Services."
+                                                                      "The cloud provider is Microsoft Azure."],
+                                                   :enum ["CLOUD_PROVIDER_UNSPECIFIED"
+                                                          "GOOGLE_CLOUD_PLATFORM"
+                                                          "AMAZON_WEB_SERVICES"
+                                                          "MICROSOFT_AZURE"]},
                                    :category {:description "The category of Findings matching.",
                                               :type "string"},
                                    :leafContainerResource {:description "The leaf container resource name that is closest to the snapshot.",
                                                            :type "string"},
-                                   :projectDisplayName {:description "The CRM resource display name that is closest to the snapshot the Findings belong to.",
-                                                        :type "string"},
                                    :complianceStandard {:description "The compliance standard (ie CIS).",
                                                         :type "string"},
                                    :complianceVersion {:description "The compliance version (ie 1.3) in CIS 1.3.",
@@ -1260,6 +1488,23 @@
                                   :type "string"},
                            :member {:description "A single identity requesting access for a Cloud Platform resource, for example, \"foo@google.com\".",
                                     :type "string"}}},
+ :GcpMetadata {:id "GcpMetadata",
+               :description "GCP metadata associated with the resource, only applicable if the finding's cloud provider is Google Cloud Platform.",
+               :type "object",
+               :properties {:project {:description "The full resource name of project that the resource belongs to.",
+                                      :type "string"},
+                            :projectDisplayName {:description "The project ID that the resource belongs to.",
+                                                 :type "string"},
+                            :parent {:description "The full resource name of resource's parent.",
+                                     :type "string"},
+                            :parentDisplayName {:description "The human readable name of resource's parent.",
+                                                :type "string"},
+                            :folders {:description "Output only. Contains a Folder message for each folder in the assets ancestry. The first folder is the deepest nested folder, and the last folder is the folder directly under the Organization.",
+                                      :readOnly true,
+                                      :type "array",
+                                      :items {:$ref "GoogleCloudSecuritycenterV2Folder"}},
+                            :organization {:description "The name of the organization that the resource belongs to.",
+                                           :type "string"}}},
  :SimulateSecurityHealthAnalyticsCustomModuleResponse {:id "SimulateSecurityHealthAnalyticsCustomModuleResponse",
                                                        :description "Response message for simulating a `SecurityHealthAnalyticsCustomModule` against a given resource.",
                                                        :type "object",
@@ -1342,24 +1587,46 @@
  :GoogleCloudSecuritycenterV1Resource {:id "GoogleCloudSecuritycenterV1Resource",
                                        :description "Information related to the Google Cloud resource.",
                                        :type "object",
-                                       :properties {:name {:description "The full resource name of the resource. See: https://cloud.google.com/apis/design/resource_names#full_resource_name",
-                                                           :type "string"},
-                                                    :displayName {:description "The human readable name of the resource.",
-                                                                  :type "string"},
-                                                    :type {:description "The full resource type of the resource.",
-                                                           :type "string"},
-                                                    :project {:description "The full resource name of project that the resource belongs to.",
+                                       :properties {:service {:description "The parent service or product from which the resource is provided, for example, GKE or SNS.",
                                                               :type "string"},
                                                     :projectDisplayName {:description "The project ID that the resource belongs to.",
                                                                          :type "string"},
-                                                    :parent {:description "The full resource name of resource's parent.",
-                                                             :type "string"},
-                                                    :parentDisplayName {:description "The human readable name of resource's parent.",
-                                                                        :type "string"},
+                                                    :awsMetadata {:description "The AWS metadata associated with the finding.",
+                                                                  :$ref "AwsMetadata"},
                                                     :folders {:description "Output only. Contains a Folder message for each folder in the assets ancestry. The first folder is the deepest nested folder, and the last folder is the folder directly under the Organization.",
                                                               :readOnly true,
                                                               :type "array",
-                                                              :items {:$ref "Folder"}}}},
+                                                              :items {:$ref "Folder"}},
+                                                    :parent {:description "The full resource name of resource's parent.",
+                                                             :type "string"},
+                                                    :displayName {:description "The human readable name of the resource.",
+                                                                  :type "string"},
+                                                    :name {:description "The full resource name of the resource. See: https://cloud.google.com/apis/design/resource_names#full_resource_name",
+                                                           :type "string"},
+                                                    :cloudProvider {:description "Indicates which cloud provider the resource resides in.",
+                                                                    :type "string",
+                                                                    :enumDescriptions ["The cloud provider is unspecified."
+                                                                                       "The cloud provider is Google Cloud Platform."
+                                                                                       "The cloud provider is Amazon Web Services."
+                                                                                       "The cloud provider is Microsoft Azure."],
+                                                                    :enum ["CLOUD_PROVIDER_UNSPECIFIED"
+                                                                           "GOOGLE_CLOUD_PLATFORM"
+                                                                           "AMAZON_WEB_SERVICES"
+                                                                           "MICROSOFT_AZURE"]},
+                                                    :resourcePath {:description "Provides the path to the resource within the resource hierarchy.",
+                                                                   :$ref "ResourcePath"},
+                                                    :type {:description "The full resource type of the resource.",
+                                                           :type "string"},
+                                                    :organization {:description "Indicates which organization or tenant in the cloud provider the finding applies to.",
+                                                                   :type "string"},
+                                                    :project {:description "The full resource name of project that the resource belongs to.",
+                                                              :type "string"},
+                                                    :parentDisplayName {:description "The human readable name of resource's parent.",
+                                                                        :type "string"},
+                                                    :resourcePathString {:description "A string representation of the resource path. For Google Cloud, it has the format of organizations/{organization_id}/folders/{folder_id}/folders/{folder_id}/projects/{project_id} where there can be any number of folders. For AWS, it has the format of org/{organization_id}/ou/{organizational_unit_id}/ou/{organizational_unit_id}/account/{account_id} where there can be any number of organizational units. For Azure, it has the format of mg/{management_group_id}/mg/{management_group_id}/subscription/{subscription_id}/rg/{resource_group_name} where there can be any number of management groups.",
+                                                                         :type "string"},
+                                                    :location {:description "The region or location of the service (if applicable).",
+                                                               :type "string"}}},
  :GoogleCloudSecuritycenterV2Indicator {:id "GoogleCloudSecuritycenterV2Indicator",
                                         :description "Represents what's commonly known as an _indicator of compromise_ (IoC) in computer forensics. This is an artifact observed on a network or in an operating system that, with high confidence, indicates a computer intrusion. For more information, see [Indicator of compromise](https://en.wikipedia.org/wiki/Indicator_of_compromise).",
                                         :type "object",
@@ -1412,6 +1679,11 @@
                                                                                       :type "boolean"},
                                                          :unexpectedKprobeHandler {:description "True if `kprobe` points are present with callbacks pointing to regions that are not in the expected kernel or module code range.",
                                                                                    :type "boolean"}}},
+ :AwsOrganization {:id "AwsOrganization",
+                   :description "An organization is a collection of accounts that are centrally managed together using consolidated billing, organized hierarchically with organizational units (OUs), and controlled with policies.",
+                   :type "object",
+                   :properties {:id {:description "The unique identifier (ID) for the organization. The regex pattern for an organization ID string requires \"o-\" followed by from 10 to 32 lowercase letters or digits.",
+                                     :type "string"}}},
  :GoogleCloudSecuritycenterV2ProcessSignature {:id "GoogleCloudSecuritycenterV2ProcessSignature",
                                                :description "Indicates what signature matched this process.",
                                                :type "object",
@@ -1427,6 +1699,13 @@
                                                                             :enum ["SIGNATURE_TYPE_UNSPECIFIED"
                                                                                    "SIGNATURE_TYPE_PROCESS"
                                                                                    "SIGNATURE_TYPE_FILE"]}}},
+ :GoogleCloudSecuritycenterV2AwsOrganizationalUnit {:id "GoogleCloudSecuritycenterV2AwsOrganizationalUnit",
+                                                    :description "An Organizational Unit (OU) is a container of AWS accounts within a root of an organization. Policies that are attached to an OU apply to all accounts contained in that OU and in any child OUs.",
+                                                    :type "object",
+                                                    :properties {:id {:description "The unique identifier (ID) associated with this OU. The regex pattern for an organizational unit ID string requires \"ou-\" followed by from 4 to 32 lowercase letters or digits (the ID of the root that contains the OU). This string is followed by a second \"-\" dash and from 8 to 32 additional lowercase letters or digits. For example, \"ou-ab12-cd34ef56\".",
+                                                                      :type "string"},
+                                                                 :name {:description "The friendly name of the OU.",
+                                                                        :type "string"}}},
  :ListAttackPathsResponse {:id "ListAttackPathsResponse",
                            :description "Response message for listing the attack paths for a given simulation or valued resource.",
                            :type "object",
@@ -1685,6 +1964,12 @@
                                                                                                                   :items {:$ref "GoogleCloudSecuritycenterV1SecurityHealthAnalyticsCustomModule"}},
                                                                            :nextPageToken {:description "If not empty, indicates that there may be more custom modules to be returned.",
                                                                                            :type "string"}}},
+ :ResourcePath {:id "ResourcePath",
+                :description "Represents the path of resources leading up to the resource this finding is about.",
+                :type "object",
+                :properties {:nodes {:description "The list of nodes that make the up resource path, ordered from lowest level to highest level.",
+                                     :type "array",
+                                     :items {:$ref "ResourcePathNode"}}}},
  :GoogleCloudSecuritycenterV2CloudDlpDataProfile {:id "GoogleCloudSecuritycenterV2CloudDlpDataProfile",
                                                   :description "The [data profile](https://cloud.google.com/dlp/docs/data-profiles) associated with the finding.",
                                                   :type "object",
@@ -1715,7 +2000,7 @@
                                                          :marks {:description "Mutable user specified security marks belonging to the parent resource. Constraints are as follows: * Keys and values are treated as case insensitive * Keys must be between 1 - 256 characters (inclusive) * Keys must be letters, numbers, underscores, or dashes * Values have leading and trailing whitespace trimmed, remaining characters must be between 1 - 4096 characters (inclusive)",
                                                                  :type "object",
                                                                  :additionalProperties {:type "string"}},
-                                                         :canonicalName {:description "The canonical name of the marks. The following list shows some examples: + `organizations/{organization_id}/assets/{asset_id}/securityMarks\" + `organizations/{organization_id}/sources/{source_id}/findings/{finding_id}/securityMarks\" + `organizations/{organization_id}/sources/{source_id}/locations/{location}/findings/{finding_id}/securityMarks\" + `folders/{folder_id}/assets/{asset_id}/securityMarks\" + `folders/{folder_id}/sources/{source_id}/findings/{finding_id}/securityMarks\" + `folders/{folder_id}/sources/{source_id}/locations/{location}/findings/{finding_id}/securityMarks\" + `projects/{project_number}/assets/{asset_id}/securityMarks\" + `projects/{project_number}/sources/{source_id}/findings/{finding_id}/securityMarks\" + `projects/{project_number}/sources/{source_id}/locations/{location}/findings/{finding_id}/securityMarks\"",
+                                                         :canonicalName {:description "The canonical name of the marks. The following list shows some examples: + `organizations/{organization_id}/assets/{asset_id}/securityMarks` + `organizations/{organization_id}/sources/{source_id}/findings/{finding_id}/securityMarks` + `organizations/{organization_id}/sources/{source_id}/locations/{location}/findings/{finding_id}/securityMarks` + `folders/{folder_id}/assets/{asset_id}/securityMarks` + `folders/{folder_id}/sources/{source_id}/findings/{finding_id}/securityMarks` + `folders/{folder_id}/sources/{source_id}/locations/{location}/findings/{finding_id}/securityMarks` + `projects/{project_number}/assets/{asset_id}/securityMarks` + `projects/{project_number}/sources/{source_id}/findings/{finding_id}/securityMarks` + `projects/{project_number}/sources/{source_id}/locations/{location}/findings/{finding_id}/securityMarks`",
                                                                          :type "string"}}},
  :GoogleCloudSecuritycenterV2TicketInfo {:id "GoogleCloudSecuritycenterV2TicketInfo",
                                          :description "Information about the ticket, if any, that is being used to track the resolution of the issue that is identified by this finding.",
@@ -1749,6 +2034,12 @@
                                                                             :duration {:description "The duration between asset discovery run start and end",
                                                                                        :type "string",
                                                                                        :format "google-duration"}}},
+ :GoogleCloudSecuritycenterV2ResourcePath {:id "GoogleCloudSecuritycenterV2ResourcePath",
+                                           :description "Represents the path of resources leading up to the resource this finding is about.",
+                                           :type "object",
+                                           :properties {:nodes {:description "The list of nodes that make the up resource path, ordered from lowest level to highest level.",
+                                                                :type "array",
+                                                                :items {:$ref "GoogleCloudSecuritycenterV2ResourcePathNode"}}}},
  :PolicyDriftDetails {:id "PolicyDriftDetails",
                       :description "The policy field that violates the deployed posture and its expected and detected values.",
                       :type "object",
@@ -1805,6 +2096,7 @@
                                                                                                       "T1057"
                                                                                                       "T1059"
                                                                                                       "T1059.004"
+                                                                                                      "T1059.006"
                                                                                                       "T1069"
                                                                                                       "T1069.003"
                                                                                                       "T1071"
@@ -1864,6 +2156,7 @@
                                                                                           "PROCESS_DISCOVERY"
                                                                                           "COMMAND_AND_SCRIPTING_INTERPRETER"
                                                                                           "UNIX_SHELL"
+                                                                                          "PYTHON"
                                                                                           "PERMISSION_GROUPS_DISCOVERY"
                                                                                           "CLOUD_GROUPS"
                                                                                           "APPLICATION_LAYER_PROTOCOL"
@@ -1959,6 +2252,7 @@
                                                                                                          "T1057"
                                                                                                          "T1059"
                                                                                                          "T1059.004"
+                                                                                                         "T1059.006"
                                                                                                          "T1069"
                                                                                                          "T1069.003"
                                                                                                          "T1071"
@@ -2018,6 +2312,7 @@
                                                                                              "PROCESS_DISCOVERY"
                                                                                              "COMMAND_AND_SCRIPTING_INTERPRETER"
                                                                                              "UNIX_SHELL"
+                                                                                             "PYTHON"
                                                                                              "PERMISSION_GROUPS_DISCOVERY"
                                                                                              "CLOUD_GROUPS"
                                                                                              "APPLICATION_LAYER_PROTOCOL"
@@ -2163,6 +2458,41 @@
                                         :type "string"},
                        :resourceFolderDisplayName {:description "The user defined display name for this folder.",
                                                    :type "string"}}},
+ :GoogleCloudSecuritycenterV2Requests {:id "GoogleCloudSecuritycenterV2Requests",
+                                       :description "Information about the requests relevant to the finding.",
+                                       :type "object",
+                                       :properties {:ratio {:description "For 'Increasing deny ratio', the ratio is the denied traffic divided by the allowed traffic. For 'Allowed traffic spike', the ratio is the allowed traffic in the short term divided by allowed traffic in the long term.",
+                                                            :type "number",
+                                                            :format "double"},
+                                                    :shortTermAllowed {:description "Allowed RPS (requests per second) in the short term.",
+                                                                       :type "integer",
+                                                                       :format "int32"},
+                                                    :longTermAllowed {:description "Allowed RPS (requests per second) over the long term.",
+                                                                      :type "integer",
+                                                                      :format "int32"},
+                                                    :longTermDenied {:description "Denied RPS (requests per second) over the long term.",
+                                                                     :type "integer",
+                                                                     :format "int32"}}},
+ :VulnerabilitySnapshot {:id "VulnerabilitySnapshot",
+                         :description "Result containing the properties and count of a VulnerabilitySnapshot request.",
+                         :type "object",
+                         :properties {:name {:description "Identifier. The vulnerability snapshot name. Format: //locations//vulnerabilitySnapshots/",
+                                             :type "string"},
+                                      :cloudProvider {:description "The cloud provider for the vulnerability snapshot.",
+                                                      :type "string",
+                                                      :enumDescriptions ["The cloud provider is unspecified."
+                                                                         "The cloud provider is Google Cloud Platform."
+                                                                         "The cloud provider is Amazon Web Services."
+                                                                         "The cloud provider is Microsoft Azure."],
+                                                      :enum ["CLOUD_PROVIDER_UNSPECIFIED"
+                                                             "GOOGLE_CLOUD_PLATFORM"
+                                                             "AMAZON_WEB_SERVICES"
+                                                             "MICROSOFT_AZURE"]},
+                                      :snapshotTime {:description "The time that the snapshot was taken.",
+                                                     :type "string",
+                                                     :format "google-datetime"},
+                                      :findingCount {:description "The vulnerability count by severity.",
+                                                     :$ref "VulnerabilityCountBySeverity"}}},
  :AssetDiscoveryConfig {:id "AssetDiscoveryConfig",
                         :description "The configuration used for Asset Discovery runs.",
                         :type "object",
@@ -2310,6 +2640,18 @@
                                                         :type "string"},
                                                    :name {:description "Name for the subject.",
                                                           :type "string"}}},
+ :GoogleCloudSecuritycenterV2Notebook {:id "GoogleCloudSecuritycenterV2Notebook",
+                                       :description "Represents a Jupyter notebook IPYNB file, such as a [Colab Enterprise notebook](https://cloud.google.com/colab/docs/introduction) file, that is associated with a finding.",
+                                       :type "object",
+                                       :properties {:name {:description "The name of the notebook.",
+                                                           :type "string"},
+                                                    :service {:description "The source notebook service, for example, \"Colab Enterprise\".",
+                                                              :type "string"},
+                                                    :lastAuthor {:description "The user ID of the latest author to modify the notebook.",
+                                                                 :type "string"},
+                                                    :notebookUpdateTime {:description "The most recent time the notebook was updated.",
+                                                                         :type "string",
+                                                                         :format "google-datetime"}}},
  :GoogleCloudSecuritycenterV1p1beta1SecurityMarks {:id "GoogleCloudSecuritycenterV1p1beta1SecurityMarks",
                                                    :description "User specified security marks that are attached to the parent Security Command Center resource. Security marks are scoped within a Security Command Center organization -- they can be modified and viewed by all users who have proper permissions on the organization.",
                                                    :type "object",
@@ -2349,6 +2691,16 @@
                                                           :exposedLowValueResourcesCount {:description "The number of high value resources that are exposed as a result of this finding.",
                                                                                           :type "integer",
                                                                                           :format "int32"}}},
+ :GoogleCloudSecuritycenterV2AwsMetadata {:id "GoogleCloudSecuritycenterV2AwsMetadata",
+                                          :description "AWS metadata associated with the resource, only applicable if the finding's cloud provider is Amazon Web Services.",
+                                          :type "object",
+                                          :properties {:organization {:description "The AWS organization associated with the resource.",
+                                                                      :$ref "GoogleCloudSecuritycenterV2AwsOrganization"},
+                                                       :organizationalUnits {:description "A list of AWS organizational units associated with the resource, ordered from lowest level (closest to the account) to highest level.",
+                                                                             :type "array",
+                                                                             :items {:$ref "GoogleCloudSecuritycenterV2AwsOrganizationalUnit"}},
+                                                       :account {:description "The AWS account associated with the resource.",
+                                                                 :$ref "GoogleCloudSecuritycenterV2AwsAccount"}}},
  :GoogleCloudSecuritycenterV1ResourceSelector {:id "GoogleCloudSecuritycenterV1ResourceSelector",
                                                :description "Resource for selecting resource type.",
                                                :type "object",
@@ -2377,6 +2729,8 @@
                                      :$ref "Kubernetes"},
                         :parent {:description "The relative resource name of the source the finding belongs to. See: https://cloud.google.com/apis/design/resource_names#relative_resource_name This field is immutable after creation time. For example: \"organizations/{organization_id}/sources/{source_id}\"",
                                  :type "string"},
+                        :cloudArmor {:description "Fields related to Cloud Armor findings.",
+                                     :$ref "CloudArmor"},
                         :contacts {:description "Output only. Map containing the points of contact for the given finding. The key represents the type of contact, while the value contains a list of all the contacts that pertain. Please refer to: https://cloud.google.com/resource-manager/docs/managing-notification-contacts#notification-categories { \"security\": { \"contacts\": [ { \"email\": \"person1@company.com\" }, { \"email\": \"person2@company.com\" } ] } }",
                                    :readOnly true,
                                    :type "object",
@@ -2437,6 +2791,8 @@
                                         :type "string"},
                         :cloudDlpInspection {:description "Cloud Data Loss Prevention (Cloud DLP) inspection results that are associated with the finding.",
                                              :$ref "CloudDlpInspection"},
+                        :notebook {:description "Notebook associated with the finding.",
+                                   :$ref "Notebook"},
                         :parentDisplayName {:description "Output only. The human readable display name of the finding source such as \"Event Threat Detection\" or \"Security Health Analytics\".",
                                             :readOnly true,
                                             :type "string"},
@@ -2507,30 +2863,40 @@
                                       "UNMUTED"
                                       "UNDEFINED"]}}},
  :GoogleCloudSecuritycenterV1ResourceValueConfig {:id "GoogleCloudSecuritycenterV1ResourceValueConfig",
-                                                  :description "A resource value config (RVC) is a mapping configuration of user's resources to resource values. Used in Attack path simulations.",
+                                                  :description "A resource value configuration (RVC) is a mapping configuration of user's resources to resource values. Used in Attack path simulations.",
                                                   :type "object",
-                                                  :properties {:description {:description "Description of the resource value config.",
+                                                  :properties {:description {:description "Description of the resource value configuration.",
                                                                              :type "string"},
-                                                               :resourceLabelsSelector {:description "List of resource labels to search for, evaluated with AND. E.g. \"resource_labels_selector\": {\"key\": \"value\", \"env\": \"prod\"} will match resources with labels \"key\": \"value\" AND \"env\": \"prod\" https://cloud.google.com/resource-manager/docs/creating-managing-labels",
+                                                               :resourceLabelsSelector {:description "List of resource labels to search for, evaluated with AND. For example, \"resource_labels_selector\": {\"key\": \"value\", \"env\": \"prod\"} will match resources with labels \"key\": \"value\" AND \"env\": \"prod\" https://cloud.google.com/resource-manager/docs/creating-managing-labels",
                                                                                         :type "object",
                                                                                         :additionalProperties {:type "string"}},
-                                                               :name {:description "Name for the resource value config",
+                                                               :name {:description "Name for the resource value configuration",
                                                                       :type "string"},
-                                                               :createTime {:description "Output only. Timestamp this resource value config was created.",
+                                                               :createTime {:description "Output only. Timestamp this resource value configuration was created.",
                                                                             :readOnly true,
                                                                             :type "string",
                                                                             :format "google-datetime"},
-                                                               :resourceType {:description "Apply resource_value only to resources that match resource_type. resource_type will be checked with \"AND\" of other resources. E.g. \"storage.googleapis.com/Bucket\" with resource_value \"HIGH\" will apply \"HIGH\" value only to \"storage.googleapis.com/Bucket\" resources.",
+                                                               :cloudProvider {:description "Cloud provider this configuration applies to",
+                                                                               :type "string",
+                                                                               :enumDescriptions ["The cloud provider is unspecified."
+                                                                                                  "The cloud provider is Google Cloud Platform."
+                                                                                                  "The cloud provider is Amazon Web Services."
+                                                                                                  "The cloud provider is Microsoft Azure."],
+                                                                               :enum ["CLOUD_PROVIDER_UNSPECIFIED"
+                                                                                      "GOOGLE_CLOUD_PLATFORM"
+                                                                                      "AMAZON_WEB_SERVICES"
+                                                                                      "MICROSOFT_AZURE"]},
+                                                               :resourceType {:description "Apply resource_value only to resources that match resource_type. resource_type will be checked with AND of other resources. For example, \"storage.googleapis.com/Bucket\" with resource_value \"HIGH\" will apply \"HIGH\" value only to \"storage.googleapis.com/Bucket\" resources.",
                                                                               :type "string"},
-                                                               :scope {:description "Project or folder to scope this config to. For example, \"project/456\" would apply this config only to resources in \"project/456\" scope will be checked with \"AND\" of other resources.",
+                                                               :scope {:description "Project or folder to scope this configuration to. For example, \"project/456\" would apply this configuration only to resources in \"project/456\" scope will be checked with AND of other resources.",
                                                                        :type "string"},
-                                                               :updateTime {:description "Output only. Timestamp this resource value config was last updated.",
+                                                               :updateTime {:description "Output only. Timestamp this resource value configuration was last updated.",
                                                                             :readOnly true,
                                                                             :type "string",
                                                                             :format "google-datetime"},
                                                                :sensitiveDataProtectionMapping {:description "A mapping of the sensitivity on Sensitive Data Protection finding to resource values. This mapping can only be used in combination with a resource_type that is related to BigQuery, e.g. \"bigquery.googleapis.com/Dataset\".",
                                                                                                 :$ref "GoogleCloudSecuritycenterV1SensitiveDataProtectionMapping"},
-                                                               :tagValues {:description "Required. Tag values combined with AND to check against. Values in the form \"tagValues/123\" E.g. [ \"tagValues/123\", \"tagValues/456\", \"tagValues/789\" ] https://cloud.google.com/resource-manager/docs/tags/tags-creating-and-managing",
+                                                               :tagValues {:description "Required. Tag values combined with AND to check against. Values in the form \"tagValues/123\" Example: [ \"tagValues/123\", \"tagValues/456\", \"tagValues/789\" ] https://cloud.google.com/resource-manager/docs/tags/tags-creating-and-managing",
                                                                            :type "array",
                                                                            :items {:type "string"}},
                                                                :resourceValue {:description "Required. Resource value level this expression represents",
@@ -2596,23 +2962,45 @@
  :Resource {:id "Resource",
             :description "Information related to the Google Cloud resource that is associated with this finding.",
             :type "object",
-            :properties {:name {:description "The full resource name of the resource. See: https://cloud.google.com/apis/design/resource_names#full_resource_name",
-                                :type "string"},
+            :properties {:service {:description "The service or resource provider associated with the resource.",
+                                   :type "string"},
+                         :projectDisplayName {:description "The project ID that the resource belongs to.",
+                                              :type "string"},
+                         :awsMetadata {:description "The AWS metadata associated with the finding.",
+                                       :$ref "AwsMetadata"},
+                         :folders {:description "Contains a Folder message for each folder in the assets ancestry. The first folder is the deepest nested folder, and the last folder is the folder directly under the Organization.",
+                                   :type "array",
+                                   :items {:$ref "Folder"}},
                          :displayName {:description "The human readable name of the resource.",
                                        :type "string"},
+                         :name {:description "The full resource name of the resource. See: https://cloud.google.com/apis/design/resource_names#full_resource_name",
+                                :type "string"},
+                         :parentName {:description "The full resource name of resource's parent.",
+                                      :type "string"},
+                         :cloudProvider {:description "Indicates which cloud provider the finding is from.",
+                                         :type "string",
+                                         :enumDescriptions ["The cloud provider is unspecified."
+                                                            "The cloud provider is Google Cloud Platform."
+                                                            "The cloud provider is Amazon Web Services."
+                                                            "The cloud provider is Microsoft Azure."],
+                                         :enum ["CLOUD_PROVIDER_UNSPECIFIED"
+                                                "GOOGLE_CLOUD_PLATFORM"
+                                                "AMAZON_WEB_SERVICES"
+                                                "MICROSOFT_AZURE"]},
+                         :resourcePath {:description "Provides the path to the resource within the resource hierarchy.",
+                                        :$ref "ResourcePath"},
                          :type {:description "The full resource type of the resource.",
                                 :type "string"},
                          :projectName {:description "The full resource name of project that the resource belongs to.",
                                        :type "string"},
-                         :projectDisplayName {:description "The project ID that the resource belongs to.",
-                                              :type "string"},
-                         :parentName {:description "The full resource name of resource's parent.",
-                                      :type "string"},
+                         :organization {:description "Indicates which organization / tenant the finding is for.",
+                                        :type "string"},
                          :parentDisplayName {:description "The human readable name of resource's parent.",
                                              :type "string"},
-                         :folders {:description "Contains a Folder message for each folder in the assets ancestry. The first folder is the deepest nested folder, and the last folder is the folder directly under the Organization.",
-                                   :type "array",
-                                   :items {:$ref "Folder"}}}},
+                         :resourcePathString {:description "A string representation of the resource path. For Google Cloud, it has the format of org/{organization_id}/folder/{folder_id}/folder/{folder_id}/project/{project_id} where there can be any number of folders. For AWS, it has the format of org/{organization_id}/ou/{organizational_unit_id}/ou/{organizational_unit_id}/account/{account_id} where there can be any number of organizational units. For Azure, it has the format of mg/{management_group_id}/mg/{management_group_id}/subscription/{subscription_id}/rg/{resource_group_name} where there can be any number of management groups.",
+                                              :type "string"},
+                         :location {:description "The region or location of the service (if applicable).",
+                                    :type "string"}}},
  :BulkMuteFindingsRequest {:id "BulkMuteFindingsRequest",
                            :description "Request message for bulk findings update. Note: 1. If multiple bulk update requests match the same resource, the order in which they get executed is not defined. 2. Once a bulk operation is started, there is no way to stop it.",
                            :type "object",
@@ -2711,6 +3099,13 @@
                                    :resource {:description "Output only. Resource that is associated with this finding.",
                                               :readOnly true,
                                               :$ref "Resource"}}},
+ :GoogleCloudSecuritycenterV2AwsAccount {:id "GoogleCloudSecuritycenterV2AwsAccount",
+                                         :description "An AWS account that is a member of an organization.",
+                                         :type "object",
+                                         :properties {:id {:description "The unique identifier (ID) of the account, containing exactly 12 digits.",
+                                                           :type "string"},
+                                                      :name {:description "The friendly name of this account.",
+                                                             :type "string"}}},
  :YaraRuleSignature {:id "YaraRuleSignature",
                      :description "A signature corresponding to a YARA rule.",
                      :type "object",
@@ -2991,6 +3386,7 @@
                                                                            "T1057"
                                                                            "T1059"
                                                                            "T1059.004"
+                                                                           "T1059.006"
                                                                            "T1069"
                                                                            "T1069.003"
                                                                            "T1071"
@@ -3050,6 +3446,7 @@
                                                                "PROCESS_DISCOVERY"
                                                                "COMMAND_AND_SCRIPTING_INTERPRETER"
                                                                "UNIX_SHELL"
+                                                               "PYTHON"
                                                                "PERMISSION_GROUPS_DISCOVERY"
                                                                "CLOUD_GROUPS"
                                                                "APPLICATION_LAYER_PROTOCOL"
@@ -3145,6 +3542,7 @@
                                                                               "T1057"
                                                                               "T1059"
                                                                               "T1059.004"
+                                                                              "T1059.006"
                                                                               "T1069"
                                                                               "T1069.003"
                                                                               "T1071"
@@ -3204,6 +3602,7 @@
                                                                   "PROCESS_DISCOVERY"
                                                                   "COMMAND_AND_SCRIPTING_INTERPRETER"
                                                                   "UNIX_SHELL"
+                                                                  "PYTHON"
                                                                   "PERMISSION_GROUPS_DISCOVERY"
                                                                   "CLOUD_GROUPS"
                                                                   "APPLICATION_LAYER_PROTOCOL"
@@ -3312,6 +3711,15 @@
                                                     :items {:$ref "Operation"}},
                                        :nextPageToken {:description "The standard List next-page token.",
                                                        :type "string"}}},
+ :GoogleCloudSecuritycenterV2SecurityPolicy {:id "GoogleCloudSecuritycenterV2SecurityPolicy",
+                                             :description "Information about the [Google Cloud Armor security policy](https://cloud.google.com/armor/docs/security-policy-overview) relevant to the finding.",
+                                             :type "object",
+                                             :properties {:name {:description "The name of the Google Cloud Armor security policy, for example, \"my-security-policy\".",
+                                                                 :type "string"},
+                                                          :type {:description "The type of Google Cloud Armor security policy for example, 'backend security policy', 'edge security policy', 'network edge security policy', or 'always-on DDoS protection'.",
+                                                                 :type "string"},
+                                                          :preview {:description "Whether or not the associated rule or policy is in preview mode.",
+                                                                    :type "boolean"}}},
  :Indicator {:id "Indicator",
              :description "Represents what's commonly known as an _indicator of compromise_ (IoC) in computer forensics. This is an artifact observed on a network or in an operating system that, with high confidence, indicates a computer intrusion. For more information, see [Indicator of compromise](https://en.wikipedia.org/wiki/Indicator_of_compromise).",
              :type "object",
@@ -3448,6 +3856,11 @@
                         :pid {:description "The process ID.",
                               :type "string",
                               :format "int64"}}},
+ :GoogleCloudSecuritycenterV2AwsOrganization {:id "GoogleCloudSecuritycenterV2AwsOrganization",
+                                              :description "An organization is a collection of accounts that are centrally managed together using consolidated billing, organized hierarchically with organizational units (OUs), and controlled with policies.",
+                                              :type "object",
+                                              :properties {:id {:description "The unique identifier (ID) for the organization. The regex pattern for an organization ID string requires \"o-\" followed by from 10 to 32 lowercase letters or digits.",
+                                                                :type "string"}}},
  :Simulation {:id "Simulation",
               :description "Attack path simulation",
               :type "object",
@@ -3459,7 +3872,17 @@
                                         :format "google-datetime"},
                            :resourceValueConfigsMetadata {:description "Resource value configurations' metadata used in this simulation. Maximum of 100.",
                                                           :type "array",
-                                                          :items {:$ref "ResourceValueConfigMetadata"}}}},
+                                                          :items {:$ref "ResourceValueConfigMetadata"}},
+                           :cloudProvider {:description "Indicates which cloud provider was used in this simulation.",
+                                           :type "string",
+                                           :enumDescriptions ["The cloud provider is unspecified."
+                                                              "The cloud provider is Google Cloud Platform."
+                                                              "The cloud provider is Amazon Web Services."
+                                                              "The cloud provider is Microsoft Azure."],
+                                           :enum ["CLOUD_PROVIDER_UNSPECIFIED"
+                                                  "GOOGLE_CLOUD_PLATFORM"
+                                                  "AMAZON_WEB_SERVICES"
+                                                  "MICROSOFT_AZURE"]}}},
  :LoadBalancer {:id "LoadBalancer",
                 :description "Contains information related to the load balancer associated with the finding.",
                 :type "object",
@@ -3474,30 +3897,40 @@
                                                                       :type "array",
                                                                       :items {:type "string"}}}},
  :GoogleCloudSecuritycenterV2ResourceValueConfig {:id "GoogleCloudSecuritycenterV2ResourceValueConfig",
-                                                  :description "A resource value config (RVC) is a mapping configuration of user's resources to resource values. Used in Attack path simulations.",
+                                                  :description "A resource value configuration (RVC) is a mapping configuration of user's resources to resource values. Used in Attack path simulations.",
                                                   :type "object",
-                                                  :properties {:description {:description "Description of the resource value config.",
+                                                  :properties {:description {:description "Description of the resource value configuration.",
                                                                              :type "string"},
-                                                               :resourceLabelsSelector {:description "List of resource labels to search for, evaluated with AND. E.g. \"resource_labels_selector\": {\"key\": \"value\", \"env\": \"prod\"} will match resources with labels \"key\": \"value\" AND \"env\": \"prod\" https://cloud.google.com/resource-manager/docs/creating-managing-labels",
+                                                               :resourceLabelsSelector {:description "List of resource labels to search for, evaluated with AND. For example, \"resource_labels_selector\": {\"key\": \"value\", \"env\": \"prod\"} will match resources with labels \"key\": \"value\" AND \"env\": \"prod\" https://cloud.google.com/resource-manager/docs/creating-managing-labels",
                                                                                         :type "object",
                                                                                         :additionalProperties {:type "string"}},
-                                                               :name {:description "Name for the resource value config",
+                                                               :name {:description "Name for the resource value configuration",
                                                                       :type "string"},
-                                                               :createTime {:description "Output only. Timestamp this resource value config was created.",
+                                                               :createTime {:description "Output only. Timestamp this resource value configuration was created.",
                                                                             :readOnly true,
                                                                             :type "string",
                                                                             :format "google-datetime"},
-                                                               :resourceType {:description "Apply resource_value only to resources that match resource_type. resource_type will be checked with \"AND\" of other resources. E.g. \"storage.googleapis.com/Bucket\" with resource_value \"HIGH\" will apply \"HIGH\" value only to \"storage.googleapis.com/Bucket\" resources.",
+                                                               :cloudProvider {:description "Cloud provider this configuration applies to",
+                                                                               :type "string",
+                                                                               :enumDescriptions ["The cloud provider is unspecified."
+                                                                                                  "The cloud provider is Google Cloud Platform."
+                                                                                                  "The cloud provider is Amazon Web Services."
+                                                                                                  "The cloud provider is Microsoft Azure."],
+                                                                               :enum ["CLOUD_PROVIDER_UNSPECIFIED"
+                                                                                      "GOOGLE_CLOUD_PLATFORM"
+                                                                                      "AMAZON_WEB_SERVICES"
+                                                                                      "MICROSOFT_AZURE"]},
+                                                               :resourceType {:description "Apply resource_value only to resources that match resource_type. resource_type will be checked with AND of other resources. For example, \"storage.googleapis.com/Bucket\" with resource_value \"HIGH\" will apply \"HIGH\" value only to \"storage.googleapis.com/Bucket\" resources.",
                                                                               :type "string"},
-                                                               :scope {:description "Project or folder to scope this config to. For example, \"project/456\" would apply this config only to resources in \"project/456\" scope will be checked with \"AND\" of other resources.",
+                                                               :scope {:description "Project or folder to scope this configuration to. For example, \"project/456\" would apply this configuration only to resources in \"project/456\" scope will be checked with AND of other resources.",
                                                                        :type "string"},
-                                                               :updateTime {:description "Output only. Timestamp this resource value config was last updated.",
+                                                               :updateTime {:description "Output only. Timestamp this resource value configuration was last updated.",
                                                                             :readOnly true,
                                                                             :type "string",
                                                                             :format "google-datetime"},
                                                                :sensitiveDataProtectionMapping {:description "A mapping of the sensitivity on Sensitive Data Protection finding to resource values. This mapping can only be used in combination with a resource_type that is related to BigQuery, e.g. \"bigquery.googleapis.com/Dataset\".",
                                                                                                 :$ref "GoogleCloudSecuritycenterV2SensitiveDataProtectionMapping"},
-                                                               :tagValues {:description "Required. Tag values combined with AND to check against. Values in the form \"tagValues/123\" E.g. [ \"tagValues/123\", \"tagValues/456\", \"tagValues/789\" ] https://cloud.google.com/resource-manager/docs/tags/tags-creating-and-managing",
+                                                               :tagValues {:description "Required. Tag values combined with AND to check against. Values in the form \"tagValues/123\" Example: [ \"tagValues/123\", \"tagValues/456\", \"tagValues/789\" ] https://cloud.google.com/resource-manager/docs/tags/tags-creating-and-managing",
                                                                            :type "array",
                                                                            :items {:type "string"}},
                                                                :resourceValue {:description "Resource value level this expression represents Only required when there is no SDP mapping in the request",
@@ -3622,7 +4055,7 @@
                         :type "object",
                         :properties {:filter {:description "Expression that defines the filter to apply across findings. The expression is a list of one or more restrictions combined via logical operators `AND` and `OR`. Parentheses are supported, and `OR` has higher precedence than `AND`. Restrictions have the form ` ` and may have a `-` character in front of them to indicate negation. Examples include: * name * source_properties.a_property * security_marks.marks.marka The supported operators are: * `=` for all value types. * `>`, `<`, `>=`, `<=` for integer values. * `:`, meaning substring matching, for strings. The supported value types are: * string literals in quotes. * integer literals without quotes. * boolean literals `true` and `false` without quotes. The following field and operator combinations are supported: * name: `=` * parent: `=`, `:` * resource_name: `=`, `:` * state: `=`, `:` * category: `=`, `:` * external_uri: `=`, `:` * event_time: `=`, `>`, `<`, `>=`, `<=` Usage: This should be milliseconds since epoch or an RFC3339 string. Examples: `event_time = \"2019-06-10T16:07:18-07:00\"` `event_time = 1560208038000` * severity: `=`, `:` * workflow_state: `=`, `:` * security_marks.marks: `=`, `:` * source_properties: `=`, `:`, `>`, `<`, `>=`, `<=` For example, `source_properties.size = 100` is a valid filter string. Use a partial match on the empty string to filter based on a property existing: `source_properties.my_property : \"\"` Use a negated partial match on the empty string to filter based on a property not existing: `-source_properties.my_property : \"\"` * resource: * resource.name: `=`, `:` * resource.parent_name: `=`, `:` * resource.parent_display_name: `=`, `:` * resource.project_name: `=`, `:` * resource.project_display_name: `=`, `:` * resource.type: `=`, `:`",
                                               :type "string"},
-                                     :groupBy {:description "Required. Expression that defines what assets fields to use for grouping (including `state_change`). The string value should follow SQL syntax: comma separated list of fields. For example: \"parent,resource_name\". The following fields are supported: * resource_name * category * state * parent * severity The following fields are supported when compare_duration is set: * state_change",
+                                     :groupBy {:description "Required. Expression that defines what assets fields to use for grouping (including `state_change`). The string value should follow SQL syntax: comma separated list of fields. For example: \"parent,resource_name\". The following fields are supported when compare_duration is set: * state_change",
                                                :type "string"},
                                      :readTime {:description "Time used as a reference point when filtering findings. The filter is limited to findings existing at the supplied time and their values are those at that specific time. Absence of this field will default to the API's version of NOW.",
                                                 :type "string",
@@ -3690,6 +4123,8 @@
                                                                 :$ref "GoogleCloudSecuritycenterV2Kubernetes"},
                                                    :parent {:description "The relative resource name of the source and location the finding belongs to. See: https://cloud.google.com/apis/design/resource_names#relative_resource_name This field is immutable after creation time. The following list shows some examples: + `organizations/{organization_id}/sources/{source_id}` + `folders/{folders_id}/sources/{source_id}` + `projects/{projects_id}/sources/{source_id}` + `organizations/{organization_id}/sources/{source_id}/locations/{location_id}` + `folders/{folders_id}/sources/{source_id}/locations/{location_id}` + `projects/{projects_id}/sources/{source_id}/locations/{location_id}`",
                                                             :type "string"},
+                                                   :cloudArmor {:description "Fields related to Cloud Armor findings.",
+                                                                :$ref "GoogleCloudSecuritycenterV2CloudArmor"},
                                                    :contacts {:description "Output only. Map containing the points of contact for the given finding. The key represents the type of contact, while the value contains a list of all the contacts that pertain. Please refer to: https://cloud.google.com/resource-manager/docs/managing-notification-contacts#notification-categories { \"security\": { \"contacts\": [ { \"email\": \"person1@company.com\" }, { \"email\": \"person2@company.com\" } ] } }",
                                                               :readOnly true,
                                                               :type "object",
@@ -3753,6 +4188,8 @@
                                                                    :type "string"},
                                                    :cloudDlpInspection {:description "Cloud Data Loss Prevention (Cloud DLP) inspection results that are associated with the finding.",
                                                                         :$ref "GoogleCloudSecuritycenterV2CloudDlpInspection"},
+                                                   :notebook {:description "Notebook associated with the finding.",
+                                                              :$ref "GoogleCloudSecuritycenterV2Notebook"},
                                                    :parentDisplayName {:description "Output only. The human readable display name of the finding source such as \"Event Threat Detection\" or \"Security Health Analytics\".",
                                                                        :readOnly true,
                                                                        :type "string"},

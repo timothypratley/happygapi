@@ -1,49 +1,10 @@
 (ns happygapi.walletobjects.giftcardobject
   "Google Wallet API: giftcardobject.
   API for issuers to save and manage Google Wallet Objects.
-  See: https://developers.google.com/pay/passesapi/reference/rest/v1/giftcardobject"
+  See: https://developers.google.com/pay/passesdocs/reference/rest/v1/giftcardobject"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
-
-(defn addmessage$
-  "https://developers.google.com/pay/passesapi/reference/rest/v1/giftcardobject/addmessage
-  
-  Required parameters: resourceId
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:message {:body string,
-             :messageType string,
-             :header string,
-             :id string,
-             :kind string,
-             :displayInterval TimeInterval,
-             :localizedHeader LocalizedString,
-             :localizedBody LocalizedString}}
-  
-  Adds a message to the gift card object referenced by the given object ID."
-  {:scopes ["https://www.googleapis.com/auth/wallet_object.issuer"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:resourceId})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://walletobjects.googleapis.com/"
-     "walletobjects/v1/giftCardObject/{resourceId}/addMessage"
-     #{:resourceId}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
 
 (defn get$
   "https://developers.google.com/pay/passesapi/reference/rest/v1/giftcardobject/get
@@ -71,32 +32,6 @@
       :as :json}
      auth))))
 
-(defn list$
-  "https://developers.google.com/pay/passesapi/reference/rest/v1/giftcardobject/list
-  
-  Required parameters: none
-  
-  Optional parameters: maxResults, token, classId
-  
-  Returns a list of all gift card objects for a given issuer ID."
-  {:scopes ["https://www.googleapis.com/auth/wallet_object.issuer"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://walletobjects.googleapis.com/"
-     "walletobjects/v1/giftCardObject"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn patch$
   "https://developers.google.com/pay/passesapi/reference/rest/v1/giftcardobject/patch
   
@@ -109,26 +44,26 @@
   {:cardNumber string,
    :hasUsers boolean,
    :smartTapRedemptionValue string,
-   :rotatingBarcode {:totpDetails RotatingBarcodeTotpDetails,
+   :rotatingBarcode {:showCodeText LocalizedString,
                      :initialRotatingBarcodeValues RotatingBarcodeValues,
-                     :showCodeText LocalizedString,
-                     :type string,
                      :valuePattern string,
+                     :renderEncoding string,
                      :alternateText string,
-                     :renderEncoding string},
-   :textModulesData [{:id string,
+                     :type string,
+                     :totpDetails RotatingBarcodeTotpDetails},
+   :textModulesData [{:localizedHeader LocalizedString,
+                      :header string,
                       :localizedBody LocalizedString,
-                      :localizedHeader LocalizedString,
-                      :body string,
-                      :header string}],
-   :barcode {:alternateText string,
+                      :id string,
+                      :body string}],
+   :barcode {:renderEncoding string,
              :showCodeText LocalizedString,
              :type string,
-             :renderEncoding string,
-             :value string,
-             :kind string},
+             :kind string,
+             :alternateText string,
+             :value string},
    :hasLinkedDevice boolean,
-   :groupingInfo {:groupingId string, :sortIndex integer},
+   :groupingInfo {:sortIndex integer, :groupingId string},
    :state string,
    :classReference {:wordMark Image,
                     :reviewStatus string,
@@ -155,6 +90,7 @@
                     :programLogo Image,
                     :id string,
                     :kind string,
+                    :appLinkData AppLinkData,
                     :localizedPinLabel LocalizedString,
                     :classTemplateInfo ClassTemplateInfo,
                     :enableSmartTap boolean,
@@ -172,32 +108,32 @@
    :eventNumber string,
    :linksModuleData {:uris [Uri]},
    :imageModulesData [{:mainImage Image, :id string}],
-   :validTimeInterval {:start DateTime, :kind string, :end DateTime},
+   :validTimeInterval {:end DateTime, :kind string, :start DateTime},
    :locations [{:latitude number, :kind string, :longitude number}],
-   :balance {:kind string, :currencyCode string, :micros string},
-   :messages [{:body string,
-               :messageType string,
-               :header string,
-               :id string,
-               :kind string,
+   :balance {:kind string, :micros string, :currencyCode string},
+   :messages [{:messageType string,
                :displayInterval TimeInterval,
+               :body string,
+               :id string,
+               :localizedBody LocalizedString,
+               :header string,
                :localizedHeader LocalizedString,
-               :localizedBody LocalizedString}],
+               :kind string}],
    :id string,
    :kind string,
    :classId string,
    :passConstraints {:nfcConstraint [string],
                      :screenshotEligibility string},
-   :appLinkData {:iosAppLinkInfo AppLinkDataAppLinkInfo,
-                 :webAppLinkInfo AppLinkDataAppLinkInfo,
+   :appLinkData {:webAppLinkInfo AppLinkDataAppLinkInfo,
+                 :iosAppLinkInfo AppLinkDataAppLinkInfo,
                  :androidAppLinkInfo AppLinkDataAppLinkInfo},
    :version string,
-   :infoModuleData {:labelValueRows [LabelValueRow],
-                    :showLastUpdateTime boolean},
+   :infoModuleData {:showLastUpdateTime boolean,
+                    :labelValueRows [LabelValueRow]},
    :balanceUpdateTime {:date string},
-   :heroImage {:contentDescription LocalizedString,
+   :heroImage {:sourceUri ImageUri,
                :kind string,
-               :sourceUri ImageUri}}
+               :contentDescription LocalizedString}}
   
   Updates the gift card object referenced by the given object ID. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/wallet_object.issuer"]}
@@ -208,6 +144,45 @@
     (util/get-url
      "https://walletobjects.googleapis.com/"
      "walletobjects/v1/giftCardObject/{resourceId}"
+     #{:resourceId}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn addmessage$
+  "https://developers.google.com/pay/passesapi/reference/rest/v1/giftcardobject/addmessage
+  
+  Required parameters: resourceId
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:message {:messageType string,
+             :displayInterval TimeInterval,
+             :body string,
+             :id string,
+             :localizedBody LocalizedString,
+             :header string,
+             :localizedHeader LocalizedString,
+             :kind string}}
+  
+  Adds a message to the gift card object referenced by the given object ID."
+  {:scopes ["https://www.googleapis.com/auth/wallet_object.issuer"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resourceId})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://walletobjects.googleapis.com/"
+     "walletobjects/v1/giftCardObject/{resourceId}/addMessage"
      #{:resourceId}
      parameters)
     (merge-with
@@ -232,26 +207,26 @@
   {:cardNumber string,
    :hasUsers boolean,
    :smartTapRedemptionValue string,
-   :rotatingBarcode {:totpDetails RotatingBarcodeTotpDetails,
+   :rotatingBarcode {:showCodeText LocalizedString,
                      :initialRotatingBarcodeValues RotatingBarcodeValues,
-                     :showCodeText LocalizedString,
-                     :type string,
                      :valuePattern string,
+                     :renderEncoding string,
                      :alternateText string,
-                     :renderEncoding string},
-   :textModulesData [{:id string,
+                     :type string,
+                     :totpDetails RotatingBarcodeTotpDetails},
+   :textModulesData [{:localizedHeader LocalizedString,
+                      :header string,
                       :localizedBody LocalizedString,
-                      :localizedHeader LocalizedString,
-                      :body string,
-                      :header string}],
-   :barcode {:alternateText string,
+                      :id string,
+                      :body string}],
+   :barcode {:renderEncoding string,
              :showCodeText LocalizedString,
              :type string,
-             :renderEncoding string,
-             :value string,
-             :kind string},
+             :kind string,
+             :alternateText string,
+             :value string},
    :hasLinkedDevice boolean,
-   :groupingInfo {:groupingId string, :sortIndex integer},
+   :groupingInfo {:sortIndex integer, :groupingId string},
    :state string,
    :classReference {:wordMark Image,
                     :reviewStatus string,
@@ -278,6 +253,7 @@
                     :programLogo Image,
                     :id string,
                     :kind string,
+                    :appLinkData AppLinkData,
                     :localizedPinLabel LocalizedString,
                     :classTemplateInfo ClassTemplateInfo,
                     :enableSmartTap boolean,
@@ -295,32 +271,32 @@
    :eventNumber string,
    :linksModuleData {:uris [Uri]},
    :imageModulesData [{:mainImage Image, :id string}],
-   :validTimeInterval {:start DateTime, :kind string, :end DateTime},
+   :validTimeInterval {:end DateTime, :kind string, :start DateTime},
    :locations [{:latitude number, :kind string, :longitude number}],
-   :balance {:kind string, :currencyCode string, :micros string},
-   :messages [{:body string,
-               :messageType string,
-               :header string,
-               :id string,
-               :kind string,
+   :balance {:kind string, :micros string, :currencyCode string},
+   :messages [{:messageType string,
                :displayInterval TimeInterval,
+               :body string,
+               :id string,
+               :localizedBody LocalizedString,
+               :header string,
                :localizedHeader LocalizedString,
-               :localizedBody LocalizedString}],
+               :kind string}],
    :id string,
    :kind string,
    :classId string,
    :passConstraints {:nfcConstraint [string],
                      :screenshotEligibility string},
-   :appLinkData {:iosAppLinkInfo AppLinkDataAppLinkInfo,
-                 :webAppLinkInfo AppLinkDataAppLinkInfo,
+   :appLinkData {:webAppLinkInfo AppLinkDataAppLinkInfo,
+                 :iosAppLinkInfo AppLinkDataAppLinkInfo,
                  :androidAppLinkInfo AppLinkDataAppLinkInfo},
    :version string,
-   :infoModuleData {:labelValueRows [LabelValueRow],
-                    :showLastUpdateTime boolean},
+   :infoModuleData {:showLastUpdateTime boolean,
+                    :labelValueRows [LabelValueRow]},
    :balanceUpdateTime {:date string},
-   :heroImage {:contentDescription LocalizedString,
+   :heroImage {:sourceUri ImageUri,
                :kind string,
-               :sourceUri ImageUri}}
+               :contentDescription LocalizedString}}
   
   Inserts an gift card object with the given ID and properties."
   {:scopes ["https://www.googleapis.com/auth/wallet_object.issuer"]}
@@ -355,26 +331,26 @@
   {:cardNumber string,
    :hasUsers boolean,
    :smartTapRedemptionValue string,
-   :rotatingBarcode {:totpDetails RotatingBarcodeTotpDetails,
+   :rotatingBarcode {:showCodeText LocalizedString,
                      :initialRotatingBarcodeValues RotatingBarcodeValues,
-                     :showCodeText LocalizedString,
-                     :type string,
                      :valuePattern string,
+                     :renderEncoding string,
                      :alternateText string,
-                     :renderEncoding string},
-   :textModulesData [{:id string,
+                     :type string,
+                     :totpDetails RotatingBarcodeTotpDetails},
+   :textModulesData [{:localizedHeader LocalizedString,
+                      :header string,
                       :localizedBody LocalizedString,
-                      :localizedHeader LocalizedString,
-                      :body string,
-                      :header string}],
-   :barcode {:alternateText string,
+                      :id string,
+                      :body string}],
+   :barcode {:renderEncoding string,
              :showCodeText LocalizedString,
              :type string,
-             :renderEncoding string,
-             :value string,
-             :kind string},
+             :kind string,
+             :alternateText string,
+             :value string},
    :hasLinkedDevice boolean,
-   :groupingInfo {:groupingId string, :sortIndex integer},
+   :groupingInfo {:sortIndex integer, :groupingId string},
    :state string,
    :classReference {:wordMark Image,
                     :reviewStatus string,
@@ -401,6 +377,7 @@
                     :programLogo Image,
                     :id string,
                     :kind string,
+                    :appLinkData AppLinkData,
                     :localizedPinLabel LocalizedString,
                     :classTemplateInfo ClassTemplateInfo,
                     :enableSmartTap boolean,
@@ -418,32 +395,32 @@
    :eventNumber string,
    :linksModuleData {:uris [Uri]},
    :imageModulesData [{:mainImage Image, :id string}],
-   :validTimeInterval {:start DateTime, :kind string, :end DateTime},
+   :validTimeInterval {:end DateTime, :kind string, :start DateTime},
    :locations [{:latitude number, :kind string, :longitude number}],
-   :balance {:kind string, :currencyCode string, :micros string},
-   :messages [{:body string,
-               :messageType string,
-               :header string,
-               :id string,
-               :kind string,
+   :balance {:kind string, :micros string, :currencyCode string},
+   :messages [{:messageType string,
                :displayInterval TimeInterval,
+               :body string,
+               :id string,
+               :localizedBody LocalizedString,
+               :header string,
                :localizedHeader LocalizedString,
-               :localizedBody LocalizedString}],
+               :kind string}],
    :id string,
    :kind string,
    :classId string,
    :passConstraints {:nfcConstraint [string],
                      :screenshotEligibility string},
-   :appLinkData {:iosAppLinkInfo AppLinkDataAppLinkInfo,
-                 :webAppLinkInfo AppLinkDataAppLinkInfo,
+   :appLinkData {:webAppLinkInfo AppLinkDataAppLinkInfo,
+                 :iosAppLinkInfo AppLinkDataAppLinkInfo,
                  :androidAppLinkInfo AppLinkDataAppLinkInfo},
    :version string,
-   :infoModuleData {:labelValueRows [LabelValueRow],
-                    :showLastUpdateTime boolean},
+   :infoModuleData {:showLastUpdateTime boolean,
+                    :labelValueRows [LabelValueRow]},
    :balanceUpdateTime {:date string},
-   :heroImage {:contentDescription LocalizedString,
+   :heroImage {:sourceUri ImageUri,
                :kind string,
-               :sourceUri ImageUri}}
+               :contentDescription LocalizedString}}
   
   Updates the gift card object referenced by the given object ID."
   {:scopes ["https://www.googleapis.com/auth/wallet_object.issuer"]}
@@ -461,6 +438,32 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn list$
+  "https://developers.google.com/pay/passesapi/reference/rest/v1/giftcardobject/list
+  
+  Required parameters: none
+  
+  Optional parameters: maxResults, classId, token
+  
+  Returns a list of all gift card objects for a given issuer ID."
+  {:scopes ["https://www.googleapis.com/auth/wallet_object.issuer"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://walletobjects.googleapis.com/"
+     "walletobjects/v1/giftCardObject"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

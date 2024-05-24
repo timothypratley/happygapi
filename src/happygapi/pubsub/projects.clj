@@ -1,7 +1,7 @@
 (ns happygapi.pubsub.projects
   "Cloud Pub/Sub API: projects.
   Provides reliable, many-to-many, asynchronous messaging between applications. 
-  See: https://cloud.google.com/pubsub/docsapi/reference/rest/v1/projects"
+  See: https://cloud.google.com/pubsub/docsdocs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -583,6 +583,7 @@
                       :maxDeliveryAttempts integer},
    :cloudStorageConfig {:maxDuration string,
                         :filenameSuffix string,
+                        :filenameDatetimeFormat string,
                         :maxBytes string,
                         :state string,
                         :serviceAccountEmail string,

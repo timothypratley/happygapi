@@ -1,7 +1,7 @@
 (ns happygapi.customsearch.cse
   "Custom Search API: cse.
   Searches over a website or collection of websites
-  See: https://developers.google.com/custom-search/v1/introductionapi/reference/rest/v1/cse"
+  See: https://developers.google.com/custom-search/v1/introductiondocs/reference/rest/v1/cse"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

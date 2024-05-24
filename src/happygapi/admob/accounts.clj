@@ -1,7 +1,7 @@
 (ns happygapi.admob.accounts
   "AdMob API: accounts.
   The AdMob API allows publishers to programmatically get information about their AdMob account. 
-  See: https://developers.google.com/admob/api/api/reference/rest/v1/accounts"
+  See: https://developers.google.com/admob/api/docs/reference/rest/v1/accounts"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -118,7 +118,7 @@
                 :maxReportRows integer,
                 :timeZone string}}
   
-  Generates an AdMob mediation report based on the provided report specification. Returns result of a server-side streaming RPC. The result is returned in a sequence of responses."
+  Generates an AdMob Mediation report based on the provided report specification. Returns result of a server-side streaming RPC. The result is returned in a sequence of responses."
   {:scopes ["https://www.googleapis.com/auth/admob.readonly"
             "https://www.googleapis.com/auth/admob.report"]}
   [auth parameters body]

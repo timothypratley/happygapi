@@ -347,6 +347,20 @@
                                                                                                          :additionalProperties {:$ref "MaintenancePolicy"}},
                                                                                    :isRollback {:description "Optional. If the update call is triggered from rollback, set the value as true.",
                                                                                                 :type "boolean"}}},
+ :Replication {:id "Replication",
+               :description "Replication specifications.",
+               :type "object",
+               :properties {:role {:description "Optional. The replication role.",
+                                   :type "string",
+                                   :enumDescriptions ["Role not set."
+                                                      "The instance is a Active replication member, functions as the replication source instance."
+                                                      "The instance is a Standby replication member, functions as the replication destination instance."],
+                                   :enum ["ROLE_UNSPECIFIED"
+                                          "ACTIVE"
+                                          "STANDBY"]},
+                            :replicas {:description "Optional. Replicas configuration on the instance. For now, only a single replica config is supported.",
+                                       :type "array",
+                                       :items {:$ref "ReplicaConfig"}}}},
  :GoogleCloudSaasacceleratorManagementProvidersV1SloEligibility {:id "GoogleCloudSaasacceleratorManagementProvidersV1SloEligibility",
                                                                  :description "SloEligibility is a tuple containing eligibility value: true if an instance is eligible for SLO calculation or false if it should be excluded from all SLO-related calculations along with a user-defined reason.",
                                                                  :type "object",
@@ -460,6 +474,8 @@
                          :satisfiesPzs {:description "Output only. Reserved for future use.",
                                         :readOnly true,
                                         :type "boolean"},
+                         :replication {:description "Optional. Replicaition configuration.",
+                                       :$ref "Replication"},
                          :kmsKeyName {:description "KMS key name used for data encryption.",
                                       :type "string"}}},
  :ListBackupsResponse {:id "ListBackupsResponse",
@@ -514,6 +530,36 @@
                                                                                                   :type "string"},
                                                                                    :resourceUrl {:description "URL identifying the resource, e.g. \"https://www.googleapis.com/compute/v1/projects/...)\".",
                                                                                                  :type "string"}}},
+ :ReplicaConfig {:id "ReplicaConfig",
+                 :description "Replica configuration for the instance.",
+                 :type "object",
+                 :properties {:state {:description "Output only. The replica state.",
+                                      :readOnly true,
+                                      :type "string",
+                                      :enumDescriptions ["State not set."
+                                                         "The replica is being created."
+                                                         "The replica is ready."
+                                                         "The replica is being removed."
+                                                         "The replica is experiencing an issue and might be unusable. You can get further details from the `stateReasons` field of the `ReplicaConfig` object."],
+                                      :enum ["STATE_UNSPECIFIED"
+                                             "CREATING"
+                                             "READY"
+                                             "REMOVING"
+                                             "FAILED"]},
+                              :stateReasons {:description "Output only. Additional information about the replication state, if available.",
+                                             :readOnly true,
+                                             :type "array",
+                                             :items {:type "string",
+                                                     :enumDescriptions ["Reason not specified."
+                                                                        "The peer instance is unreachable."],
+                                                     :enum ["STATE_REASON_UNSPECIFIED"
+                                                            "PEER_INSTANCE_UNREACHABLE"]}},
+                              :peerInstance {:description "Optional. The peer instance.",
+                                             :type "string"},
+                              :lastActiveSyncTime {:description "Output only. The timestamp of the latest replication snapshot taken on the active instance and is already replicated safely.",
+                                                   :readOnly true,
+                                                   :type "string",
+                                                   :format "google-datetime"}}},
  :ListOperationsResponse {:id "ListOperationsResponse",
                           :description "The response message for Operations.ListOperations.",
                           :type "object",

@@ -771,10 +771,16 @@
                                          :type "string",
                                          :enumDescriptions ["Unspecified communications protocol. This is the default value."
                                                             "UDP"
-                                                            "TCP"],
+                                                            "TCP"
+                                                            "TLS"
+                                                            "SSL"
+                                                            "RELP"],
                                          :enum ["PROTOCOL_UNSPECIFIED"
                                                 "UDP"
-                                                "TCP"]},
+                                                "TCP"
+                                                "TLS"
+                                                "SSL"
+                                                "RELP"]},
                               :sourceType {:description "Required. The type of component that produces logs that will be forwarded to this logging server.",
                                            :type "string",
                                            :enumDescriptions ["The default value. This value should never be used."

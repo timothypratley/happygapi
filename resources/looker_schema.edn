@@ -196,7 +196,7 @@
                            :type "integer",
                            :format "int32"}}},
  :Instance {:id "Instance",
-            :description "A Looker instance.",
+            :description "A Looker instance. LINT.IfChange",
             :type "object",
             :properties {:linkedLspProjectNumber {:description "Optional. Linked Google Cloud Project Number for Looker Studio Pro.",
                                                   :type "string",

@@ -805,7 +805,8 @@
                                                                                               "Audience"
                                                                                               "Local Services Ads Service ID."
                                                                                               "Brand"
-                                                                                              "Brand List"],
+                                                                                              "Brand List"
+                                                                                              "Life Event"],
                                                                            :enum ["UNSPECIFIED"
                                                                                   "UNKNOWN"
                                                                                   "KEYWORD"
@@ -844,7 +845,8 @@
                                                                                   "AUDIENCE"
                                                                                   "LOCAL_SERVICE_ID"
                                                                                   "BRAND"
-                                                                                  "BRAND_LIST"]},
+                                                                                  "BRAND_LIST"
+                                                                                  "LIFE_EVENT"]},
                                                                     :criterionId {:description "Output only. The ID of the criterion. This field is ignored during mutate.",
                                                                                   :readOnly true,
                                                                                   :type "string",
@@ -870,7 +872,7 @@
                                                                                     "REMOVED"]},
                                                                     :language {:description "Immutable. Language.",
                                                                                :$ref "GoogleAdsSearchads360V0Common__LanguageInfo"},
-                                                                    :userList {:description "Immutable. User List. The Similar Audiences sunset starts May 2023. Refer to https://ads-developers.googleblog.com/2022/11/announcing-deprecation-and-sunset-of.html for other options.",
+                                                                    :userList {:description "Immutable. User List.",
                                                                                :$ref "GoogleAdsSearchads360V0Common__UserListInfo"},
                                                                     :device {:description "Immutable. Device.",
                                                                              :$ref "GoogleAdsSearchads360V0Common__DeviceInfo"},
@@ -1275,7 +1277,8 @@
                                                                                                  "The asset is linked for use to select a call-to-action."
                                                                                                  "The asset is linked for use to select an ad image."
                                                                                                  "The asset is linked for use as a business logo."
-                                                                                                 "The asset is linked for use as a hotel property in a Performance Max for travel goals campaign."],
+                                                                                                 "The asset is linked for use as a hotel property in a Performance Max for travel goals campaign."
+                                                                                                 "The asset is linked for use as a discovery carousel card."],
                                                                               :enum ["UNSPECIFIED"
                                                                                      "UNKNOWN"
                                                                                      "HEADLINE"
@@ -1304,7 +1307,8 @@
                                                                                      "CALL_TO_ACTION_SELECTION"
                                                                                      "AD_IMAGE"
                                                                                      "BUSINESS_LOGO"
-                                                                                     "HOTEL_PROPERTY"]},
+                                                                                     "HOTEL_PROPERTY"
+                                                                                     "DISCOVERY_CAROUSEL_CARD"]},
                                                              :conversionVisitDateTime {:description "Output only. The timestamp of the visit that the conversion is attributed to.",
                                                                                        :readOnly true,
                                                                                        :type "string"},
@@ -1473,6 +1477,85 @@
                                                                                                          :readOnly true,
                                                                                                          :type "string",
                                                                                                          :format "int64"}}},
+ :GoogleAdsSearchads360V0Resources__AccessibleBiddingStrategy {:id "GoogleAdsSearchads360V0Resources__AccessibleBiddingStrategy",
+                                                               :description "Represents a view of BiddingStrategies owned by and shared with the customer. In contrast to BiddingStrategy, this resource includes strategies owned by managers of the customer and shared with this customer - in addition to strategies owned by this customer. This resource does not provide metrics and only exposes a limited subset of the BiddingStrategy attributes.",
+                                                               :type "object",
+                                                               :properties {:targetSpend {:description "Output only. A bid strategy that sets your bids to help get as many clicks as possible within your budget.",
+                                                                                          :readOnly true,
+                                                                                          :$ref "GoogleAdsSearchads360V0Resources_AccessibleBiddingStrategy_TargetSpend"},
+                                                                            :name {:description "Output only. The name of the bidding strategy.",
+                                                                                   :readOnly true,
+                                                                                   :type "string"},
+                                                                            :maximizeConversions {:description "Output only. An automated bidding strategy to help get the most conversions for your campaigns while spending your budget.",
+                                                                                                  :readOnly true,
+                                                                                                  :$ref "GoogleAdsSearchads360V0Resources_AccessibleBiddingStrategy_MaximizeConversions"},
+                                                                            :type {:description "Output only. The type of the bidding strategy.",
+                                                                                   :readOnly true,
+                                                                                   :type "string",
+                                                                                   :enumDescriptions ["Not specified."
+                                                                                                      "Used for return value only. Represents value unknown in this version."
+                                                                                                      "Commission is an automatic bidding strategy in which the advertiser pays a certain portion of the conversion value."
+                                                                                                      "Enhanced CPC is a bidding strategy that raises bids for clicks that seem more likely to lead to a conversion and lowers them for clicks where they seem less likely."
+                                                                                                      "Used for return value only. Indicates that a campaign does not have a bidding strategy. This prevents the campaign from serving. For example, a campaign may be attached to a manager bidding strategy and the serving account is subsequently unlinked from the manager account. In this case the campaign will automatically be detached from the now inaccessible manager bidding strategy and transition to the INVALID bidding strategy type."
+                                                                                                      "Manual bidding strategy that allows advertiser to set the bid per advertiser-specified action."
+                                                                                                      "Manual click based bidding where user pays per click."
+                                                                                                      "Manual impression based bidding where user pays per thousand impressions."
+                                                                                                      "A bidding strategy that pays a configurable amount per video view."
+                                                                                                      "A bidding strategy that automatically maximizes number of conversions given a daily budget."
+                                                                                                      "An automated bidding strategy that automatically sets bids to maximize revenue while spending your budget."
+                                                                                                      "Page-One Promoted bidding scheme, which sets max cpc bids to target impressions on page one or page one promoted slots on google.com. This enum value is deprecated."
+                                                                                                      "Percent Cpc is bidding strategy where bids are a fraction of the advertised price for some good or service."
+                                                                                                      "Target CPA is an automated bid strategy that sets bids to help get as many conversions as possible at the target cost-per-acquisition (CPA) you set."
+                                                                                                      "Target CPM is an automated bid strategy that sets bids to help get as many impressions as possible at the target cost per one thousand impressions (CPM) you set."
+                                                                                                      "An automated bidding strategy that sets bids so that a certain percentage of search ads are shown at the top of the first page (or other targeted location)."
+                                                                                                      "Target Outrank Share is an automated bidding strategy that sets bids based on the target fraction of auctions where the advertiser should outrank a specific competitor. This enum value is deprecated."
+                                                                                                      "Target ROAS is an automated bidding strategy that helps you maximize revenue while averaging a specific target Return On Average Spend (ROAS)."
+                                                                                                      "Target Spend is an automated bid strategy that sets your bids to help get as many clicks as possible within your budget."],
+                                                                                   :enum ["UNSPECIFIED"
+                                                                                          "UNKNOWN"
+                                                                                          "COMMISSION"
+                                                                                          "ENHANCED_CPC"
+                                                                                          "INVALID"
+                                                                                          "MANUAL_CPA"
+                                                                                          "MANUAL_CPC"
+                                                                                          "MANUAL_CPM"
+                                                                                          "MANUAL_CPV"
+                                                                                          "MAXIMIZE_CONVERSIONS"
+                                                                                          "MAXIMIZE_CONVERSION_VALUE"
+                                                                                          "PAGE_ONE_PROMOTED"
+                                                                                          "PERCENT_CPC"
+                                                                                          "TARGET_CPA"
+                                                                                          "TARGET_CPM"
+                                                                                          "TARGET_IMPRESSION_SHARE"
+                                                                                          "TARGET_OUTRANK_SHARE"
+                                                                                          "TARGET_ROAS"
+                                                                                          "TARGET_SPEND"]},
+                                                                            :maximizeConversionValue {:description "Output only. An automated bidding strategy to help get the most conversion value for your campaigns while spending your budget.",
+                                                                                                      :readOnly true,
+                                                                                                      :$ref "GoogleAdsSearchads360V0Resources_AccessibleBiddingStrategy_MaximizeConversionValue"},
+                                                                            :ownerCustomerId {:description "Output only. The ID of the Customer which owns the bidding strategy.",
+                                                                                              :readOnly true,
+                                                                                              :type "string",
+                                                                                              :format "int64"},
+                                                                            :resourceName {:description "Output only. The resource name of the accessible bidding strategy. AccessibleBiddingStrategy resource names have the form: `customers/{customer_id}/accessibleBiddingStrategies/{bidding_strategy_id}`",
+                                                                                           :readOnly true,
+                                                                                           :type "string"},
+                                                                            :targetImpressionShare {:description "Output only. A bidding strategy that automatically optimizes towards a chosen percentage of impressions.",
+                                                                                                    :readOnly true,
+                                                                                                    :$ref "GoogleAdsSearchads360V0Resources_AccessibleBiddingStrategy_TargetImpressionShare"},
+                                                                            :id {:description "Output only. The ID of the bidding strategy.",
+                                                                                 :readOnly true,
+                                                                                 :type "string",
+                                                                                 :format "int64"},
+                                                                            :ownerDescriptiveName {:description "Output only. descriptive_name of the Customer which owns the bidding strategy.",
+                                                                                                   :readOnly true,
+                                                                                                   :type "string"},
+                                                                            :targetCpa {:description "Output only. A bidding strategy that sets bids to help get as many conversions as possible at the target cost-per-acquisition (CPA) you set.",
+                                                                                        :readOnly true,
+                                                                                        :$ref "GoogleAdsSearchads360V0Resources_AccessibleBiddingStrategy_TargetCpa"},
+                                                                            :targetRoas {:description "Output only. A bidding strategy that helps you maximize revenue while averaging a specific target Return On Ad Spend (ROAS).",
+                                                                                         :readOnly true,
+                                                                                         :$ref "GoogleAdsSearchads360V0Resources_AccessibleBiddingStrategy_TargetRoas"}}},
  :GoogleAdsSearchads360V0Common__SearchAds360ProductAdInfo {:id "GoogleAdsSearchads360V0Common__SearchAds360ProductAdInfo",
                                                             :description "A Search Ads 360 product ad.",
                                                             :type "object",
@@ -1503,6 +1586,13 @@
                                                                                "ENABLED"
                                                                                "REMOVED"
                                                                                "PAUSED"]}}},
+ :GoogleAdsSearchads360V0Resources_AccessibleBiddingStrategy_TargetRoas {:id "GoogleAdsSearchads360V0Resources_AccessibleBiddingStrategy_TargetRoas",
+                                                                         :description "An automated bidding strategy that helps you maximize revenue while averaging a specific target return on ad spend (ROAS).",
+                                                                         :type "object",
+                                                                         :properties {:targetRoas {:description "Output only. The chosen revenue (based on conversion data) per unit of spend.",
+                                                                                                   :readOnly true,
+                                                                                                   :type "number",
+                                                                                                   :format "double"}}},
  :GoogleAdsSearchads360V0Resources__WebpageView {:id "GoogleAdsSearchads360V0Resources__WebpageView",
                                                  :description "A webpage view.",
                                                  :type "object",
@@ -1862,7 +1952,7 @@
                                                        :leadRevenueMicros {:description "Lead revenue is the total amount you made from products sold as a result of advertising the same product. How it works: You report conversions with cart data for completed purchases on your website. If the ad that was interacted with before the purchase has an associated product (see Shopping Ads) then this product is considered the advertised product. Any product included in the order the customer places is a sold product. If the advertised and sold products match, then the total value you made from the sales of these products is shown under lead revenue. Example: Someone clicked on a Shopping ad for a hat then bought the same hat and a shirt. The hat is priced $10 and the shirt is priced $20. The lead revenue of this order is $10. This metric is only available if you report conversions with cart data. This metric is a monetary value and returned in the customer's currency by default. See the metrics_currency parameter at https://developers.google.com/search-ads/reporting/query/query-structure#parameters_clause",
                                                                            :type "string",
                                                                            :format "int64"},
-                                                       :searchTopImpressionShare {:description "The impressions you've received in the top location (anywhere above the organic search results) compared to the estimated number of impressions you were eligible to receive in the top location. Note: Search top impression share is reported in the range of 0.1 to 1. Any value below 0.1 is reported as 0.0999.",
+                                                       :searchTopImpressionShare {:description "The impressions you've received among the top ads compared to the estimated number of impressions you were eligible to receive among the top ads. Note: Search top impression share is reported in the range of 0.1 to 1. Any value below 0.1 is reported as 0.0999. Top ads are generally above the top organic results, although they may show below the top organic results on certain queries.",
                                                                                   :type "number",
                                                                                   :format "double"},
                                                        :historicalSearchPredictedCtr {:description "The historical search predicted click through rate (CTR).",
@@ -1931,7 +2021,7 @@
                                                        :invalidClicks {:description "Number of clicks Google considers illegitimate and doesn't charge you for.",
                                                                        :type "string",
                                                                        :format "int64"},
-                                                       :searchBudgetLostAbsoluteTopImpressionShare {:description "The number estimating how often your ad wasn't the very first ad above the organic search results due to a low budget. Note: Search budget lost absolute top impression share is reported in the range of 0 to 0.9. Any value above 0.9 is reported as 0.9001.",
+                                                       :searchBudgetLostAbsoluteTopImpressionShare {:description "The number estimating how often your ad wasn't the very first ad among the top ads in the search results due to a low budget. Note: Search budget lost absolute top impression share is reported in the range of 0 to 0.9. Any value above 0.9 is reported as 0.9001.",
                                                                                                     :type "number",
                                                                                                     :format "double"},
                                                        :contentImpressionShare {:description "The impressions you've received on the Display Network divided by the estimated number of impressions you were eligible to receive. Note: Content impression share is reported in the range of 0.1 to 1. Any value below 0.1 is reported as 0.0999.",
@@ -2060,16 +2150,16 @@
                                                        :clientAccountCrossSellUnitsSold {:description "Client account cross-sell units sold is the total number of products sold as a result of advertising a different product. How it works: You report conversions with cart data for completed purchases on your website. If the ad that was interacted with before the purchase has an associated product (see Shopping Ads) then this product is considered the advertised product. Any product included in the order the customer places is a sold product. If these products don't match then this is considered cross-sell. Cross-sell units sold is the total number of cross-sold products from all orders attributed to your ads. Example: Someone clicked on a Shopping ad for a hat then bought the same hat, a shirt and a jacket. The cross-sell units sold in this order is 2. This metric is only available if you report conversions with cart data.",
                                                                                          :type "number",
                                                                                          :format "double"},
-                                                       :searchBudgetLostTopImpressionShare {:description "The number estimating how often your ad didn't show anywhere above the organic search results due to a low budget. Note: Search budget lost top impression share is reported in the range of 0 to 0.9. Any value above 0.9 is reported as 0.9001.",
+                                                       :searchBudgetLostTopImpressionShare {:description "The number estimating how often your ad didn't show adjacent to the top organic search results due to a low budget. Note: Search budget lost top impression share is reported in the range of 0 to 0.9. Any value above 0.9 is reported as 0.9001.",
                                                                                             :type "number",
                                                                                             :format "double"},
                                                        :clientAccountLeadRevenueMicros {:description "Client account lead revenue is the total amount you made from products sold as a result of advertising the same product. How it works: You report conversions with cart data for completed purchases on your website. If the ad that was interacted with before the purchase has an associated product (see Shopping Ads) then this product is considered the advertised product. Any product included in the order the customer places is a sold product. If the advertised and sold products match, then the total value you made from the sales of these products is shown under lead revenue. Example: Someone clicked on a Shopping ad for a hat then bought the same hat and a shirt. The hat is priced $10 and the shirt is priced $20. The lead revenue of this order is $10. This metric is only available if you report conversions with cart data. This metric is a monetary value and returned in the customer's currency by default. See the metrics_currency parameter at https://developers.google.com/search-ads/reporting/query/query-structure#parameters_clause",
                                                                                         :type "string",
                                                                                         :format "int64"},
-                                                       :topImpressionPercentage {:description "The percent of your ad impressions that are shown anywhere above the organic search results.",
+                                                       :topImpressionPercentage {:description "The percent of your ad impressions that are shown adjacent to the top organic search results.",
                                                                                  :type "number",
                                                                                  :format "double"},
-                                                       :absoluteTopImpressionPercentage {:description "The percent of your ad impressions that are shown as the very first ad above the organic search results.",
+                                                       :absoluteTopImpressionPercentage {:description "Search absolute top impression share is the percentage of your Search ad impressions that are shown in the most prominent Search position.",
                                                                                          :type "number",
                                                                                          :format "double"},
                                                        :searchAbsoluteTopImpressionShare {:description "The percentage of the customer's Shopping or Search ad impressions that are shown in the most prominent Shopping position. See https://support.google.com/sa360/answer/9566729 for details. Any value below 0.1 is reported as 0.0999.",
@@ -2078,7 +2168,7 @@
                                                        :clientAccountLeadGrossProfitMicros {:description "Client account lead gross profit is the profit you made from products sold as a result of advertising the same product, minus cost of goods sold (COGS). How it works: You report conversions with cart data for completed purchases on your website. If the ad that was interacted with before the purchase has an associated product (see Shopping Ads) then this product is considered the advertised product. Any product included in the order the customer places is a sold product. If the advertised and sold products match, then the revenue you made from these sales minus the cost of goods sold is your lead gross profit. Example: Someone clicked on a Shopping ad for a hat then bought the same hat and a shirt. The hat is priced $10 and has a cost of goods sold value of $3. The lead gross profit of this order is $7 = $10 - $3. This metric is only available if you report conversions with cart data. This metric is a monetary value and returned in the customer's currency by default. See the metrics_currency parameter at https://developers.google.com/search-ads/reporting/query/query-structure#parameters_clause",
                                                                                             :type "string",
                                                                                             :format "int64"},
-                                                       :searchRankLostAbsoluteTopImpressionShare {:description "The number estimating how often your ad wasn't the very first ad above the organic search results due to poor Ad Rank. Note: Search rank lost absolute top impression share is reported in the range of 0 to 0.9. Any value above 0.9 is reported as 0.9001.",
+                                                       :searchRankLostAbsoluteTopImpressionShare {:description "The number estimating how often your ad wasn't the very first ad among the top ads in the search results due to poor Ad Rank. Note: Search rank lost absolute top impression share is reported in the range of 0 to 0.9. Any value above 0.9 is reported as 0.9001.",
                                                                                                   :type "number",
                                                                                                   :format "double"},
                                                        :clientAccountConversions {:description "The number of client account conversions. This only includes conversion actions which include_in_client_account_conversions_metric attribute is set to true. If you use conversion-based bidding, your bid strategies will optimize for these conversions.",
@@ -2099,7 +2189,7 @@
                                                        :ctr {:description "The number of clicks your ad receives (Clicks) divided by the number of times your ad is shown (Impressions).",
                                                              :type "number",
                                                              :format "double"},
-                                                       :searchRankLostTopImpressionShare {:description "The number estimating how often your ad didn't show anywhere above the organic search results due to poor Ad Rank. Note: Search rank lost top impression share is reported in the range of 0 to 0.9. Any value above 0.9 is reported as 0.9001.",
+                                                       :searchRankLostTopImpressionShare {:description "The number estimating how often your ad didn't show adjacent to the top organic search results due to poor Ad Rank. Note: Search rank lost top impression share is reported in the range of 0 to 0.9. Any value above 0.9 is reported as 0.9001.",
                                                                                           :type "number",
                                                                                           :format "double"},
                                                        :historicalQualityScore {:description "The historical quality score.",
@@ -2282,6 +2372,36 @@
                                                                    :targetable {:description "Output only. Whether the language is targetable.",
                                                                                 :readOnly true,
                                                                                 :type "boolean"}}},
+ :GoogleAdsSearchads360V0Resources_AccessibleBiddingStrategy_TargetImpressionShare {:id "GoogleAdsSearchads360V0Resources_AccessibleBiddingStrategy_TargetImpressionShare",
+                                                                                    :description "An automated bidding strategy that sets bids so that a certain percentage of search ads are shown at the top of the first page (or other targeted location).",
+                                                                                    :type "object",
+                                                                                    :properties {:location {:description "Output only. The targeted location on the search results page.",
+                                                                                                            :readOnly true,
+                                                                                                            :type "string",
+                                                                                                            :enumDescriptions ["Not specified."
+                                                                                                                               "Used for return value only. Represents value unknown in this version."
+                                                                                                                               "Any location on the web page."
+                                                                                                                               "Top box of ads."
+                                                                                                                               "Top slot in the top box of ads."],
+                                                                                                            :enum ["UNSPECIFIED"
+                                                                                                                   "UNKNOWN"
+                                                                                                                   "ANYWHERE_ON_PAGE"
+                                                                                                                   "TOP_OF_PAGE"
+                                                                                                                   "ABSOLUTE_TOP_OF_PAGE"]},
+                                                                                                 :locationFractionMicros {:description "The chosen fraction of ads to be shown in the targeted location in micros. For example, 1% equals 10,000.",
+                                                                                                                          :type "string",
+                                                                                                                          :format "int64"},
+                                                                                                 :cpcBidCeilingMicros {:description "Output only. The highest CPC bid the automated bidding system is permitted to specify. This is a required field entered by the advertiser that sets the ceiling and specified in local micros.",
+                                                                                                                       :readOnly true,
+                                                                                                                       :type "string",
+                                                                                                                       :format "int64"}}},
+ :GoogleAdsSearchads360V0Resources_AccessibleBiddingStrategy_MaximizeConversionValue {:id "GoogleAdsSearchads360V0Resources_AccessibleBiddingStrategy_MaximizeConversionValue",
+                                                                                      :description "An automated bidding strategy to help get the most conversion value for your campaigns while spending your budget.",
+                                                                                      :type "object",
+                                                                                      :properties {:targetRoas {:description "Output only. The target return on ad spend (ROAS) option. If set, the bid strategy will maximize revenue while averaging the target return on ad spend. If the target ROAS is high, the bid strategy may not be able to spend the full budget. If the target ROAS is not set, the bid strategy will aim to achieve the highest possible ROAS for the budget.",
+                                                                                                                :readOnly true,
+                                                                                                                :type "number",
+                                                                                                                :format "double"}}},
  :GoogleAdsSearchads360V0Resources__AdGroupLabel {:id "GoogleAdsSearchads360V0Resources__AdGroupLabel",
                                                   :description "A relationship between an ad group and a label.",
                                                   :type "object",
@@ -2381,6 +2501,8 @@
                                                                             :$ref "GoogleAdsSearchads360V0Common__Segments"},
                                                                  :campaignBudget {:description "The campaign budget referenced in the query.",
                                                                                   :$ref "GoogleAdsSearchads360V0Resources__CampaignBudget"},
+                                                                 :accessibleBiddingStrategy {:description "The accessible bidding strategy referenced in the query.",
+                                                                                             :$ref "GoogleAdsSearchads360V0Resources__AccessibleBiddingStrategy"},
                                                                  :customer {:description "The customer referenced in the query.",
                                                                             :$ref "GoogleAdsSearchads360V0Resources__Customer"},
                                                                  :customerAssetSet {:description "The customer asset set referenced in the query.",
@@ -2515,6 +2637,18 @@
                                                                             :format "int64"},
                                                               :url {:description "A URL that returns the image with this height and width.",
                                                                     :type "string"}}},
+ :GoogleAdsSearchads360V0Resources_AccessibleBiddingStrategy_TargetSpend {:id "GoogleAdsSearchads360V0Resources_AccessibleBiddingStrategy_TargetSpend",
+                                                                          :description "An automated bid strategy that sets your bids to help get as many clicks as possible within your budget.",
+                                                                          :type "object",
+                                                                          :properties {:targetSpendMicros {:description "Output only. The spend target under which to maximize clicks. A TargetSpend bidder will attempt to spend the smaller of this value or the natural throttling spend amount. If not specified, the budget is used as the spend target. This field is deprecated and should no longer be used. See https://ads-developers.googleblog.com/2020/05/reminder-about-sunset-creation-of.html for details.",
+                                                                                                           :readOnly true,
+                                                                                                           :deprecated true,
+                                                                                                           :type "string",
+                                                                                                           :format "int64"},
+                                                                                       :cpcBidCeilingMicros {:description "Output only. Maximum bid limit that can be set by the bid strategy. The limit applies to all keywords managed by the strategy.",
+                                                                                                             :readOnly true,
+                                                                                                             :type "string",
+                                                                                                             :format "int64"}}},
  :GoogleAdsSearchads360V0Common__FrequencyCapEntry {:id "GoogleAdsSearchads360V0Common__FrequencyCapEntry",
                                                     :description "A rule specifying the maximum number of times an ad (or some set of ads) can be shown to a user over a particular time period.",
                                                     :type "object",
@@ -2523,6 +2657,17 @@
                                             :description "Target CPM (cost per thousand impressions) is an automated bidding strategy that sets bids to optimize performance given the target CPM you set.",
                                             :type "object",
                                             :properties {}},
+ :GoogleAdsSearchads360V0Resources_AccessibleBiddingStrategy_MaximizeConversions {:id "GoogleAdsSearchads360V0Resources_AccessibleBiddingStrategy_MaximizeConversions",
+                                                                                  :description "An automated bidding strategy to help get the most conversions for your campaigns while spending your budget.",
+                                                                                  :type "object",
+                                                                                  :properties {:targetCpa {:description "Output only. The target cost per acquisition (CPA) option. This is the average amount that you would like to spend per acquisition.",
+                                                                                                           :readOnly true,
+                                                                                                           :type "string",
+                                                                                                           :format "int64"},
+                                                                                               :targetCpaMicros {:description "Output only. The target cost per acquisition (CPA) option. This is the average amount that you would like to spend per acquisition.",
+                                                                                                                 :readOnly true,
+                                                                                                                 :type "string",
+                                                                                                                 :format "int64"}}},
  :GoogleAdsSearchads360V0Resources__AdGroupAssetSet {:id "GoogleAdsSearchads360V0Resources__AdGroupAssetSet",
                                                      :description "AdGroupAssetSet is the linkage between an ad group and an asset set. Creating an AdGroupAssetSet links an asset set with an ad group.",
                                                      :type "object",
@@ -2951,7 +3096,8 @@
                                                                                                  "The asset is linked for use to select a call-to-action."
                                                                                                  "The asset is linked for use to select an ad image."
                                                                                                  "The asset is linked for use as a business logo."
-                                                                                                 "The asset is linked for use as a hotel property in a Performance Max for travel goals campaign."],
+                                                                                                 "The asset is linked for use as a hotel property in a Performance Max for travel goals campaign."
+                                                                                                 "The asset is linked for use as a discovery carousel card."],
                                                                               :enum ["UNSPECIFIED"
                                                                                      "UNKNOWN"
                                                                                      "HEADLINE"
@@ -2980,7 +3126,8 @@
                                                                                      "CALL_TO_ACTION_SELECTION"
                                                                                      "AD_IMAGE"
                                                                                      "BUSINESS_LOGO"
-                                                                                     "HOTEL_PROPERTY"]},
+                                                                                     "HOTEL_PROPERTY"
+                                                                                     "DISCOVERY_CAROUSEL_CARD"]},
                                                                   :status {:description "The status of the link between an asset and asset group.",
                                                                            :type "string",
                                                                            :enumDescriptions ["Not specified."
@@ -2994,7 +3141,7 @@
                                                                                   "REMOVED"
                                                                                   "PAUSED"]}}},
  :GoogleAdsSearchads360V0Resources__LocationView {:id "GoogleAdsSearchads360V0Resources__LocationView",
-                                                  :description "A location view summarizes the performance of campaigns by Location criteria.",
+                                                  :description "A location view summarizes the performance of campaigns by a Location criterion.",
                                                   :type "object",
                                                   :properties {:resourceName {:description "Output only. The resource name of the location view. Location view resource names have the form: `customers/{customer_id}/locationViews/{campaign_id}~{criterion_id}`",
                                                                               :readOnly true,
@@ -3268,6 +3415,13 @@
                                                  :properties {:resourceName {:description "Output only. The resource name of the keyword view. Keyword view resource names have the form: `customers/{customer_id}/keywordViews/{ad_group_id}~{criterion_id}`",
                                                                              :readOnly true,
                                                                              :type "string"}}},
+ :GoogleAdsSearchads360V0Resources_AccessibleBiddingStrategy_TargetCpa {:id "GoogleAdsSearchads360V0Resources_AccessibleBiddingStrategy_TargetCpa",
+                                                                        :description "An automated bid strategy that sets bids to help get as many conversions as possible at the target cost-per-acquisition (CPA) you set.",
+                                                                        :type "object",
+                                                                        :properties {:targetCpaMicros {:description "Output only. Average CPA target. This target should be greater than or equal to minimum billable unit based on the currency for the account.",
+                                                                                                       :readOnly true,
+                                                                                                       :type "string",
+                                                                                                       :format "int64"}}},
  :GoogleAdsSearchads360V0Resources__ListingGroupFilterDimension {:id "GoogleAdsSearchads360V0Resources__ListingGroupFilterDimension",
                                                                  :description "Listing dimensions for the asset group listing group filter.",
                                                                  :type "object",
@@ -3817,7 +3971,8 @@
                                                                                             "The asset is linked for use to select a call-to-action."
                                                                                             "The asset is linked for use to select an ad image."
                                                                                             "The asset is linked for use as a business logo."
-                                                                                            "The asset is linked for use as a hotel property in a Performance Max for travel goals campaign."],
+                                                                                            "The asset is linked for use as a hotel property in a Performance Max for travel goals campaign."
+                                                                                            "The asset is linked for use as a discovery carousel card."],
                                                                          :enum ["UNSPECIFIED"
                                                                                 "UNKNOWN"
                                                                                 "HEADLINE"
@@ -3846,7 +4001,8 @@
                                                                                 "CALL_TO_ACTION_SELECTION"
                                                                                 "AD_IMAGE"
                                                                                 "BUSINESS_LOGO"
-                                                                                "HOTEL_PROPERTY"]},
+                                                                                "HOTEL_PROPERTY"
+                                                                                "DISCOVERY_CAROUSEL_CARD"]},
                                                         :visitDateTime {:description "Output only. The timestamp of the visit event. The timestamp is in the customer's time zone and in \"yyyy-MM-dd HH:mm:ss\" format.",
                                                                         :readOnly true,
                                                                         :type "string"},
@@ -4314,7 +4470,7 @@
                                                                                 :alwaysUseDefaultValue {:description "Controls whether the default value and default currency code are used in place of the value and currency code specified in conversion events for this conversion action.",
                                                                                                         :type "boolean"}}},
  :GoogleAdsSearchads360V0Resources__AdGroupCriterion {:id "GoogleAdsSearchads360V0Resources__AdGroupCriterion",
-                                                      :description "An ad group criterion.",
+                                                      :description "An ad group criterion. The ad_group_criterion report only returns criteria that were explicitly added to the ad group.",
                                                       :type "object",
                                                       :properties {:creationTime {:description "Output only. The timestamp when this ad group criterion was created. The timestamp is in the customer's time zone and in \"yyyy-MM-dd HH:mm:ss\" format.",
                                                                                   :readOnly true,
@@ -4385,7 +4541,8 @@
                                                                                              "Audience"
                                                                                              "Local Services Ads Service ID."
                                                                                              "Brand"
-                                                                                             "Brand List"],
+                                                                                             "Brand List"
+                                                                                             "Life Event"],
                                                                           :enum ["UNSPECIFIED"
                                                                                  "UNKNOWN"
                                                                                  "KEYWORD"
@@ -4424,7 +4581,8 @@
                                                                                  "AUDIENCE"
                                                                                  "LOCAL_SERVICE_ID"
                                                                                  "BRAND"
-                                                                                 "BRAND_LIST"]},
+                                                                                 "BRAND_LIST"
+                                                                                 "LIFE_EVENT"]},
                                                                    :finalUrlSuffix {:description "URL template for appending params to final URL.",
                                                                                     :type "string"},
                                                                    :listingGroup {:description "Immutable. Listing group.",
@@ -4455,7 +4613,7 @@
                                                                                    "ENABLED"
                                                                                    "PAUSED"
                                                                                    "REMOVED"]},
-                                                                   :userList {:description "Immutable. User List. The Similar Audiences sunset starts May 2023. Refer to https://ads-developers.googleblog.com/2022/11/announcing-deprecation-and-sunset-of.html for other options.",
+                                                                   :userList {:description "Immutable. User List.",
                                                                               :$ref "GoogleAdsSearchads360V0Common__UserListInfo"},
                                                                    :qualityInfo {:description "Output only. Information regarding the quality of the criterion.",
                                                                                  :readOnly true,
@@ -4709,7 +4867,8 @@
                                                                                                                       "The asset is linked for use to select a call-to-action."
                                                                                                                       "The asset is linked for use to select an ad image."
                                                                                                                       "The asset is linked for use as a business logo."
-                                                                                                                      "The asset is linked for use as a hotel property in a Performance Max for travel goals campaign."],
+                                                                                                                      "The asset is linked for use as a hotel property in a Performance Max for travel goals campaign."
+                                                                                                                      "The asset is linked for use as a discovery carousel card."],
                                                                                                    :enum ["UNSPECIFIED"
                                                                                                           "UNKNOWN"
                                                                                                           "HEADLINE"
@@ -4738,7 +4897,8 @@
                                                                                                           "CALL_TO_ACTION_SELECTION"
                                                                                                           "AD_IMAGE"
                                                                                                           "BUSINESS_LOGO"
-                                                                                                          "HOTEL_PROPERTY"]}},
+                                                                                                          "HOTEL_PROPERTY"
+                                                                                                          "DISCOVERY_CAROUSEL_CARD"]}},
                                                            :maximizeConversions {:description "Standard Maximize Conversions bidding strategy that automatically maximizes number of conversions while spending your budget.",
                                                                                  :$ref "GoogleAdsSearchads360V0Common__MaximizeConversions"},
                                                            :startDate {:description "The date when campaign started in serving customer's timezone in YYYY-MM-DD format.",
@@ -4773,6 +4933,9 @@
                                                                             :type "string"},
                                                            :campaignBudget {:description "The budget of the campaign.",
                                                                             :type "string"},
+                                                           :accessibleBiddingStrategy {:description "Output only. Resource name of AccessibleBiddingStrategy, a read-only view of the unrestricted attributes of the attached portfolio bidding strategy identified by 'bidding_strategy'. Empty, if the campaign does not use a portfolio strategy. Unrestricted strategy attributes are available to all customers with whom the strategy is shared and are read from the AccessibleBiddingStrategy resource. In contrast, restricted attributes are only available to the owner customer of the strategy and their managers. Restricted attributes can only be read from the BiddingStrategy resource.",
+                                                                                       :readOnly true,
+                                                                                       :type "string"},
                                                            :maximizeConversionValue {:description "Standard Maximize Conversion Value bidding strategy that automatically sets bids to maximize revenue while spending your budget.",
                                                                                      :$ref "GoogleAdsSearchads360V0Common__MaximizeConversionValue"},
                                                            :biddingStrategyType {:description "Output only. The type of bidding strategy. A bidding strategy can be created by setting either the bidding scheme to create a standard bidding strategy or the `bidding_strategy` field to create a portfolio bidding strategy. This field is read-only.",
@@ -5149,7 +5312,7 @@
                                                                                 "REMOVED"
                                                                                 "PAUSED"]}}},
  :GoogleAdsSearchads360V0Resources__GenderView {:id "GoogleAdsSearchads360V0Resources__GenderView",
-                                                :description "A gender view.",
+                                                :description "A gender view. The gender_view resource reflects the effective serving state, rather than what criteria were added. An ad group without gender criteria by default shows to all genders, so all genders appear in gender_view with stats.",
                                                 :type "object",
                                                 :properties {:resourceName {:description "Output only. The resource name of the gender view. Gender view resource names have the form: `customers/{customer_id}/genderViews/{ad_group_id}~{criterion_id}`",
                                                                             :readOnly true,

@@ -1,7 +1,7 @@
 (ns happygapi.servicecontrol.services
   "Service Control API: services.
   Provides admission control and telemetry reporting for services integrated with Service Infrastructure. 
-  See: https://cloud.google.com/service-control/api/reference/rest/v2/services"
+  See: https://cloud.google.com/service-control/docs/reference/rest/v2/services"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

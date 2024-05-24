@@ -1,7 +1,7 @@
 (ns happygapi.youtube.membershipsLevels
   "YouTube Data API v3: membershipsLevels.
   The YouTube Data API v3 is an API that provides access to YouTube data, such as videos, playlists, and channels.
-  See: https://developers.google.com/youtube/api/reference/rest/v3/membershipsLevels"
+  See: https://developers.google.com/youtube/docs/reference/rest/v3/membershipsLevels"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

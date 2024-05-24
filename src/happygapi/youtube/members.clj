@@ -1,7 +1,7 @@
 (ns happygapi.youtube.members
   "YouTube Data API v3: members.
   The YouTube Data API v3 is an API that provides access to YouTube data, such as videos, playlists, and channels.
-  See: https://developers.google.com/youtube/api/reference/rest/v3/members"
+  See: https://developers.google.com/youtube/docs/reference/rest/v3/members"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -11,7 +11,7 @@
   
   Required parameters: part
   
-  Optional parameters: hasAccessToLevel, mode, filterByMemberChannelId, pageToken, maxResults
+  Optional parameters: maxResults, pageToken, hasAccessToLevel, mode, filterByMemberChannelId
   
   Retrieves a list of members that match the request criteria for a channel."
   {:scopes ["https://www.googleapis.com/auth/youtube.channel-memberships.creator"]}

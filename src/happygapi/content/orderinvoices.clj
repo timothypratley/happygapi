@@ -1,7 +1,7 @@
 (ns happygapi.content.orderinvoices
   "Content API for Shopping: orderinvoices.
   Manage your product listings and accounts for Google Shopping
-  See: https://developers.google.com/shopping-content/v2/api/reference/rest/v2.1/orderinvoices"
+  See: https://developers.google.com/shopping-content/v2/docs/reference/rest/v2.1/orderinvoices"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

@@ -1,7 +1,7 @@
 (ns happygapi.recommendationengine.projects
   "Recommendations AI (Beta): projects.
   Note that we now highly recommend new customers to use Retail API, which incorporates the GA version of the Recommendations AI funtionalities. To enable Retail API, please visit https://console.cloud.google.com/apis/library/retail.googleapis.com. The Recommendations AI service enables customers to build end-to-end personalized recommendation systems without requiring a high level of expertise in machine learning, recommendation system, or Google Cloud.
-  See: https://cloud.google.com/recommendations-ai/docsapi/reference/rest/v1beta1/projects"
+  See: https://cloud.google.com/recommendations-ai/docsdocs/reference/rest/v1beta1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

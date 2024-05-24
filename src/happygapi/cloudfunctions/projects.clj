@@ -1,7 +1,7 @@
 (ns happygapi.cloudfunctions.projects
   "Cloud Functions API: projects.
   Manages lightweight user-provided functions executed in response to events.
-  See: https://cloud.google.com/functionsapi/reference/rest/v2/projects"
+  See: https://cloud.google.com/functionsdocs/reference/rest/v2/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

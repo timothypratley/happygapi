@@ -1,7 +1,7 @@
 (ns happygapi.retail.projects
   "Vertex AI Search for Retail API: projects.
   Vertex AI Search for Retail API is made up of Retail Search, Browse and Recommendations. These discovery AI solutions help you implement personalized search, browse and recommendations, based on machine learning models, across your websites and mobile applications.
-  See: https://cloud.google.com/recommendationsapi/reference/rest/v2/projects"
+  See: https://cloud.google.com/recommendationsdocs/reference/rest/v2/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -156,7 +156,7 @@
   
   Required parameters: catalog
   
-  Optional parameters: query, visitorId, languageCodes, deviceType, dataset, maxSuggestions, entity
+  Optional parameters: languageCodes, maxSuggestions, visitorId, enableAttributeSuggestions, deviceType, query, entity, dataset
   
   Completes the specified prefix with keyword suggestions. This feature is only available for users who have Retail Search enabled. Enable Retail Search on Cloud Console before using this feature."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -1898,6 +1898,7 @@
    :facetControlIds [string],
    :solutionTypes [string],
    :doNotAssociateControlIds [string],
+   :ignoreRecsDenylist boolean,
    :enableCategoryFilterLevel string,
    :priceRerankingLevel string,
    :diversityType string,
@@ -1948,6 +1949,7 @@
    :facetControlIds [string],
    :solutionTypes [string],
    :doNotAssociateControlIds [string],
+   :ignoreRecsDenylist boolean,
    :enableCategoryFilterLevel string,
    :priceRerankingLevel string,
    :diversityType string,

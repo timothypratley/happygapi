@@ -1,7 +1,7 @@
 (ns happygapi.rapidmigrationassessment.projects
   "Rapid Migration Assessment API: projects.
   The Rapid Migration Assessment service is our first-party migration assessment and planning tool.
-  See: https://cloud.google.com/migration-centerapi/reference/rest/v1/projects"
+  See: https://cloud.google.com/migration-centerdocs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

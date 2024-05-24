@@ -1,7 +1,7 @@
 (ns happygapi.driveactivity.activity
   "Drive Activity API: activity.
   Provides a historical view of activity in Google Drive.
-  See: https://developers.google.com/drive/activity/api/reference/rest/v2/activity"
+  See: https://developers.google.com/drive/activity/docs/reference/rest/v2/activity"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

@@ -1,7 +1,7 @@
 (ns happygapi.abusiveexperiencereport.sites
   "Abusive Experience Report API: sites.
   Views Abusive Experience Report data, and gets a list of sites that have a significant number of abusive experiences.
-  See: https://developers.google.com/abusive-experience-report/api/reference/rest/v1/sites"
+  See: https://developers.google.com/abusive-experience-report/docs/reference/rest/v1/sites"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

@@ -1,7 +1,7 @@
 (ns happygapi.compute.nodeGroups
   "Compute Engine API: nodeGroups.
   Creates and runs virtual machines on Google Cloud Platform. 
-  See: https://cloud.google.com/compute/api/reference/rest/v1/nodeGroups"
+  See: https://cloud.google.com/compute/docs/reference/rest/v1/nodeGroups"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -102,6 +102,7 @@
    :autoscalingPolicy {:mode string,
                        :minNodes integer,
                        :maxNodes integer},
+   :maintenanceInterval string,
    :fingerprint string}
   
   Creates a NodeGroup resource in the specified project using the data included in the request."
@@ -154,6 +155,7 @@
    :autoscalingPolicy {:mode string,
                        :minNodes integer,
                        :maxNodes integer},
+   :maintenanceInterval string,
    :fingerprint string}
   
   Updates the specified node group."
@@ -261,6 +263,39 @@
     (util/get-url
      "https://compute.googleapis.com/compute/v1/"
      "projects/{project}/zones/{zone}/nodeGroups/{nodeGroup}/addNodes"
+     #{:zone :nodeGroup :project}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn performMaintenance$
+  "https://cloud.google.com/compute/api/reference/rest/v1/nodeGroups/performMaintenance
+  
+  Required parameters: nodeGroup, project, zone
+  
+  Optional parameters: requestId
+  
+  Body: 
+  
+  {:nodes [string], :startTime string}
+  
+  Perform maintenance on a subset of nodes in the node group."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/compute"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:zone :nodeGroup :project})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://compute.googleapis.com/compute/v1/"
+     "projects/{project}/zones/{zone}/nodeGroups/{nodeGroup}/performMaintenance"
      #{:zone :nodeGroup :project}
      parameters)
     (merge-with

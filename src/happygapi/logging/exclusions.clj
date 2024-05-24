@@ -1,7 +1,7 @@
 (ns happygapi.logging.exclusions
   "Cloud Logging API: exclusions.
   Writes log entries and manages your Cloud Logging configuration.
-  See: https://cloud.google.com/logging/docs/api/reference/rest/v2/exclusions"
+  See: https://cloud.google.com/logging/docs/docs/reference/rest/v2/exclusions"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

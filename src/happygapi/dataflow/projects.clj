@@ -1,7 +1,7 @@
 (ns happygapi.dataflow.projects
   "Dataflow API: projects.
   Manages Google Cloud Dataflow projects on Google Cloud Platform.
-  See: https://cloud.google.com/dataflowapi/reference/rest/v1b3/projects"
+  See: https://cloud.google.com/dataflowdocs/reference/rest/v1b3/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

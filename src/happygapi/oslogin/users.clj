@@ -1,7 +1,7 @@
 (ns happygapi.oslogin.users
   "Cloud OS Login API: users.
   You can use OS Login to manage access to your VM instances using IAM roles.
-  See: https://cloud.google.com/compute/docs/oslogin/api/reference/rest/v1/users"
+  See: https://cloud.google.com/compute/docs/oslogin/docs/reference/rest/v1/users"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

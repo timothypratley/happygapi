@@ -1,7 +1,7 @@
 (ns happygapi.walletobjects.media
   "Google Wallet API: media.
   API for issuers to save and manage Google Wallet Objects.
-  See: https://developers.google.com/pay/passesapi/reference/rest/v1/media"
+  See: https://developers.google.com/pay/passesdocs/reference/rest/v1/media"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

@@ -1,7 +1,7 @@
 (ns happygapi.bigqueryreservation.projects
   "BigQuery Reservation API: projects.
   A service to modify your BigQuery flat-rate reservations.
-  See: https://cloud.google.com/bigquery/api/reference/rest/v1/projects"
+  See: https://cloud.google.com/bigquery/docs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -138,11 +138,14 @@
    :autoscale {:currentSlots string, :maxSlots string},
    :concurrency string,
    :name string,
+   :originalPrimaryLocation string,
+   :secondaryLocation string,
    :updateTime string,
    :multiRegionAuxiliary boolean,
    :slotCapacity string,
    :edition string,
-   :ignoreIdleSlots boolean}
+   :ignoreIdleSlots boolean,
+   :primaryLocation string}
   
   Creates a new reservation resource."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
@@ -260,11 +263,14 @@
    :autoscale {:currentSlots string, :maxSlots string},
    :concurrency string,
    :name string,
+   :originalPrimaryLocation string,
+   :secondaryLocation string,
    :updateTime string,
    :multiRegionAuxiliary boolean,
    :slotCapacity string,
    :edition string,
-   :ignoreIdleSlots boolean}
+   :ignoreIdleSlots boolean,
+   :primaryLocation string}
   
   Updates an existing reservation resource."
   {:scopes ["https://www.googleapis.com/auth/bigquery"
@@ -276,6 +282,39 @@
     (util/get-url
      "https://bigqueryreservation.googleapis.com/"
      "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-reservations-failoverReservation$
+  "https://cloud.google.com/bigquery/api/reference/rest/v1/projects/locations/reservations/failoverReservation
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {}
+  
+  Failover a reservation to the secondary location. The operation should be done in the current secondary location, which will be promoted to the new primary location for the reservation. Attempting to failover a reservation in the current primary location will fail with the error code `google.rpc.Code.FAILED_PRECONDITION`."
+  {:scopes ["https://www.googleapis.com/auth/bigquery"
+            "https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://bigqueryreservation.googleapis.com/"
+     "v1/{+name}:failoverReservation"
      #{:name}
      parameters)
     (merge-with

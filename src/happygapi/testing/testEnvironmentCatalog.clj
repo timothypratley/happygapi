@@ -1,7 +1,7 @@
 (ns happygapi.testing.testEnvironmentCatalog
   "Cloud Testing API: testEnvironmentCatalog.
   Allows developers to run automated tests for their mobile applications on Google infrastructure.
-  See: https://firebase.google.com/docs/test-lab/api/reference/rest/v1/testEnvironmentCatalog"
+  See: https://firebase.google.com/docs/test-lab/docs/reference/rest/v1/testEnvironmentCatalog"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

@@ -1,7 +1,7 @@
 (ns happygapi.connectors.projects
   "Connectors API: projects.
   Enables users to create and manage connections to Google Cloud services and third-party business applications using the Connectors interface.
-  See: https://cloud.google.com/apigee/docs/api-platform/connectors/about-connectorsapi/reference/rest/v2/projects"
+  See: https://cloud.google.com/apigee/docs/api-platform/connectors/about-connectorsdocs/reference/rest/v2/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

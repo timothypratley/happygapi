@@ -1,7 +1,7 @@
 (ns happygapi.apigee.hybrid
   "Apigee API: hybrid.
   Use the Apigee API to programmatically develop and manage APIs with a set of RESTful operations. Develop and secure API proxies, deploy and undeploy API proxy revisions, monitor APIs, configure environments, manage users, and more. Note: This product is available as a free trial for a time period of 60 days.
-  See: https://cloud.google.com/apigee-api-management/api/reference/rest/v1/hybrid"
+  See: https://cloud.google.com/apigee-api-management/docs/reference/rest/v1/hybrid"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

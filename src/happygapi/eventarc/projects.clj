@@ -1,7 +1,7 @@
 (ns happygapi.eventarc.projects
   "Eventarc API: projects.
   Build event-driven applications on Google Cloud Platform.
-  See: https://cloud.google.com/eventarcapi/reference/rest/v1/projects"
+  See: https://cloud.google.com/eventarcdocs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -299,6 +299,7 @@
    :updateTime string,
    :eventFilters [{:attribute string, :value string, :operator string}],
    :conditions {},
+   :satisfiesPzs boolean,
    :destination {:cloudRun CloudRun,
                  :cloudFunction string,
                  :gke GKE,
@@ -348,6 +349,7 @@
    :updateTime string,
    :eventFilters [{:attribute string, :value string, :operator string}],
    :conditions {},
+   :satisfiesPzs boolean,
    :destination {:cloudRun CloudRun,
                  :cloudFunction string,
                  :gke GKE,
@@ -565,6 +567,7 @@
    :state string,
    :pubsubTopic string,
    :updateTime string,
+   :satisfiesPzs boolean,
    :provider string}
   
   Create a new channel in a particular project and location."
@@ -605,6 +608,7 @@
    :state string,
    :pubsubTopic string,
    :updateTime string,
+   :satisfiesPzs boolean,
    :provider string}
   
   Update a single channel."

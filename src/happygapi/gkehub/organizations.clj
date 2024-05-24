@@ -1,7 +1,7 @@
 (ns happygapi.gkehub.organizations
   "GKE Hub API: organizations.
   
-  See: https://cloud.google.com/anthos/multicluster-management/connect/registering-a-clusterapi/reference/rest/v1/organizations"
+  See: https://cloud.google.com/anthos/multicluster-management/connect/registering-a-clusterdocs/reference/rest/v1/organizations"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

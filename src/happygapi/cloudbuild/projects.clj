@@ -1,36 +1,10 @@
 (ns happygapi.cloudbuild.projects
   "Cloud Build API: projects.
   Creates and manages builds on Google Cloud Platform.
-  See: https://cloud.google.com/cloud-build/docs/api/reference/rest/v2/projects"
+  See: https://cloud.google.com/cloud-build/docs/docs/reference/rest/v2/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
-
-(defn locations-list$
-  "https://cloud.google.com/cloud-build/docs/api/reference/rest/v2/projects/locations/list
-  
-  Required parameters: name
-  
-  Optional parameters: pageSize, filter, pageToken
-  
-  Lists information about the supported locations for this service."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://cloudbuild.googleapis.com/"
-     "v2/{+name}/locations"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
 
 (defn locations-get$
   "https://cloud.google.com/cloud-build/docs/api/reference/rest/v2/projects/locations/get
@@ -58,46 +32,14 @@
       :as :json}
      auth))))
 
-(defn locations-operations-cancel$
-  "https://cloud.google.com/cloud-build/docs/api/reference/rest/v2/projects/locations/operations/cancel
+(defn locations-list$
+  "https://cloud.google.com/cloud-build/docs/api/reference/rest/v2/projects/locations/list
   
   Required parameters: name
   
-  Optional parameters: none
+  Optional parameters: filter, pageSize, pageToken
   
-  Body: 
-  
-  {}
-  
-  Starts asynchronous cancellation on a long-running operation. The server makes a best effort to cancel the operation, but success is not guaranteed. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`. Clients can use Operations.GetOperation or other methods to check whether the cancellation succeeded or whether the operation completed despite cancellation. On successful cancellation, the operation is not deleted; instead, it becomes an operation with an Operation.error value with a google.rpc.Status.code of 1, corresponding to `Code.CANCELLED`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://cloudbuild.googleapis.com/"
-     "v2/{+name}:cancel"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-operations-get$
-  "https://cloud.google.com/cloud-build/docs/api/reference/rest/v2/projects/locations/operations/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service."
+  Lists information about the supported locations for this service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -105,7 +47,7 @@
    (http/get
     (util/get-url
      "https://cloudbuild.googleapis.com/"
-     "v2/{+name}"
+     "v2/{+name}/locations"
      #{:name}
      parameters)
     (merge-with
@@ -153,9 +95,9 @@
   
   {:updateMask string,
    :policy {:version integer,
-            :etag string,
+            :auditConfigs [AuditConfig],
             :bindings [Binding],
-            :auditConfigs [AuditConfig]}}
+            :etag string}}
   
   Sets the access control policy on the specified resource. Replaces any existing policy. Can return `NOT_FOUND`, `INVALID_ARGUMENT`, and `PERMISSION_DENIED` errors."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -183,7 +125,7 @@
   
   Required parameters: name
   
-  Optional parameters: etag, updateMask, allowMissing
+  Optional parameters: allowMissing, updateMask, etag
   
   Body: 
   
@@ -202,31 +144,31 @@
    :createTime string,
    :etag string,
    :updateTime string,
-   :bitbucketDataCenterConfig {:serviceDirectoryConfig GoogleDevtoolsCloudbuildV2ServiceDirectoryConfig,
-                               :hostUri string,
-                               :readAuthorizerCredential UserCredential,
-                               :sslCa string,
+   :bitbucketDataCenterConfig {:webhookSecretSecretVersion string,
                                :serverVersion string,
+                               :sslCa string,
+                               :hostUri string,
+                               :serviceDirectoryConfig GoogleDevtoolsCloudbuildV2ServiceDirectoryConfig,
                                :authorizerCredential UserCredential,
-                               :webhookSecretSecretVersion string},
+                               :readAuthorizerCredential UserCredential},
    :reconciling boolean,
    :installationState {:stage string,
                        :message string,
                        :actionUri string},
-   :githubConfig {:authorizerCredential OAuthCredential,
-                  :appInstallationId string},
-   :bitbucketCloudConfig {:webhookSecretSecretVersion string,
-                          :authorizerCredential UserCredential,
-                          :workspace string,
-                          :readAuthorizerCredential UserCredential},
+   :githubConfig {:appInstallationId string,
+                  :authorizerCredential OAuthCredential},
+   :bitbucketCloudConfig {:workspace string,
+                          :readAuthorizerCredential UserCredential,
+                          :webhookSecretSecretVersion string,
+                          :authorizerCredential UserCredential},
    :annotations {},
-   :gitlabConfig {:readAuthorizerCredential UserCredential,
-                  :sslCa string,
-                  :webhookSecretSecretVersion string,
-                  :hostUri string,
-                  :authorizerCredential UserCredential,
+   :gitlabConfig {:hostUri string,
                   :serviceDirectoryConfig GoogleDevtoolsCloudbuildV2ServiceDirectoryConfig,
-                  :serverVersion string}}
+                  :sslCa string,
+                  :readAuthorizerCredential UserCredential,
+                  :serverVersion string,
+                  :authorizerCredential UserCredential,
+                  :webhookSecretSecretVersion string}}
   
   Updates a single connection."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -305,31 +247,31 @@
    :createTime string,
    :etag string,
    :updateTime string,
-   :bitbucketDataCenterConfig {:serviceDirectoryConfig GoogleDevtoolsCloudbuildV2ServiceDirectoryConfig,
-                               :hostUri string,
-                               :readAuthorizerCredential UserCredential,
-                               :sslCa string,
+   :bitbucketDataCenterConfig {:webhookSecretSecretVersion string,
                                :serverVersion string,
+                               :sslCa string,
+                               :hostUri string,
+                               :serviceDirectoryConfig GoogleDevtoolsCloudbuildV2ServiceDirectoryConfig,
                                :authorizerCredential UserCredential,
-                               :webhookSecretSecretVersion string},
+                               :readAuthorizerCredential UserCredential},
    :reconciling boolean,
    :installationState {:stage string,
                        :message string,
                        :actionUri string},
-   :githubConfig {:authorizerCredential OAuthCredential,
-                  :appInstallationId string},
-   :bitbucketCloudConfig {:webhookSecretSecretVersion string,
-                          :authorizerCredential UserCredential,
-                          :workspace string,
-                          :readAuthorizerCredential UserCredential},
+   :githubConfig {:appInstallationId string,
+                  :authorizerCredential OAuthCredential},
+   :bitbucketCloudConfig {:workspace string,
+                          :readAuthorizerCredential UserCredential,
+                          :webhookSecretSecretVersion string,
+                          :authorizerCredential UserCredential},
    :annotations {},
-   :gitlabConfig {:readAuthorizerCredential UserCredential,
-                  :sslCa string,
-                  :webhookSecretSecretVersion string,
-                  :hostUri string,
-                  :authorizerCredential UserCredential,
+   :gitlabConfig {:hostUri string,
                   :serviceDirectoryConfig GoogleDevtoolsCloudbuildV2ServiceDirectoryConfig,
-                  :serverVersion string}}
+                  :sslCa string,
+                  :readAuthorizerCredential UserCredential,
+                  :serverVersion string,
+                  :authorizerCredential UserCredential,
+                  :webhookSecretSecretVersion string}}
   
   Creates a Connection."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -357,7 +299,7 @@
   
   Required parameters: name
   
-  Optional parameters: validateOnly, etag
+  Optional parameters: etag, validateOnly
   
   Deletes a single connection."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -409,7 +351,7 @@
   
   Required parameters: parent
   
-  Optional parameters: pageToken, pageSize
+  Optional parameters: pageSize, pageToken
   
   Lists Connections in a given project and location."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -465,7 +407,7 @@
   
   Body: 
   
-  {:data string, :extensions [{}], :contentType string}
+  {:contentType string, :extensions [{}], :data string}
   
   ProcessWebhook is called by the external SCM for notifying of events."
   {:scopes nil}
@@ -488,6 +430,58 @@
       :as :json}
      auth))))
 
+(defn locations-connections-repositories-get$
+  "https://cloud.google.com/cloud-build/docs/api/reference/rest/v2/projects/locations/connections/repositories/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets details of a single repository."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://cloudbuild.googleapis.com/"
+     "v2/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-connections-repositories-delete$
+  "https://cloud.google.com/cloud-build/docs/api/reference/rest/v2/projects/locations/connections/repositories/delete
+  
+  Required parameters: name
+  
+  Optional parameters: etag, validateOnly
+  
+  Deletes a single repository."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://cloudbuild.googleapis.com/"
+     "v2/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn locations-connections-repositories-batchCreate$
   "https://cloud.google.com/cloud-build/docs/api/reference/rest/v2/projects/locations/connections/repositories/batchCreate
   
@@ -498,8 +492,8 @@
   Body: 
   
   {:requests [{:repository Repository,
-               :repositoryId string,
-               :parent string}]}
+               :parent string,
+               :repositoryId string}]}
   
   Creates multiple repositories inside a connection."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -522,61 +516,23 @@
       :as :json}
      auth))))
 
-(defn locations-connections-repositories-create$
-  "https://cloud.google.com/cloud-build/docs/api/reference/rest/v2/projects/locations/connections/repositories/create
+(defn locations-connections-repositories-fetchGitRefs$
+  "https://cloud.google.com/cloud-build/docs/api/reference/rest/v2/projects/locations/connections/repositories/fetchGitRefs
   
-  Required parameters: parent
+  Required parameters: repository
   
-  Optional parameters: repositoryId
+  Optional parameters: pageToken, refType, pageSize
   
-  Body: 
-  
-  {:remoteUri string,
-   :createTime string,
-   :updateTime string,
-   :annotations {},
-   :webhookId string,
-   :name string,
-   :etag string}
-  
-  Creates a Repository."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://cloudbuild.googleapis.com/"
-     "v2/{+parent}/repositories"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-connections-repositories-delete$
-  "https://cloud.google.com/cloud-build/docs/api/reference/rest/v2/projects/locations/connections/repositories/delete
-  
-  Required parameters: name
-  
-  Optional parameters: validateOnly, etag
-  
-  Deletes a single repository."
+  Fetch the list of branches or tags for a given repository."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
+  {:pre [(util/has-keys? parameters #{:repository})]}
   (util/get-response
-   (http/delete
+   (http/get
     (util/get-url
      "https://cloudbuild.googleapis.com/"
-     "v2/{+name}"
-     #{:name}
+     "v2/{+repository}:fetchGitRefs"
+     #{:repository}
      parameters)
     (merge-with
      merge
@@ -591,7 +547,7 @@
   
   Required parameters: parent
   
-  Optional parameters: pageSize, filter, pageToken
+  Optional parameters: filter, pageToken, pageSize
   
   Lists Repositories in a given connection."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -644,58 +600,6 @@
       :as :json}
      auth))))
 
-(defn locations-connections-repositories-fetchGitRefs$
-  "https://cloud.google.com/cloud-build/docs/api/reference/rest/v2/projects/locations/connections/repositories/fetchGitRefs
-  
-  Required parameters: repository
-  
-  Optional parameters: refType, pageToken, pageSize
-  
-  Fetch the list of branches or tags for a given repository."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:repository})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://cloudbuild.googleapis.com/"
-     "v2/{+repository}:fetchGitRefs"
-     #{:repository}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-connections-repositories-get$
-  "https://cloud.google.com/cloud-build/docs/api/reference/rest/v2/projects/locations/connections/repositories/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets details of a single repository."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://cloudbuild.googleapis.com/"
-     "v2/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn locations-connections-repositories-accessReadToken$
   "https://cloud.google.com/cloud-build/docs/api/reference/rest/v2/projects/locations/connections/repositories/accessReadToken
   
@@ -723,6 +627,102 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-connections-repositories-create$
+  "https://cloud.google.com/cloud-build/docs/api/reference/rest/v2/projects/locations/connections/repositories/create
+  
+  Required parameters: parent
+  
+  Optional parameters: repositoryId
+  
+  Body: 
+  
+  {:webhookId string,
+   :remoteUri string,
+   :updateTime string,
+   :annotations {},
+   :etag string,
+   :createTime string,
+   :name string}
+  
+  Creates a Repository."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://cloudbuild.googleapis.com/"
+     "v2/{+parent}/repositories"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-operations-cancel$
+  "https://cloud.google.com/cloud-build/docs/api/reference/rest/v2/projects/locations/operations/cancel
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {}
+  
+  Starts asynchronous cancellation on a long-running operation. The server makes a best effort to cancel the operation, but success is not guaranteed. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`. Clients can use Operations.GetOperation or other methods to check whether the cancellation succeeded or whether the operation completed despite cancellation. On successful cancellation, the operation is not deleted; instead, it becomes an operation with an Operation.error value with a google.rpc.Status.code of 1, corresponding to `Code.CANCELLED`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://cloudbuild.googleapis.com/"
+     "v2/{+name}:cancel"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-operations-get$
+  "https://cloud.google.com/cloud-build/docs/api/reference/rest/v2/projects/locations/operations/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://cloudbuild.googleapis.com/"
+     "v2/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

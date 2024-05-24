@@ -1,13 +1,156 @@
 (ns happygapi.walletobjects.offerclass
   "Google Wallet API: offerclass.
   API for issuers to save and manage Google Wallet Objects.
-  See: https://developers.google.com/pay/passesapi/reference/rest/v1/offerclass"
+  See: https://developers.google.com/pay/passesdocs/reference/rest/v1/offerclass"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn addmessage$
-  "https://developers.google.com/pay/passesapi/reference/rest/v1/offerclass/addmessage
+(defn list$
+  "https://developers.google.com/pay/passesapi/reference/rest/v1/offerclass/list
+  
+  Required parameters: none
+  
+  Optional parameters: maxResults, token, issuerId
+  
+  Returns a list of all offer classes for a given issuer ID."
+  {:scopes ["https://www.googleapis.com/auth/wallet_object.issuer"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://walletobjects.googleapis.com/"
+     "walletobjects/v1/offerClass"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn insert$
+  "https://developers.google.com/pay/passesapi/reference/rest/v1/offerclass/insert
+  
+  Required parameters: none
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:helpUri {:id string,
+             :uri string,
+             :localizedDescription LocalizedString,
+             :kind string,
+             :description string},
+   :wordMark {:sourceUri ImageUri,
+              :kind string,
+              :contentDescription LocalizedString},
+   :reviewStatus string,
+   :localizedFinePrint {:kind string,
+                        :translatedValues [TranslatedString],
+                        :defaultValue TranslatedString},
+   :textModulesData [{:localizedHeader LocalizedString,
+                      :header string,
+                      :localizedBody LocalizedString,
+                      :id string,
+                      :body string}],
+   :issuerName string,
+   :localizedTitle {:kind string,
+                    :translatedValues [TranslatedString],
+                    :defaultValue TranslatedString},
+   :redemptionChannel string,
+   :securityAnimation {:animationType string},
+   :multipleDevicesAndHoldersAllowedStatus string,
+   :localizedProvider {:kind string,
+                       :translatedValues [TranslatedString],
+                       :defaultValue TranslatedString},
+   :homepageUri {:id string,
+                 :uri string,
+                 :localizedDescription LocalizedString,
+                 :kind string,
+                 :description string},
+   :titleImage {:sourceUri ImageUri,
+                :kind string,
+                :contentDescription LocalizedString},
+   :callbackOptions {:updateRequestUrl string, :url string},
+   :title string,
+   :linksModuleData {:uris [Uri]},
+   :imageModulesData [{:mainImage Image, :id string}],
+   :locations [{:latitude number, :kind string, :longitude number}],
+   :allowMultipleUsersPerObject boolean,
+   :hexBackgroundColor string,
+   :messages [{:messageType string,
+               :displayInterval TimeInterval,
+               :body string,
+               :id string,
+               :localizedBody LocalizedString,
+               :header string,
+               :localizedHeader LocalizedString,
+               :kind string}],
+   :localizedIssuerName {:kind string,
+                         :translatedValues [TranslatedString],
+                         :defaultValue TranslatedString},
+   :details string,
+   :redemptionIssuers [string],
+   :review {:comments string},
+   :localizedShortTitle {:kind string,
+                         :translatedValues [TranslatedString],
+                         :defaultValue TranslatedString},
+   :wideTitleImage {:sourceUri ImageUri,
+                    :kind string,
+                    :contentDescription LocalizedString},
+   :id string,
+   :kind string,
+   :finePrint string,
+   :appLinkData {:webAppLinkInfo AppLinkDataAppLinkInfo,
+                 :iosAppLinkInfo AppLinkDataAppLinkInfo,
+                 :androidAppLinkInfo AppLinkDataAppLinkInfo},
+   :classTemplateInfo {:detailsTemplateOverride DetailsTemplateOverride,
+                       :listTemplateOverride ListTemplateOverride,
+                       :cardTemplateOverride CardTemplateOverride,
+                       :cardBarcodeSectionDetails CardBarcodeSectionDetails},
+   :shortTitle string,
+   :enableSmartTap boolean,
+   :version string,
+   :viewUnlockRequirement string,
+   :infoModuleData {:showLastUpdateTime boolean,
+                    :labelValueRows [LabelValueRow]},
+   :provider string,
+   :heroImage {:sourceUri ImageUri,
+               :kind string,
+               :contentDescription LocalizedString},
+   :localizedDetails {:kind string,
+                      :translatedValues [TranslatedString],
+                      :defaultValue TranslatedString},
+   :countryCode string}
+  
+  Inserts an offer class with the given ID and properties."
+  {:scopes ["https://www.googleapis.com/auth/wallet_object.issuer"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://walletobjects.googleapis.com/"
+     "walletobjects/v1/offerClass"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn update$
+  "https://developers.google.com/pay/passesapi/reference/rest/v1/offerclass/update
   
   Required parameters: resourceId
   
@@ -15,24 +158,102 @@
   
   Body: 
   
-  {:message {:body string,
-             :messageType string,
-             :header string,
-             :id string,
+  {:helpUri {:id string,
+             :uri string,
+             :localizedDescription LocalizedString,
              :kind string,
-             :displayInterval TimeInterval,
-             :localizedHeader LocalizedString,
-             :localizedBody LocalizedString}}
+             :description string},
+   :wordMark {:sourceUri ImageUri,
+              :kind string,
+              :contentDescription LocalizedString},
+   :reviewStatus string,
+   :localizedFinePrint {:kind string,
+                        :translatedValues [TranslatedString],
+                        :defaultValue TranslatedString},
+   :textModulesData [{:localizedHeader LocalizedString,
+                      :header string,
+                      :localizedBody LocalizedString,
+                      :id string,
+                      :body string}],
+   :issuerName string,
+   :localizedTitle {:kind string,
+                    :translatedValues [TranslatedString],
+                    :defaultValue TranslatedString},
+   :redemptionChannel string,
+   :securityAnimation {:animationType string},
+   :multipleDevicesAndHoldersAllowedStatus string,
+   :localizedProvider {:kind string,
+                       :translatedValues [TranslatedString],
+                       :defaultValue TranslatedString},
+   :homepageUri {:id string,
+                 :uri string,
+                 :localizedDescription LocalizedString,
+                 :kind string,
+                 :description string},
+   :titleImage {:sourceUri ImageUri,
+                :kind string,
+                :contentDescription LocalizedString},
+   :callbackOptions {:updateRequestUrl string, :url string},
+   :title string,
+   :linksModuleData {:uris [Uri]},
+   :imageModulesData [{:mainImage Image, :id string}],
+   :locations [{:latitude number, :kind string, :longitude number}],
+   :allowMultipleUsersPerObject boolean,
+   :hexBackgroundColor string,
+   :messages [{:messageType string,
+               :displayInterval TimeInterval,
+               :body string,
+               :id string,
+               :localizedBody LocalizedString,
+               :header string,
+               :localizedHeader LocalizedString,
+               :kind string}],
+   :localizedIssuerName {:kind string,
+                         :translatedValues [TranslatedString],
+                         :defaultValue TranslatedString},
+   :details string,
+   :redemptionIssuers [string],
+   :review {:comments string},
+   :localizedShortTitle {:kind string,
+                         :translatedValues [TranslatedString],
+                         :defaultValue TranslatedString},
+   :wideTitleImage {:sourceUri ImageUri,
+                    :kind string,
+                    :contentDescription LocalizedString},
+   :id string,
+   :kind string,
+   :finePrint string,
+   :appLinkData {:webAppLinkInfo AppLinkDataAppLinkInfo,
+                 :iosAppLinkInfo AppLinkDataAppLinkInfo,
+                 :androidAppLinkInfo AppLinkDataAppLinkInfo},
+   :classTemplateInfo {:detailsTemplateOverride DetailsTemplateOverride,
+                       :listTemplateOverride ListTemplateOverride,
+                       :cardTemplateOverride CardTemplateOverride,
+                       :cardBarcodeSectionDetails CardBarcodeSectionDetails},
+   :shortTitle string,
+   :enableSmartTap boolean,
+   :version string,
+   :viewUnlockRequirement string,
+   :infoModuleData {:showLastUpdateTime boolean,
+                    :labelValueRows [LabelValueRow]},
+   :provider string,
+   :heroImage {:sourceUri ImageUri,
+               :kind string,
+               :contentDescription LocalizedString},
+   :localizedDetails {:kind string,
+                      :translatedValues [TranslatedString],
+                      :defaultValue TranslatedString},
+   :countryCode string}
   
-  Adds a message to the offer class referenced by the given class ID."
+  Updates the offer class referenced by the given class ID."
   {:scopes ["https://www.googleapis.com/auth/wallet_object.issuer"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:resourceId})]}
   (util/get-response
-   (http/post
+   (http/put
     (util/get-url
      "https://walletobjects.googleapis.com/"
-     "walletobjects/v1/offerClass/{resourceId}/addMessage"
+     "walletobjects/v1/offerClass/{resourceId}"
      #{:resourceId}
      parameters)
     (merge-with
@@ -54,88 +275,91 @@
   
   Body: 
   
-  {:helpUri {:kind string,
+  {:helpUri {:id string,
              :uri string,
-             :description string,
              :localizedDescription LocalizedString,
-             :id string},
-   :wordMark {:contentDescription LocalizedString,
+             :kind string,
+             :description string},
+   :wordMark {:sourceUri ImageUri,
               :kind string,
-              :sourceUri ImageUri},
+              :contentDescription LocalizedString},
    :reviewStatus string,
-   :localizedFinePrint {:defaultValue TranslatedString,
+   :localizedFinePrint {:kind string,
                         :translatedValues [TranslatedString],
-                        :kind string},
-   :textModulesData [{:id string,
+                        :defaultValue TranslatedString},
+   :textModulesData [{:localizedHeader LocalizedString,
+                      :header string,
                       :localizedBody LocalizedString,
-                      :localizedHeader LocalizedString,
-                      :body string,
-                      :header string}],
+                      :id string,
+                      :body string}],
    :issuerName string,
-   :localizedTitle {:defaultValue TranslatedString,
+   :localizedTitle {:kind string,
                     :translatedValues [TranslatedString],
-                    :kind string},
+                    :defaultValue TranslatedString},
    :redemptionChannel string,
    :securityAnimation {:animationType string},
    :multipleDevicesAndHoldersAllowedStatus string,
-   :localizedProvider {:defaultValue TranslatedString,
+   :localizedProvider {:kind string,
                        :translatedValues [TranslatedString],
-                       :kind string},
-   :homepageUri {:kind string,
+                       :defaultValue TranslatedString},
+   :homepageUri {:id string,
                  :uri string,
-                 :description string,
                  :localizedDescription LocalizedString,
-                 :id string},
-   :titleImage {:contentDescription LocalizedString,
+                 :kind string,
+                 :description string},
+   :titleImage {:sourceUri ImageUri,
                 :kind string,
-                :sourceUri ImageUri},
-   :callbackOptions {:url string, :updateRequestUrl string},
+                :contentDescription LocalizedString},
+   :callbackOptions {:updateRequestUrl string, :url string},
    :title string,
    :linksModuleData {:uris [Uri]},
    :imageModulesData [{:mainImage Image, :id string}],
    :locations [{:latitude number, :kind string, :longitude number}],
    :allowMultipleUsersPerObject boolean,
    :hexBackgroundColor string,
-   :messages [{:body string,
-               :messageType string,
-               :header string,
-               :id string,
-               :kind string,
+   :messages [{:messageType string,
                :displayInterval TimeInterval,
+               :body string,
+               :id string,
+               :localizedBody LocalizedString,
+               :header string,
                :localizedHeader LocalizedString,
-               :localizedBody LocalizedString}],
-   :localizedIssuerName {:defaultValue TranslatedString,
+               :kind string}],
+   :localizedIssuerName {:kind string,
                          :translatedValues [TranslatedString],
-                         :kind string},
+                         :defaultValue TranslatedString},
    :details string,
    :redemptionIssuers [string],
    :review {:comments string},
-   :localizedShortTitle {:defaultValue TranslatedString,
+   :localizedShortTitle {:kind string,
                          :translatedValues [TranslatedString],
-                         :kind string},
-   :wideTitleImage {:contentDescription LocalizedString,
+                         :defaultValue TranslatedString},
+   :wideTitleImage {:sourceUri ImageUri,
                     :kind string,
-                    :sourceUri ImageUri},
+                    :contentDescription LocalizedString},
    :id string,
    :kind string,
    :finePrint string,
-   :classTemplateInfo {:listTemplateOverride ListTemplateOverride,
-                       :detailsTemplateOverride DetailsTemplateOverride,
-                       :cardBarcodeSectionDetails CardBarcodeSectionDetails,
-                       :cardTemplateOverride CardTemplateOverride},
+   :appLinkData {:webAppLinkInfo AppLinkDataAppLinkInfo,
+                 :iosAppLinkInfo AppLinkDataAppLinkInfo,
+                 :androidAppLinkInfo AppLinkDataAppLinkInfo},
+   :classTemplateInfo {:detailsTemplateOverride DetailsTemplateOverride,
+                       :listTemplateOverride ListTemplateOverride,
+                       :cardTemplateOverride CardTemplateOverride,
+                       :cardBarcodeSectionDetails CardBarcodeSectionDetails},
    :shortTitle string,
    :enableSmartTap boolean,
    :version string,
    :viewUnlockRequirement string,
-   :infoModuleData {:labelValueRows [LabelValueRow],
-                    :showLastUpdateTime boolean},
+   :infoModuleData {:showLastUpdateTime boolean,
+                    :labelValueRows [LabelValueRow]},
    :provider string,
-   :heroImage {:contentDescription LocalizedString,
+   :heroImage {:sourceUri ImageUri,
                :kind string,
-               :sourceUri ImageUri},
-   :localizedDetails {:defaultValue TranslatedString,
+               :contentDescription LocalizedString},
+   :localizedDetails {:kind string,
                       :translatedValues [TranslatedString],
-                      :kind string},
+                      :defaultValue TranslatedString},
    :countryCode string}
   
   Updates the offer class referenced by the given class ID. This method supports patch semantics."
@@ -185,122 +409,8 @@
       :as :json}
      auth))))
 
-(defn insert$
-  "https://developers.google.com/pay/passesapi/reference/rest/v1/offerclass/insert
-  
-  Required parameters: none
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:helpUri {:kind string,
-             :uri string,
-             :description string,
-             :localizedDescription LocalizedString,
-             :id string},
-   :wordMark {:contentDescription LocalizedString,
-              :kind string,
-              :sourceUri ImageUri},
-   :reviewStatus string,
-   :localizedFinePrint {:defaultValue TranslatedString,
-                        :translatedValues [TranslatedString],
-                        :kind string},
-   :textModulesData [{:id string,
-                      :localizedBody LocalizedString,
-                      :localizedHeader LocalizedString,
-                      :body string,
-                      :header string}],
-   :issuerName string,
-   :localizedTitle {:defaultValue TranslatedString,
-                    :translatedValues [TranslatedString],
-                    :kind string},
-   :redemptionChannel string,
-   :securityAnimation {:animationType string},
-   :multipleDevicesAndHoldersAllowedStatus string,
-   :localizedProvider {:defaultValue TranslatedString,
-                       :translatedValues [TranslatedString],
-                       :kind string},
-   :homepageUri {:kind string,
-                 :uri string,
-                 :description string,
-                 :localizedDescription LocalizedString,
-                 :id string},
-   :titleImage {:contentDescription LocalizedString,
-                :kind string,
-                :sourceUri ImageUri},
-   :callbackOptions {:url string, :updateRequestUrl string},
-   :title string,
-   :linksModuleData {:uris [Uri]},
-   :imageModulesData [{:mainImage Image, :id string}],
-   :locations [{:latitude number, :kind string, :longitude number}],
-   :allowMultipleUsersPerObject boolean,
-   :hexBackgroundColor string,
-   :messages [{:body string,
-               :messageType string,
-               :header string,
-               :id string,
-               :kind string,
-               :displayInterval TimeInterval,
-               :localizedHeader LocalizedString,
-               :localizedBody LocalizedString}],
-   :localizedIssuerName {:defaultValue TranslatedString,
-                         :translatedValues [TranslatedString],
-                         :kind string},
-   :details string,
-   :redemptionIssuers [string],
-   :review {:comments string},
-   :localizedShortTitle {:defaultValue TranslatedString,
-                         :translatedValues [TranslatedString],
-                         :kind string},
-   :wideTitleImage {:contentDescription LocalizedString,
-                    :kind string,
-                    :sourceUri ImageUri},
-   :id string,
-   :kind string,
-   :finePrint string,
-   :classTemplateInfo {:listTemplateOverride ListTemplateOverride,
-                       :detailsTemplateOverride DetailsTemplateOverride,
-                       :cardBarcodeSectionDetails CardBarcodeSectionDetails,
-                       :cardTemplateOverride CardTemplateOverride},
-   :shortTitle string,
-   :enableSmartTap boolean,
-   :version string,
-   :viewUnlockRequirement string,
-   :infoModuleData {:labelValueRows [LabelValueRow],
-                    :showLastUpdateTime boolean},
-   :provider string,
-   :heroImage {:contentDescription LocalizedString,
-               :kind string,
-               :sourceUri ImageUri},
-   :localizedDetails {:defaultValue TranslatedString,
-                      :translatedValues [TranslatedString],
-                      :kind string},
-   :countryCode string}
-  
-  Inserts an offer class with the given ID and properties."
-  {:scopes ["https://www.googleapis.com/auth/wallet_object.issuer"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://walletobjects.googleapis.com/"
-     "walletobjects/v1/offerClass"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn update$
-  "https://developers.google.com/pay/passesapi/reference/rest/v1/offerclass/update
+(defn addmessage$
+  "https://developers.google.com/pay/passesapi/reference/rest/v1/offerclass/addmessage
   
   Required parameters: resourceId
   
@@ -308,99 +418,24 @@
   
   Body: 
   
-  {:helpUri {:kind string,
-             :uri string,
-             :description string,
-             :localizedDescription LocalizedString,
-             :id string},
-   :wordMark {:contentDescription LocalizedString,
-              :kind string,
-              :sourceUri ImageUri},
-   :reviewStatus string,
-   :localizedFinePrint {:defaultValue TranslatedString,
-                        :translatedValues [TranslatedString],
-                        :kind string},
-   :textModulesData [{:id string,
-                      :localizedBody LocalizedString,
-                      :localizedHeader LocalizedString,
-                      :body string,
-                      :header string}],
-   :issuerName string,
-   :localizedTitle {:defaultValue TranslatedString,
-                    :translatedValues [TranslatedString],
-                    :kind string},
-   :redemptionChannel string,
-   :securityAnimation {:animationType string},
-   :multipleDevicesAndHoldersAllowedStatus string,
-   :localizedProvider {:defaultValue TranslatedString,
-                       :translatedValues [TranslatedString],
-                       :kind string},
-   :homepageUri {:kind string,
-                 :uri string,
-                 :description string,
-                 :localizedDescription LocalizedString,
-                 :id string},
-   :titleImage {:contentDescription LocalizedString,
-                :kind string,
-                :sourceUri ImageUri},
-   :callbackOptions {:url string, :updateRequestUrl string},
-   :title string,
-   :linksModuleData {:uris [Uri]},
-   :imageModulesData [{:mainImage Image, :id string}],
-   :locations [{:latitude number, :kind string, :longitude number}],
-   :allowMultipleUsersPerObject boolean,
-   :hexBackgroundColor string,
-   :messages [{:body string,
-               :messageType string,
-               :header string,
-               :id string,
-               :kind string,
-               :displayInterval TimeInterval,
-               :localizedHeader LocalizedString,
-               :localizedBody LocalizedString}],
-   :localizedIssuerName {:defaultValue TranslatedString,
-                         :translatedValues [TranslatedString],
-                         :kind string},
-   :details string,
-   :redemptionIssuers [string],
-   :review {:comments string},
-   :localizedShortTitle {:defaultValue TranslatedString,
-                         :translatedValues [TranslatedString],
-                         :kind string},
-   :wideTitleImage {:contentDescription LocalizedString,
-                    :kind string,
-                    :sourceUri ImageUri},
-   :id string,
-   :kind string,
-   :finePrint string,
-   :classTemplateInfo {:listTemplateOverride ListTemplateOverride,
-                       :detailsTemplateOverride DetailsTemplateOverride,
-                       :cardBarcodeSectionDetails CardBarcodeSectionDetails,
-                       :cardTemplateOverride CardTemplateOverride},
-   :shortTitle string,
-   :enableSmartTap boolean,
-   :version string,
-   :viewUnlockRequirement string,
-   :infoModuleData {:labelValueRows [LabelValueRow],
-                    :showLastUpdateTime boolean},
-   :provider string,
-   :heroImage {:contentDescription LocalizedString,
-               :kind string,
-               :sourceUri ImageUri},
-   :localizedDetails {:defaultValue TranslatedString,
-                      :translatedValues [TranslatedString],
-                      :kind string},
-   :countryCode string}
+  {:message {:messageType string,
+             :displayInterval TimeInterval,
+             :body string,
+             :id string,
+             :localizedBody LocalizedString,
+             :header string,
+             :localizedHeader LocalizedString,
+             :kind string}}
   
-  Updates the offer class referenced by the given class ID."
+  Adds a message to the offer class referenced by the given class ID."
   {:scopes ["https://www.googleapis.com/auth/wallet_object.issuer"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:resourceId})]}
   (util/get-response
-   (http/put
+   (http/post
     (util/get-url
      "https://walletobjects.googleapis.com/"
-     "walletobjects/v1/offerClass/{resourceId}"
+     "walletobjects/v1/offerClass/{resourceId}/addMessage"
      #{:resourceId}
      parameters)
     (merge-with
@@ -408,32 +443,6 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn list$
-  "https://developers.google.com/pay/passesapi/reference/rest/v1/offerclass/list
-  
-  Required parameters: none
-  
-  Optional parameters: issuerId, token, maxResults
-  
-  Returns a list of all offer classes for a given issuer ID."
-  {:scopes ["https://www.googleapis.com/auth/wallet_object.issuer"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://walletobjects.googleapis.com/"
-     "walletobjects/v1/offerClass"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

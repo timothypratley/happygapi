@@ -1,37 +1,10 @@
 (ns happygapi.serviceusage.operations
   "Service Usage API: operations.
   Enables services that service consumers want to use on Google Cloud Platform, lists the available or enabled services, or disables services that service consumers no longer use.
-  See: https://cloud.google.com/service-usage/api/reference/rest/v1/operations"
+  See: https://cloud.google.com/service-usage/docs/reference/rest/v1/operations"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
-
-(defn list$
-  "https://cloud.google.com/service-usage/api/reference/rest/v1/operations/list
-  
-  Required parameters: none
-  
-  Optional parameters: pageSize, pageToken, name, filter
-  
-  Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns `UNIMPLEMENTED`."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/service.management"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://serviceusage.googleapis.com/"
-     "v1/operations"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
 
 (defn delete$
   "https://cloud.google.com/service-usage/api/reference/rest/v1/operations/delete
@@ -78,6 +51,33 @@
      "https://serviceusage.googleapis.com/"
      "v1/{+name}"
      #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn list$
+  "https://cloud.google.com/service-usage/api/reference/rest/v1/operations/list
+  
+  Required parameters: none
+  
+  Optional parameters: filter, pageSize, pageToken, name
+  
+  Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns `UNIMPLEMENTED`."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/service.management"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://serviceusage.googleapis.com/"
+     "v1/operations"
+     #{}
      parameters)
     (merge-with
      merge

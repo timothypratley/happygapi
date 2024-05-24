@@ -1,7 +1,7 @@
 (ns happygapi.iam.policies
   "Identity and Access Management (IAM) API: policies.
   Manages identity and access control for Google Cloud resources, including the creation of service accounts, which you can use to authenticate to Google and make API calls. Enabling this API also enables the IAM Service Account Credentials API (iamcredentials.googleapis.com). However, disabling this API doesn't disable the IAM Service Account Credentials API. 
-  See: https://cloud.google.com/iam/api/reference/rest/v2/policies"
+  See: https://cloud.google.com/iam/docs/reference/rest/v2/policies"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

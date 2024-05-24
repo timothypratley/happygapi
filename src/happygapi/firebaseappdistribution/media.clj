@@ -1,7 +1,7 @@
 (ns happygapi.firebaseappdistribution.media
   "Firebase App Distribution API: media.
   
-  See: https://firebase.google.com/products/app-distributionapi/reference/rest/v1/media"
+  See: https://firebase.google.com/products/app-distributiondocs/reference/rest/v1/media"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

@@ -1,7 +1,7 @@
 (ns happygapi.dfareporting.remarketingListShares
   "Campaign Manager 360 API: remarketingListShares.
   Build applications to efficiently manage large or complex trafficking, reporting, and attribution workflows for Campaign Manager 360.
-  See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v4/remarketingListShares"
+  See: https://developers.google.com/doubleclick-advertisers/docs/reference/rest/v4/remarketingListShares"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

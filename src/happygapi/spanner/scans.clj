@@ -1,7 +1,7 @@
 (ns happygapi.spanner.scans
   "Cloud Spanner API: scans.
   Cloud Spanner is a managed, mission-critical, globally consistent and scalable relational database service.
-  See: https://cloud.google.com/spanner/api/reference/rest/v1/scans"
+  See: https://cloud.google.com/spanner/docs/reference/rest/v1/scans"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

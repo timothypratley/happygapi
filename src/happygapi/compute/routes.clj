@@ -1,7 +1,7 @@
 (ns happygapi.compute.routes
   "Compute Engine API: routes.
   Creates and runs virtual machines on Google Cloud Platform. 
-  See: https://cloud.google.com/compute/api/reference/rest/v1/routes"
+  See: https://cloud.google.com/compute/docs/reference/rest/v1/routes"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

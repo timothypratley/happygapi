@@ -1339,6 +1339,14 @@
                    :description "This field does not contain anything as of now and is just used as an indicator that the suggest result was a phrase completion.",
                    :type "object",
                    :properties {}},
+ :RewrittenQueries {:id "RewrittenQueries",
+                    :description "The rewritten queries returned by Apps Search Query Understanding service.",
+                    :type "object",
+                    :properties {:rewrittenQueries {:type "array",
+                                                    :items {:$ref "RewrittenQuery"}},
+                                 :selectedQueryIndex {:description "The index of the selected query in `rewritten_queries` that is used by QAPI to call CSSR to get search results. If none of the queries were used (i.e. they all give empty search results), `selected_query_index` would default to -1.",
+                                                      :type "integer",
+                                                      :format "int32"}}},
  :ResultDisplayMetadata {:id "ResultDisplayMetadata",
                          :type "object",
                          :properties {:objectTypeLabel {:description "The display label for the object.",
@@ -2527,6 +2535,36 @@
                                                     :items {:$ref "Operation"}},
                                        :nextPageToken {:description "The standard List next-page token.",
                                                        :type "string"}}},
+ :RewrittenQuery {:id "RewrittenQuery",
+                  :type "object",
+                  :properties {:rewrittenQuery {:type "string"},
+                               :score {:type "number",
+                                       :format "double"},
+                               :sortBy {:type "string",
+                                        :enumDescriptions [""
+                                                           ""
+                                                           ""
+                                                           ""
+                                                           ""
+                                                           ""
+                                                           ""
+                                                           ""
+                                                           ""
+                                                           ""
+                                                           ""
+                                                           ""],
+                                        :enum ["SORTBY_UNSUPPORTED"
+                                               "SORTBY_RELEVANCY"
+                                               "SORTBY_LATEST"
+                                               "SORTBY_OLDEST"
+                                               "SORTBY_LARGEST"
+                                               "SORTBY_SMALLEST"
+                                               "SORTBY_MODIFY_LATEST"
+                                               "SORTBY_MODIFY_OLDEST"
+                                               "SORTBY_VIEW_LATEST"
+                                               "SORTBY_VIEW_OLDEST"
+                                               "SORTBY_CREATE_LATEST"
+                                               "SORTBY_CREATE_OLDEST"]}}},
  :VPCSettings {:id "VPCSettings",
                :type "object",
                :properties {:project {:description "The resource name of the GCP Project to be used for VPC SC policy check. VPC security settings on this project will be honored for Cloud Search APIs after project_name has been updated through CustomerService. Format: projects/{project_id}",

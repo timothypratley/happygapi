@@ -1,10 +1,48 @@
 (ns happygapi.recommender.organizations
   "Recommender API: organizations.
   
-  See: https://cloud.google.com/recommender/docs/api/reference/rest/v1/organizations"
+  See: https://cloud.google.com/recommender/docs/docs/reference/rest/v1/organizations"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
+
+(defn locations-recommenders-updateConfig$
+  "https://cloud.google.com/recommender/docs/api/reference/rest/v1/organizations/locations/recommenders/updateConfig
+  
+  Required parameters: name
+  
+  Optional parameters: validateOnly, updateMask
+  
+  Body: 
+  
+  {:displayName string,
+   :recommenderGenerationConfig {:params {}},
+   :updateTime string,
+   :annotations {},
+   :name string,
+   :etag string,
+   :revisionId string}
+  
+  Updates a Recommender Config. This will create a new revision of the config."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://recommender.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
 
 (defn locations-recommenders-getConfig$
   "https://cloud.google.com/recommender/docs/api/reference/rest/v1/organizations/locations/recommenders/getConfig
@@ -32,140 +70,12 @@
       :as :json}
      auth))))
 
-(defn locations-recommenders-updateConfig$
-  "https://cloud.google.com/recommender/docs/api/reference/rest/v1/organizations/locations/recommenders/updateConfig
-  
-  Required parameters: name
-  
-  Optional parameters: validateOnly, updateMask
-  
-  Body: 
-  
-  {:revisionId string,
-   :displayName string,
-   :updateTime string,
-   :annotations {},
-   :etag string,
-   :recommenderGenerationConfig {:params {}},
-   :name string}
-  
-  Updates a Recommender Config. This will create a new revision of the config."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://recommender.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-recommenders-recommendations-get$
-  "https://cloud.google.com/recommender/docs/api/reference/rest/v1/organizations/locations/recommenders/recommendations/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets the requested recommendation. Requires the recommender.*.get IAM permission for the specified recommender."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://recommender.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-recommenders-recommendations-markClaimed$
-  "https://cloud.google.com/recommender/docs/api/reference/rest/v1/organizations/locations/recommenders/recommendations/markClaimed
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:etag string, :stateMetadata {}}
-  
-  Marks the Recommendation State as Claimed. Users can use this method to indicate to the Recommender API that they are starting to apply the recommendation themselves. This stops the recommendation content from being updated. Associated insights are frozen and placed in the ACCEPTED state. MarkRecommendationClaimed can be applied to recommendations in CLAIMED, SUCCEEDED, FAILED, or ACTIVE state. Requires the recommender.*.update IAM permission for the specified recommender."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://recommender.googleapis.com/"
-     "v1/{+name}:markClaimed"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-recommenders-recommendations-markDismissed$
-  "https://cloud.google.com/recommender/docs/api/reference/rest/v1/organizations/locations/recommenders/recommendations/markDismissed
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:etag string}
-  
-  Mark the Recommendation State as Dismissed. Users can use this method to indicate to the Recommender API that an ACTIVE recommendation has to be marked back as DISMISSED. MarkRecommendationDismissed can be applied to recommendations in ACTIVE state. Requires the recommender.*.update IAM permission for the specified recommender."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://recommender.googleapis.com/"
-     "v1/{+name}:markDismissed"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn locations-recommenders-recommendations-list$
   "https://cloud.google.com/recommender/docs/api/reference/rest/v1/organizations/locations/recommenders/recommendations/list
   
   Required parameters: parent
   
-  Optional parameters: filter, pageSize, pageToken
+  Optional parameters: pageSize, pageToken, filter
   
   Lists recommendations for the specified Cloud Resource. Requires the recommender.*.list IAM permission for the specified recommender."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -218,6 +128,32 @@
       :as :json}
      auth))))
 
+(defn locations-recommenders-recommendations-get$
+  "https://cloud.google.com/recommender/docs/api/reference/rest/v1/organizations/locations/recommenders/recommendations/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets the requested recommendation. Requires the recommender.*.get IAM permission for the specified recommender."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://recommender.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn locations-recommenders-recommendations-markSucceeded$
   "https://cloud.google.com/recommender/docs/api/reference/rest/v1/organizations/locations/recommenders/recommendations/markSucceeded
   
@@ -227,7 +163,7 @@
   
   Body: 
   
-  {:stateMetadata {}, :etag string}
+  {:etag string, :stateMetadata {}}
   
   Marks the Recommendation State as Succeeded. Users can use this method to indicate to the Recommender API that they have applied the recommendation themselves, and the operation was successful. This stops the recommendation content from being updated. Associated insights are frozen and placed in the ACCEPTED state. MarkRecommendationSucceeded can be applied to recommendations in ACTIVE, CLAIMED, SUCCEEDED, or FAILED state. Requires the recommender.*.update IAM permission for the specified recommender."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -250,32 +186,58 @@
       :as :json}
      auth))))
 
-(defn locations-insightTypes-updateConfig$
-  "https://cloud.google.com/recommender/docs/api/reference/rest/v1/organizations/locations/insightTypes/updateConfig
+(defn locations-recommenders-recommendations-markDismissed$
+  "https://cloud.google.com/recommender/docs/api/reference/rest/v1/organizations/locations/recommenders/recommendations/markDismissed
   
   Required parameters: name
   
-  Optional parameters: updateMask, validateOnly
+  Optional parameters: none
   
   Body: 
   
-  {:updateTime string,
-   :insightTypeGenerationConfig {:params {}},
-   :name string,
-   :etag string,
-   :annotations {},
-   :revisionId string,
-   :displayName string}
+  {:etag string}
   
-  Updates an InsightTypeConfig change. This will create a new revision of the config."
+  Mark the Recommendation State as Dismissed. Users can use this method to indicate to the Recommender API that an ACTIVE recommendation has to be marked back as DISMISSED. MarkRecommendationDismissed can be applied to recommendations in ACTIVE state. Requires the recommender.*.update IAM permission for the specified recommender."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/patch
+   (http/post
     (util/get-url
      "https://recommender.googleapis.com/"
-     "v1/{+name}"
+     "v1/{+name}:markDismissed"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-recommenders-recommendations-markClaimed$
+  "https://cloud.google.com/recommender/docs/api/reference/rest/v1/organizations/locations/recommenders/recommendations/markClaimed
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:etag string, :stateMetadata {}}
+  
+  Marks the Recommendation State as Claimed. Users can use this method to indicate to the Recommender API that they are starting to apply the recommendation themselves. This stops the recommendation content from being updated. Associated insights are frozen and placed in the ACCEPTED state. MarkRecommendationClaimed can be applied to recommendations in CLAIMED, SUCCEEDED, FAILED, or ACTIVE state. Requires the recommender.*.update IAM permission for the specified recommender."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://recommender.googleapis.com/"
+     "v1/{+name}:markClaimed"
      #{:name}
      parameters)
     (merge-with
@@ -314,27 +276,39 @@
       :as :json}
      auth))))
 
-(defn locations-insightTypes-insights-list$
-  "https://cloud.google.com/recommender/docs/api/reference/rest/v1/organizations/locations/insightTypes/insights/list
+(defn locations-insightTypes-updateConfig$
+  "https://cloud.google.com/recommender/docs/api/reference/rest/v1/organizations/locations/insightTypes/updateConfig
   
-  Required parameters: parent
+  Required parameters: name
   
-  Optional parameters: filter, pageToken, pageSize
+  Optional parameters: updateMask, validateOnly
   
-  Lists insights for the specified Cloud Resource. Requires the recommender.*.list IAM permission for the specified insight type."
+  Body: 
+  
+  {:etag string,
+   :updateTime string,
+   :annotations {},
+   :displayName string,
+   :insightTypeGenerationConfig {:params {}},
+   :revisionId string,
+   :name string}
+  
+  Updates an InsightTypeConfig change. This will create a new revision of the config."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/get
+   (http/patch
     (util/get-url
      "https://recommender.googleapis.com/"
-     "v1/{+parent}/insights"
-     #{:parent}
+     "v1/{+name}"
+     #{:name}
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -389,6 +363,32 @@
      "https://recommender.googleapis.com/"
      "v1/{+name}"
      #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-insightTypes-insights-list$
+  "https://cloud.google.com/recommender/docs/api/reference/rest/v1/organizations/locations/insightTypes/insights/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageToken, filter, pageSize
+  
+  Lists insights for the specified Cloud Resource. Requires the recommender.*.list IAM permission for the specified insight type."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://recommender.googleapis.com/"
+     "v1/{+parent}/insights"
+     #{:parent}
      parameters)
     (merge-with
      merge

@@ -1,7 +1,7 @@
 (ns happygapi.chromemanagement.customers
   "Chrome Management API: customers.
   The Chrome Management API is a suite of services that allows Chrome administrators to view, manage and gain insights on their Chrome OS and Chrome Browser devices.
-  See: http://developers.google.com/chrome/management/api/reference/rest/v1/customers"
+  See: http://developers.google.com/chrome/management/docs/reference/rest/v1/customers"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -11,7 +11,7 @@
   
   Required parameters: customer
   
-  Optional parameters: readMask, orgUnitId
+  Optional parameters: orgUnitId, readMask
   
   Counts of ChromeOS devices that have not synced policies or have lacked user activity in the past 28 days, are out of date, or are not complaint. Further information can be found here https://support.google.com/chrome/a/answer/10564947"
   {:scopes ["https://www.googleapis.com/auth/chrome.management.reports.readonly"]}
@@ -63,7 +63,7 @@
   
   Required parameters: customer
   
-  Optional parameters: filter, pageToken, appId, orderBy, appType, orgUnitId, pageSize
+  Optional parameters: filter, orderBy, appId, pageSize, appType, orgUnitId, pageToken
   
   Generate report of managed Chrome browser devices that have a specified app installed."
   {:scopes ["https://www.googleapis.com/auth/chrome.management.reports.readonly"]}
@@ -89,7 +89,7 @@
   
   Required parameters: customer
   
-  Optional parameters: orderBy, orgUnitId, filter
+  Optional parameters: filter, orgUnitId, orderBy
   
   Get a count of Chrome crash events."
   {:scopes ["https://www.googleapis.com/auth/chrome.management.reports.readonly"]}
@@ -115,7 +115,7 @@
   
   Required parameters: customer
   
-  Optional parameters: pageToken, filter, pageSize, orgUnitId
+  Optional parameters: filter, orgUnitId, pageSize, pageToken
   
   Generate report of installed Chrome versions."
   {:scopes ["https://www.googleapis.com/auth/chrome.management.reports.readonly"]}
@@ -141,7 +141,7 @@
   
   Required parameters: customer
   
-  Optional parameters: orderBy, pageToken, filter, printerOrgUnitId, pageSize
+  Optional parameters: pageSize, filter, pageToken, printerOrgUnitId, orderBy
   
   Get a summary of printing done by each printer."
   {:scopes ["https://www.googleapis.com/auth/chrome.management.reports.readonly"]}
@@ -193,7 +193,7 @@
   
   Required parameters: customer
   
-  Optional parameters: pageSize, filter, printerOrgUnitId, orderBy, pageToken
+  Optional parameters: orderBy, pageSize, filter, pageToken, printerOrgUnitId
   
   Get a list of print jobs."
   {:scopes ["https://www.googleapis.com/auth/chrome.management.reports.readonly"]}
@@ -219,7 +219,7 @@
   
   Required parameters: customer
   
-  Optional parameters: pageSize, printerOrgUnitId, pageToken, filter, orderBy
+  Optional parameters: pageToken, pageSize, orderBy, filter, printerOrgUnitId
   
   Get a summary of printing done by each user."
   {:scopes ["https://www.googleapis.com/auth/chrome.management.reports.readonly"]}
@@ -271,7 +271,7 @@
   
   Required parameters: customer
   
-  Optional parameters: orgUnitId, pageToken, orderBy, filter, pageSize
+  Optional parameters: orderBy, pageSize, orgUnitId, pageToken, filter
   
   Generate report of app installations."
   {:scopes ["https://www.googleapis.com/auth/chrome.management.reports.readonly"]}
@@ -292,38 +292,12 @@
       :as :json}
      auth))))
 
-(defn apps-fetchDevicesRequestingExtension$
-  "http://developers.google.com/chrome/management/api/reference/rest/v1/customers/apps/fetchDevicesRequestingExtension
-  
-  Required parameters: customer
-  
-  Optional parameters: pageToken, orgUnitId, extensionId, pageSize
-  
-  Get a list of devices that have requested to install an extension."
-  {:scopes ["https://www.googleapis.com/auth/chrome.management.appdetails.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:customer})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://chromemanagement.googleapis.com/"
-     "v1/{+customer}/apps:fetchDevicesRequestingExtension"
-     #{:customer}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn apps-countChromeAppRequests$
   "http://developers.google.com/chrome/management/api/reference/rest/v1/customers/apps/countChromeAppRequests
   
   Required parameters: customer
   
-  Optional parameters: orgUnitId, pageSize, pageToken, orderBy
+  Optional parameters: orgUnitId, orderBy, pageSize, pageToken
   
   Generate summary of app installation requests."
   {:scopes ["https://www.googleapis.com/auth/chrome.management.appdetails.readonly"]}
@@ -344,12 +318,38 @@
       :as :json}
      auth))))
 
+(defn apps-fetchDevicesRequestingExtension$
+  "http://developers.google.com/chrome/management/api/reference/rest/v1/customers/apps/fetchDevicesRequestingExtension
+  
+  Required parameters: customer
+  
+  Optional parameters: extensionId, orgUnitId, pageSize, pageToken
+  
+  Get a list of devices that have requested to install an extension."
+  {:scopes ["https://www.googleapis.com/auth/chrome.management.appdetails.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:customer})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://chromemanagement.googleapis.com/"
+     "v1/{+customer}/apps:fetchDevicesRequestingExtension"
+     #{:customer}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn apps-fetchUsersRequestingExtension$
   "http://developers.google.com/chrome/management/api/reference/rest/v1/customers/apps/fetchUsersRequestingExtension
   
   Required parameters: customer
   
-  Optional parameters: pageSize, orgUnitId, pageToken, extensionId
+  Optional parameters: orgUnitId, extensionId, pageToken, pageSize
   
   Get a list of users that have requested to install an extension."
   {:scopes ["https://www.googleapis.com/auth/chrome.management.appdetails.readonly"]}
@@ -361,32 +361,6 @@
      "https://chromemanagement.googleapis.com/"
      "v1/{+customer}/apps:fetchUsersRequestingExtension"
      #{:customer}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn apps-android-get$
-  "http://developers.google.com/chrome/management/api/reference/rest/v1/customers/apps/android/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Get a specific app for a customer by its resource name."
-  {:scopes ["https://www.googleapis.com/auth/chrome.management.appdetails.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://chromemanagement.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
      parameters)
     (merge-with
      merge
@@ -448,6 +422,58 @@
       :as :json}
      auth))))
 
+(defn apps-android-get$
+  "http://developers.google.com/chrome/management/api/reference/rest/v1/customers/apps/android/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Get a specific app for a customer by its resource name."
+  {:scopes ["https://www.googleapis.com/auth/chrome.management.appdetails.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://chromemanagement.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn telemetry-devices-list$
+  "http://developers.google.com/chrome/management/api/reference/rest/v1/customers/telemetry/devices/list
+  
+  Required parameters: parent
+  
+  Optional parameters: readMask, filter, pageToken, pageSize
+  
+  List all telemetry devices."
+  {:scopes ["https://www.googleapis.com/auth/chrome.management.telemetry.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://chromemanagement.googleapis.com/"
+     "v1/{+parent}/telemetry/devices"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn telemetry-devices-get$
   "http://developers.google.com/chrome/management/api/reference/rest/v1/customers/telemetry/devices/get
   
@@ -474,49 +500,23 @@
       :as :json}
      auth))))
 
-(defn telemetry-devices-list$
-  "http://developers.google.com/chrome/management/api/reference/rest/v1/customers/telemetry/devices/list
+(defn telemetry-users-get$
+  "http://developers.google.com/chrome/management/api/reference/rest/v1/customers/telemetry/users/get
   
-  Required parameters: parent
+  Required parameters: name
   
-  Optional parameters: readMask, filter, pageSize, pageToken
+  Optional parameters: readMask
   
-  List all telemetry devices."
+  Get telemetry user."
   {:scopes ["https://www.googleapis.com/auth/chrome.management.telemetry.readonly"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://chromemanagement.googleapis.com/"
-     "v1/{+parent}/telemetry/devices"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn telemetry-events-list$
-  "http://developers.google.com/chrome/management/api/reference/rest/v1/customers/telemetry/events/list
-  
-  Required parameters: parent
-  
-  Optional parameters: readMask, pageToken, filter, pageSize
-  
-  List telemetry events."
-  {:scopes ["https://www.googleapis.com/auth/chrome.management.telemetry.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://chromemanagement.googleapis.com/"
-     "v1/{+parent}/telemetry/events"
-     #{:parent}
+     "v1/{+name}"
+     #{:name}
      parameters)
     (merge-with
      merge
@@ -531,7 +531,7 @@
   
   Required parameters: parent
   
-  Optional parameters: filter, pageSize, pageToken, readMask
+  Optional parameters: pageSize, filter, readMask, pageToken
   
   List all telemetry users."
   {:scopes ["https://www.googleapis.com/auth/chrome.management.telemetry.readonly"]}
@@ -552,23 +552,23 @@
       :as :json}
      auth))))
 
-(defn telemetry-users-get$
-  "http://developers.google.com/chrome/management/api/reference/rest/v1/customers/telemetry/users/get
+(defn telemetry-notificationConfigs-list$
+  "http://developers.google.com/chrome/management/api/reference/rest/v1/customers/telemetry/notificationConfigs/list
   
-  Required parameters: name
+  Required parameters: parent
   
-  Optional parameters: readMask
+  Optional parameters: pageToken, pageSize
   
-  Get telemetry user."
+  List all telemetry notification configs."
   {:scopes ["https://www.googleapis.com/auth/chrome.management.telemetry.readonly"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://chromemanagement.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
+     "v1/{+parent}/telemetry/notificationConfigs"
+     #{:parent}
      parameters)
     (merge-with
      merge
@@ -613,14 +613,14 @@
   
   Body: 
   
-  {:filter {:userOrgUnitId string,
-            :userEmail string,
-            :telemetryEventNotificationFilter GoogleChromeManagementV1TelemetryEventNotificationFilter,
-            :deviceOrgUnitId string,
-            :deviceId string},
+  {:name string,
    :customer string,
    :googleCloudPubsubTopic string,
-   :name string}
+   :filter {:userOrgUnitId string,
+            :deviceOrgUnitId string,
+            :deviceId string,
+            :telemetryEventNotificationFilter GoogleChromeManagementV1TelemetryEventNotificationFilter,
+            :userEmail string}}
   
   Create a telemetry notification config."
   {:scopes ["https://www.googleapis.com/auth/chrome.management.telemetry.readonly"]}
@@ -643,14 +643,14 @@
       :as :json}
      auth))))
 
-(defn telemetry-notificationConfigs-list$
-  "http://developers.google.com/chrome/management/api/reference/rest/v1/customers/telemetry/notificationConfigs/list
+(defn telemetry-events-list$
+  "http://developers.google.com/chrome/management/api/reference/rest/v1/customers/telemetry/events/list
   
   Required parameters: parent
   
-  Optional parameters: pageToken, pageSize
+  Optional parameters: filter, pageSize, readMask, pageToken
   
-  List all telemetry notification configs."
+  List telemetry events."
   {:scopes ["https://www.googleapis.com/auth/chrome.management.telemetry.readonly"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:parent})]}
@@ -658,7 +658,7 @@
    (http/get
     (util/get-url
      "https://chromemanagement.googleapis.com/"
-     "v1/{+parent}/telemetry/notificationConfigs"
+     "v1/{+parent}/telemetry/events"
      #{:parent}
      parameters)
     (merge-with

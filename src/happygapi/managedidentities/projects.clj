@@ -1,7 +1,7 @@
 (ns happygapi.managedidentities.projects
   "Managed Service for Microsoft Active Directory API: projects.
   The Managed Service for Microsoft Active Directory API is used for managing a highly available, hardened service running Microsoft Active Directory (AD).
-  See: https://cloud.google.com/managed-microsoft-ad/api/reference/rest/v1/projects"
+  See: https://cloud.google.com/managed-microsoft-ad/docs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

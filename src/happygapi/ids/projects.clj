@@ -1,7 +1,7 @@
 (ns happygapi.ids.projects
   "Cloud IDS API: projects.
   Cloud IDS (Cloud Intrusion Detection System) detects malware, spyware, command-and-control attacks, and other network-based threats. Its security efficacy is industry leading, built with Palo Alto Networks technologies. When you use this product, your organization name and consumption levels will be shared with Palo Alto Networks.
-  See: https://cloud.google.com/api/reference/rest/v1/projects"
+  See: https://cloud.google.com/docs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

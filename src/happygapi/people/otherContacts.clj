@@ -1,7 +1,7 @@
 (ns happygapi.people.otherContacts
   "People API: otherContacts.
   Provides access to information about profiles and contacts.
-  See: https://developers.google.com/people/api/reference/rest/v1/otherContacts"
+  See: https://developers.google.com/people/docs/reference/rest/v1/otherContacts"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

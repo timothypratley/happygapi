@@ -1,7 +1,7 @@
 (ns happygapi.gamesManagement.players
   "Google Play Game Management: players.
   The Google Play Game Management API allows developers to manage resources from the Google Play Game service.
-  See: https://developers.google.com/games/api/reference/rest/v1management/players"
+  See: https://developers.google.com/games/docs/reference/rest/v1management/players"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

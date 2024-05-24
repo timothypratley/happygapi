@@ -1,7 +1,7 @@
 (ns happygapi.monitoring.uptimeCheckIps
   "Cloud Monitoring API: uptimeCheckIps.
   Manages your Cloud Monitoring data and configurations.
-  See: https://cloud.google.com/monitoring/api/api/reference/rest/v3/uptimeCheckIps"
+  See: https://cloud.google.com/monitoring/api/docs/reference/rest/v3/uptimeCheckIps"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

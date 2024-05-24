@@ -1,7 +1,7 @@
 (ns happygapi.dfareporting.connectionTypes
   "Campaign Manager 360 API: connectionTypes.
   Build applications to efficiently manage large or complex trafficking, reporting, and attribution workflows for Campaign Manager 360.
-  See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v4/connectionTypes"
+  See: https://developers.google.com/doubleclick-advertisers/docs/reference/rest/v4/connectionTypes"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

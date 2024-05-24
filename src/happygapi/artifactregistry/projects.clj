@@ -1,7 +1,7 @@
 (ns happygapi.artifactregistry.projects
   "Artifact Registry API: projects.
   Store and manage build artifacts in a scalable and integrated service built on Google infrastructure.
-  See: https://cloud.google.com/artifacts/docs/api/reference/rest/v1/projects"
+  See: https://cloud.google.com/artifacts/docs/docs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -273,6 +273,7 @@
    :format string,
    :mavenConfig {:allowSnapshotOverwrites boolean,
                  :versionPolicy string},
+   :satisfiesPzi boolean,
    :name string,
    :sizeBytes string,
    :mode string,
@@ -330,6 +331,7 @@
    :format string,
    :mavenConfig {:allowSnapshotOverwrites boolean,
                  :versionPolicy string},
+   :satisfiesPzi boolean,
    :name string,
    :sizeBytes string,
    :mode string,
@@ -867,6 +869,38 @@
       :as :json}
      auth))))
 
+(defn locations-repositories-genericArtifacts-upload$
+  "https://cloud.google.com/artifacts/docs/api/reference/rest/v1/projects/locations/repositories/genericArtifacts/upload
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:packageId string, :versionId string, :filename string}
+  
+  Directly uploads a Generic artifact. The returned operation will complete once the resources are uploaded. Package, version, and file resources are created based on the uploaded artifact. Uploaded artifacts that conflict with existing resources will raise an `ALREADY_EXISTS` error."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://artifactregistry.googleapis.com/"
+     "v1/{+parent}/genericArtifacts:create"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn locations-repositories-goModules-upload$
   "https://cloud.google.com/artifacts/docs/api/reference/rest/v1/projects/locations/repositories/goModules/upload
   
@@ -940,6 +974,59 @@
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
+    (util/get-url
+     "https://artifactregistry.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-repositories-files-download$
+  "https://cloud.google.com/artifacts/docs/api/reference/rest/v1/projects/locations/repositories/files/download
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Download a file."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform.read-only"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://artifactregistry.googleapis.com/"
+     "v1/{+name}:download"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-repositories-files-delete$
+  "https://cloud.google.com/artifacts/docs/api/reference/rest/v1/projects/locations/repositories/files/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes a file and all of its content. It is only allowed on generic repositories. The returned operation will complete once the file has been deleted."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
     (util/get-url
      "https://artifactregistry.googleapis.com/"
      "v1/{+name}"

@@ -1,7 +1,7 @@
 (ns happygapi.androidpublisher.users
   "Google Play Android Developer API: users.
   Lets Android application developers access their Google Play accounts. At a high level, the expected workflow is to \"insert\" an Edit, make changes as necessary, and then \"commit\" it. 
-  See: https://developers.google.com/android-publisherapi/reference/rest/v3/users"
+  See: https://developers.google.com/android-publisherdocs/reference/rest/v3/users"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

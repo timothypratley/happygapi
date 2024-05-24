@@ -1,7 +1,7 @@
 (ns happygapi.bigquerydatapolicy.projects
   "BigQuery Data Policy API: projects.
   Allows users to manage BigQuery data policies.
-  See: https://cloud.google.com/bigquery/docs/column-data-maskingapi/reference/rest/v1/projects"
+  See: https://cloud.google.com/bigquery/docs/column-data-maskingdocs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

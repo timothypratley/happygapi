@@ -1,7 +1,7 @@
 (ns happygapi.games.metagame
   "Google Play Game Services: metagame.
   The Google Play games service allows developers to enhance games with social leaderboards, achievements, game state, sign-in with Google, and more.
-  See: https://developers.google.com/games/api/reference/rest/v1/metagame"
+  See: https://developers.google.com/games/docs/reference/rest/v1/metagame"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

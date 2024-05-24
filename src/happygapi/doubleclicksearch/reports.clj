@@ -1,7 +1,7 @@
 (ns happygapi.doubleclicksearch.reports
   "Search Ads 360 API: reports.
   The Search Ads 360 API allows developers to automate uploading conversions and downloading reports from Search Ads 360.
-  See: https://developers.google.com/search-adsapi/reference/rest/v2/reports"
+  See: https://developers.google.com/search-adsdocs/reference/rest/v2/reports"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

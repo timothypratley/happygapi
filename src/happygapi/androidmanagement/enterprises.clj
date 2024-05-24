@@ -1,7 +1,7 @@
 (ns happygapi.androidmanagement.enterprises
   "Android Management API: enterprises.
   The Android Management API provides remote enterprise management of Android devices and apps.
-  See: https://developers.google.com/android/managementapi/reference/rest/v1/enterprises"
+  See: https://developers.google.com/android/managementdocs/reference/rest/v1/enterprises"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -808,7 +808,8 @@
    :deviceConnectivityManagement {:usbDataAccess string,
                                   :configureWifi string,
                                   :wifiDirectSettings string,
-                                  :tetheringSettings string},
+                                  :tetheringSettings string,
+                                  :wifiSsidPolicy WifiSsidPolicy},
    :name string,
    :passwordRequirements {:requirePasswordUnlock string,
                           :unifiedLockSettings string,
@@ -1195,7 +1196,7 @@
    :expireTime string,
    :device string}
   
-  Creates a migration token, to migrate an existing device from being managed by the EMM's Device Policy Controller (DPC) to being managed by the Android Management API."
+  Creates a migration token, to migrate an existing device from being managed by the EMM's Device Policy Controller (DPC) to being managed by the Android Management API. See the guide (https://developers.google.com/android/management/dpc-migration) for more details."
   {:scopes ["https://www.googleapis.com/auth/androidmanagement"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:parent})]}

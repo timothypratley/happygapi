@@ -1,7 +1,7 @@
 (ns happygapi.youtube.i18nRegions
   "YouTube Data API v3: i18nRegions.
   The YouTube Data API v3 is an API that provides access to YouTube data, such as videos, playlists, and channels.
-  See: https://developers.google.com/youtube/api/reference/rest/v3/i18nRegions"
+  See: https://developers.google.com/youtube/docs/reference/rest/v3/i18nRegions"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

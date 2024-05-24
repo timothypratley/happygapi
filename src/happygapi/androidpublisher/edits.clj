@@ -1,7 +1,7 @@
 (ns happygapi.androidpublisher.edits
   "Google Play Android Developer API: edits.
   Lets Android application developers access their Google Play accounts. At a high level, the expected workflow is to \"insert\" an Edit, make changes as necessary, and then \"commit\" it. 
-  See: https://developers.google.com/android-publisherapi/reference/rest/v3/edits"
+  See: https://developers.google.com/android-publisherdocs/reference/rest/v3/edits"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

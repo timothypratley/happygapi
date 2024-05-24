@@ -1,13 +1,13 @@
 (ns happygapi.sourcerepo.projects
   "Cloud Source Repositories API: projects.
-  Accesses source code repositories hosted by Google.
-  See: https://cloud.google.com/source-repositories/docs/apisapi/reference/rest/v1/projects"
+  Accesses source code repositories hosted by Google. Important: Cloud Source Repositories is scheduled for end of sales starting June 17, 2024. Customers who have enabled the API prior to this date will not be affected and can continue to use Cloud Source Repositories. Organizations or projects who have not previously enabled the API cannot use Cloud Source Repositories after this date. View Cloud Source Repositories documentation for more info. 
+  See: https://cloud.google.com/source-repositories/docsdocs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn getConfig$
-  "https://cloud.google.com/source-repositories/docs/apisapi/reference/rest/v1/projects/getConfig
+  "https://cloud.google.com/source-repositories/docsapi/reference/rest/v1/projects/getConfig
   
   Required parameters: name
   
@@ -33,7 +33,7 @@
      auth))))
 
 (defn updateConfig$
-  "https://cloud.google.com/source-repositories/docs/apisapi/reference/rest/v1/projects/updateConfig
+  "https://cloud.google.com/source-repositories/docsapi/reference/rest/v1/projects/updateConfig
   
   Required parameters: name
   
@@ -68,7 +68,7 @@
      auth))))
 
 (defn repos-get$
-  "https://cloud.google.com/source-repositories/docs/apisapi/reference/rest/v1/projects/repos/get
+  "https://cloud.google.com/source-repositories/docsapi/reference/rest/v1/projects/repos/get
   
   Required parameters: name
   
@@ -97,7 +97,7 @@
      auth))))
 
 (defn repos-setIamPolicy$
-  "https://cloud.google.com/source-repositories/docs/apisapi/reference/rest/v1/projects/repos/setIamPolicy
+  "https://cloud.google.com/source-repositories/docsapi/reference/rest/v1/projects/repos/setIamPolicy
   
   Required parameters: resource
   
@@ -134,7 +134,7 @@
      auth))))
 
 (defn repos-patch$
-  "https://cloud.google.com/source-repositories/docs/apisapi/reference/rest/v1/projects/repos/patch
+  "https://cloud.google.com/source-repositories/docsapi/reference/rest/v1/projects/repos/patch
   
   Required parameters: name
   
@@ -171,7 +171,7 @@
      auth))))
 
 (defn repos-testIamPermissions$
-  "https://cloud.google.com/source-repositories/docs/apisapi/reference/rest/v1/projects/repos/testIamPermissions
+  "https://cloud.google.com/source-repositories/docsapi/reference/rest/v1/projects/repos/testIamPermissions
   
   Required parameters: resource
   
@@ -206,7 +206,7 @@
      auth))))
 
 (defn repos-create$
-  "https://cloud.google.com/source-repositories/docs/apisapi/reference/rest/v1/projects/repos/create
+  "https://cloud.google.com/source-repositories/docsapi/reference/rest/v1/projects/repos/create
   
   Required parameters: parent
   
@@ -243,7 +243,7 @@
      auth))))
 
 (defn repos-delete$
-  "https://cloud.google.com/source-repositories/docs/apisapi/reference/rest/v1/projects/repos/delete
+  "https://cloud.google.com/source-repositories/docsapi/reference/rest/v1/projects/repos/delete
   
   Required parameters: name
   
@@ -270,7 +270,7 @@
      auth))))
 
 (defn repos-sync$
-  "https://cloud.google.com/source-repositories/docs/apisapi/reference/rest/v1/projects/repos/sync
+  "https://cloud.google.com/source-repositories/docsapi/reference/rest/v1/projects/repos/sync
   
   Required parameters: name
   
@@ -302,7 +302,7 @@
      auth))))
 
 (defn repos-getIamPolicy$
-  "https://cloud.google.com/source-repositories/docs/apisapi/reference/rest/v1/projects/repos/getIamPolicy
+  "https://cloud.google.com/source-repositories/docsapi/reference/rest/v1/projects/repos/getIamPolicy
   
   Required parameters: resource
   
@@ -331,7 +331,7 @@
      auth))))
 
 (defn repos-list$
-  "https://cloud.google.com/source-repositories/docs/apisapi/reference/rest/v1/projects/repos/list
+  "https://cloud.google.com/source-repositories/docsapi/reference/rest/v1/projects/repos/list
   
   Required parameters: name
   

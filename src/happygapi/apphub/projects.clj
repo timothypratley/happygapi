@@ -1,7 +1,7 @@
 (ns happygapi.apphub.projects
   "App Hub API: projects.
   
-  See: https://cloud.google.com/app-hub/docs/api/reference/rest/v1/projects"
+  See: https://cloud.google.com/app-hub/docs/docs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

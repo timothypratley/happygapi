@@ -1,7 +1,7 @@
 (ns happygapi.tpu.projects
   "Cloud TPU API: projects.
   TPU API provides customers with access to Google TPU technology.
-  See: https://cloud.google.com/tpu/api/reference/rest/v2/projects"
+  See: https://cloud.google.com/tpu/docs/reference/rest/v2/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

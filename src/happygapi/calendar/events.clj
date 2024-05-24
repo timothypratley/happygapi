@@ -1,7 +1,7 @@
 (ns happygapi.calendar.events
   "Calendar API: events.
   Manipulates events and other calendar data.
-  See: https://developers.google.com/google-apps/calendar/firstappapi/reference/rest/v3/events"
+  See: https://developers.google.com/google-apps/calendar/firstappdocs/reference/rest/v3/events"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -666,7 +666,8 @@
                :self boolean},
    :transparency string}
   
-  Imports an event. This operation is used to add a private copy of an existing event to a calendar."
+  Imports an event. This operation is used to add a private copy of an existing event to a calendar. Only events with an eventType of default may be imported.
+  Deprecated behavior: If a non-default event is imported, its type will be changed to default and any event-type-specific properties it may have will be dropped."
   {:scopes ["https://www.googleapis.com/auth/calendar"
             "https://www.googleapis.com/auth/calendar.events"]}
   [auth parameters body]

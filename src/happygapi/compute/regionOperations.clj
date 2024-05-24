@@ -1,7 +1,7 @@
 (ns happygapi.compute.regionOperations
   "Compute Engine API: regionOperations.
   Creates and runs virtual machines on Google Cloud Platform. 
-  See: https://cloud.google.com/compute/api/reference/rest/v1/regionOperations"
+  See: https://cloud.google.com/compute/docs/reference/rest/v1/regionOperations"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

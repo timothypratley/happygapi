@@ -59,6 +59,10 @@
                          :labels {:description "Labels associated with this workflow. Labels can contain at most 64 entries. Keys and values can be no longer than 63 characters and can only contain lowercase letters, numeric characters, underscores, and dashes. Label keys must start with a letter. International characters are allowed. This is a workflow-wide field and is not tied to a specific revision.",
                                   :type "object",
                                   :additionalProperties {:type "string"}},
+                         :allKmsKeysVersions {:description "Output only. A list of all KMS crypto keys versions used to encrypt or decrpt the data associated with the workflow.",
+                                              :readOnly true,
+                                              :type "array",
+                                              :items {:type "string"}},
                          :cryptoKeyName {:description "Optional. The resource name of a KMS crypto key used to encrypt or decrypt the data associated with the workflow. Format: projects/{project}/locations/{location}/keyRings/{keyRing}/cryptoKeys/{cryptoKey} Using `-` as a wildcard for the `{project}` or not providing one at all will infer the project from the account. If not provided, data associated with the workflow will not be CMEK-encrypted.",
                                          :type "string"},
                          :sourceContents {:description "Workflow code to be executed. The size limit is 128KB.",
@@ -95,6 +99,9 @@
                          :userEnvVars {:description "Optional. User-defined environment variables associated with this workflow revision. This map has a maximum length of 20. Each string can take up to 4KiB. Keys cannot be empty strings and cannot start with \"GOOGLE\" or \"WORKFLOWS\".",
                                        :type "object",
                                        :additionalProperties {:type "string"}},
+                         :cryptoKeyVersion {:description "Output only. The resource name of a KMS crypto key version used to encrypt or decrypt the data associated with the workflow. Format: projects/{project}/locations/{location}/keyRings/{keyRing}/cryptoKeys/{cryptoKey}/cryptoKeyVersions/{cryptoKeyVersion}",
+                                            :readOnly true,
+                                            :type "string"},
                          :callLogLevel {:description "Optional. Describes the level of platform logging to apply to calls and call responses during executions of this workflow. If both the workflow and the execution specify a logging level, the execution level takes precedence.",
                                         :type "string",
                                         :enumDescriptions ["No call logging level specified."
@@ -104,7 +111,11 @@
                                         :enum ["CALL_LOG_LEVEL_UNSPECIFIED"
                                                "LOG_ALL_CALLS"
                                                "LOG_ERRORS_ONLY"
-                                               "LOG_NONE"]}}},
+                                               "LOG_NONE"]},
+                         :allKmsKeys {:description "Output only. A list of all KMS crypto keys used to encrypt or decrpt the data associated with the workflow.",
+                                      :readOnly true,
+                                      :type "array",
+                                      :items {:type "string"}}}},
  :OperationMetadata {:id "OperationMetadata",
                      :description "Represents the metadata of the long-running operation.",
                      :type "object",

@@ -1,7 +1,7 @@
 (ns happygapi.androidmanagement.provisioningInfo
   "Android Management API: provisioningInfo.
   The Android Management API provides remote enterprise management of Android devices and apps.
-  See: https://developers.google.com/android/managementapi/reference/rest/v1/provisioningInfo"
+  See: https://developers.google.com/android/managementdocs/reference/rest/v1/provisioningInfo"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

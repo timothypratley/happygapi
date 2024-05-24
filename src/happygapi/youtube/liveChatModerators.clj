@@ -1,38 +1,10 @@
 (ns happygapi.youtube.liveChatModerators
   "YouTube Data API v3: liveChatModerators.
   The YouTube Data API v3 is an API that provides access to YouTube data, such as videos, playlists, and channels.
-  See: https://developers.google.com/youtube/api/reference/rest/v3/liveChatModerators"
+  See: https://developers.google.com/youtube/docs/reference/rest/v3/liveChatModerators"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
-
-(defn list$
-  "https://developers.google.com/youtube/api/reference/rest/v3/liveChatModerators/list
-  
-  Required parameters: liveChatId, part
-  
-  Optional parameters: pageToken, maxResults
-  
-  Retrieves a list of resources, possibly filtered."
-  {:scopes ["https://www.googleapis.com/auth/youtube"
-            "https://www.googleapis.com/auth/youtube.force-ssl"
-            "https://www.googleapis.com/auth/youtube.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:part :liveChatId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://youtube.googleapis.com/"
-     "youtube/v3/liveChat/moderators"
-     #{:part :liveChatId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
 
 (defn insert$
   "https://developers.google.com/youtube/api/reference/rest/v3/liveChatModerators/insert
@@ -43,11 +15,11 @@
   
   Body: 
   
-  {:kind string,
-   :id string,
-   :snippet {:liveChatId string,
+  {:snippet {:liveChatId string,
              :moderatorDetails ChannelProfileDetails},
-   :etag string}
+   :kind string,
+   :etag string,
+   :id string}
   
   Inserts a new resource into this collection."
   {:scopes ["https://www.googleapis.com/auth/youtube"
@@ -89,6 +61,34 @@
      "https://youtube.googleapis.com/"
      "youtube/v3/liveChat/moderators"
      #{:id}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn list$
+  "https://developers.google.com/youtube/api/reference/rest/v3/liveChatModerators/list
+  
+  Required parameters: part, liveChatId
+  
+  Optional parameters: maxResults, pageToken
+  
+  Retrieves a list of resources, possibly filtered."
+  {:scopes ["https://www.googleapis.com/auth/youtube"
+            "https://www.googleapis.com/auth/youtube.force-ssl"
+            "https://www.googleapis.com/auth/youtube.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:part :liveChatId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://youtube.googleapis.com/"
+     "youtube/v3/liveChat/moderators"
+     #{:part :liveChatId}
      parameters)
     (merge-with
      merge

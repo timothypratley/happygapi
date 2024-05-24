@@ -1,7 +1,7 @@
 (ns happygapi.classroom.userProfiles
   "Google Classroom API: userProfiles.
   Manages classes, rosters, and invitations in Google Classroom.
-  See: https://developers.google.com/classroom/api/reference/rest/v1/userProfiles"
+  See: https://developers.google.com/classroom/docs/reference/rest/v1/userProfiles"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

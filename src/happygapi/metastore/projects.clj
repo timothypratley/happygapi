@@ -1,7 +1,7 @@
 (ns happygapi.metastore.projects
   "Dataproc Metastore API: projects.
   The Dataproc Metastore API is used to manage the lifecycle and configuration of metastore services.
-  See: https://cloud.google.com/dataproc-metastore/docsapi/reference/rest/v1/projects"
+  See: https://cloud.google.com/dataproc-metastore/docsdocs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -459,7 +459,7 @@
   
   {:query string}
   
-  Query DPMS metadata."
+  Query Dataproc Metastore metadata."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{:service})]}
@@ -556,6 +556,7 @@
    :databaseType string,
    :network string,
    :metadataIntegration {:dataCatalogConfig DataCatalogConfig},
+   :deletionProtection boolean,
    :encryptionConfig {:kmsKey string},
    :stateMessage string}
   
@@ -687,6 +688,7 @@
    :databaseType string,
    :network string,
    :metadataIntegration {:dataCatalogConfig DataCatalogConfig},
+   :deletionProtection boolean,
    :encryptionConfig {:kmsKey string},
    :stateMessage string}
   
@@ -1139,6 +1141,7 @@
                      :databaseType string,
                      :network string,
                      :metadataIntegration MetadataIntegration,
+                     :deletionProtection boolean,
                      :encryptionConfig EncryptionConfig,
                      :stateMessage string},
    :description string,
@@ -1229,6 +1232,130 @@
 
 (defn locations-services-backups-getIamPolicy$
   "https://cloud.google.com/dataproc-metastore/docsapi/reference/rest/v1/projects/locations/services/backups/getIamPolicy
+  
+  Required parameters: resource
+  
+  Optional parameters: options.requestedPolicyVersion
+  
+  Gets the access control policy for a resource. Returns an empty policy if the resource exists and does not have a policy set."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://metastore.googleapis.com/"
+     "v1/{+resource}:getIamPolicy"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-services-databases-setIamPolicy$
+  "https://cloud.google.com/dataproc-metastore/docsapi/reference/rest/v1/projects/locations/services/databases/setIamPolicy
+  
+  Required parameters: resource
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:policy {:version integer,
+            :bindings [Binding],
+            :auditConfigs [AuditConfig],
+            :etag string},
+   :updateMask string}
+  
+  Sets the access control policy on the specified resource. Replaces any existing policy.Can return NOT_FOUND, INVALID_ARGUMENT, and PERMISSION_DENIED errors."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://metastore.googleapis.com/"
+     "v1/{+resource}:setIamPolicy"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-services-databases-getIamPolicy$
+  "https://cloud.google.com/dataproc-metastore/docsapi/reference/rest/v1/projects/locations/services/databases/getIamPolicy
+  
+  Required parameters: resource
+  
+  Optional parameters: options.requestedPolicyVersion
+  
+  Gets the access control policy for a resource. Returns an empty policy if the resource exists and does not have a policy set."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://metastore.googleapis.com/"
+     "v1/{+resource}:getIamPolicy"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-services-databases-tables-setIamPolicy$
+  "https://cloud.google.com/dataproc-metastore/docsapi/reference/rest/v1/projects/locations/services/databases/tables/setIamPolicy
+  
+  Required parameters: resource
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:policy {:version integer,
+            :bindings [Binding],
+            :auditConfigs [AuditConfig],
+            :etag string},
+   :updateMask string}
+  
+  Sets the access control policy on the specified resource. Replaces any existing policy.Can return NOT_FOUND, INVALID_ARGUMENT, and PERMISSION_DENIED errors."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://metastore.googleapis.com/"
+     "v1/{+resource}:setIamPolicy"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-services-databases-tables-getIamPolicy$
+  "https://cloud.google.com/dataproc-metastore/docsapi/reference/rest/v1/projects/locations/services/databases/tables/getIamPolicy
   
   Required parameters: resource
   

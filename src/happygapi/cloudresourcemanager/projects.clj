@@ -1,7 +1,7 @@
 (ns happygapi.cloudresourcemanager.projects
   "Cloud Resource Manager API: projects.
   Creates, reads, and updates metadata for Google Cloud Platform resource containers.
-  See: https://cloud.google.com/resource-managerapi/reference/rest/v3/projects"
+  See: https://cloud.google.com/resource-managerdocs/reference/rest/v3/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

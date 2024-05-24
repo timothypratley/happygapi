@@ -1,7 +1,7 @@
 (ns happygapi.vmmigration.projects
   "VM Migration API: projects.
   Use the Migrate to Virtual Machines API to programmatically migrate workloads. 
-  See: https://cloud.google.com/migrate/virtual-machinesapi/reference/rest/v1/projects"
+  See: https://cloud.google.com/migrate/virtual-machinesdocs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

@@ -1,7 +1,7 @@
 (ns happygapi.cloudsearch.indexing
   "Cloud Search API: indexing.
   Cloud Search provides cloud-based search capabilities over Google Workspace data. The Cloud Search API allows indexing of non-Google Workspace data into Cloud Search.
-  See: https://developers.google.com/cloud-search/docs/guides/api/reference/rest/v1/indexing"
+  See: https://developers.google.com/cloud-search/docs/guides/docs/reference/rest/v1/indexing"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

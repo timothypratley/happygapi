@@ -1,7 +1,7 @@
 (ns happygapi.androidpublisher.monetization
   "Google Play Android Developer API: monetization.
   Lets Android application developers access their Google Play accounts. At a high level, the expected workflow is to \"insert\" an Edit, make changes as necessary, and then \"commit\" it. 
-  See: https://developers.google.com/android-publisherapi/reference/rest/v3/monetization"
+  See: https://developers.google.com/android-publisherdocs/reference/rest/v3/monetization"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -131,6 +131,7 @@
                 :state string,
                 :autoRenewingBasePlanType AutoRenewingBasePlanType,
                 :prepaidBasePlanType PrepaidBasePlanType,
+                :installmentsBasePlanType InstallmentsBasePlanType,
                 :regionalConfigs [RegionalBasePlanConfig],
                 :offerTags [OfferTag],
                 :otherRegionsConfig OtherRegionsBasePlanConfig}],
@@ -141,7 +142,8 @@
    :archived boolean,
    :taxAndComplianceSettings {:eeaWithdrawalRightType string,
                               :taxRateInfoByRegionCode {},
-                              :isTokenizedDigitalAsset boolean}}
+                              :isTokenizedDigitalAsset boolean},
+   :restrictedPaymentCountries {:regionCodes [string]}}
   
   Creates a new subscription. Newly added base plans will remain in draft state until activated."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}
@@ -179,6 +181,7 @@
                 :state string,
                 :autoRenewingBasePlanType AutoRenewingBasePlanType,
                 :prepaidBasePlanType PrepaidBasePlanType,
+                :installmentsBasePlanType InstallmentsBasePlanType,
                 :regionalConfigs [RegionalBasePlanConfig],
                 :offerTags [OfferTag],
                 :otherRegionsConfig OtherRegionsBasePlanConfig}],
@@ -189,7 +192,8 @@
    :archived boolean,
    :taxAndComplianceSettings {:eeaWithdrawalRightType string,
                               :taxRateInfoByRegionCode {},
-                              :isTokenizedDigitalAsset boolean}}
+                              :isTokenizedDigitalAsset boolean},
+   :restrictedPaymentCountries {:regionCodes [string]}}
   
   Updates an existing subscription."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}

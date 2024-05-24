@@ -1,7 +1,7 @@
 (ns happygapi.people.contactGroups
   "People API: contactGroups.
   Provides access to information about profiles and contacts.
-  See: https://developers.google.com/people/api/reference/rest/v1/contactGroups"
+  See: https://developers.google.com/people/docs/reference/rest/v1/contactGroups"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

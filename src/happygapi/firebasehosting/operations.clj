@@ -1,7 +1,7 @@
 (ns happygapi.firebasehosting.operations
   "Firebase Hosting API: operations.
   The Firebase Hosting REST API enables programmatic and customizable management and deployments to your Firebase-hosted sites. Use this REST API to create and manage channels and sites as well as to deploy new or updated hosting configurations and content files.
-  See: https://firebase.google.com/docs/hosting/api/reference/rest/v1/operations"
+  See: https://firebase.google.com/docs/hosting/docs/reference/rest/v1/operations"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

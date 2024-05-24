@@ -1,7 +1,7 @@
 (ns happygapi.redis.projects
   "Google Cloud Memorystore for Redis API: projects.
   Creates and manages Redis instances on the Google Cloud Platform.
-  See: https://cloud.google.com/memorystore/docs/redis/api/reference/rest/v1/projects"
+  See: https://cloud.google.com/memorystore/docs/redis/docs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -223,7 +223,8 @@
   
   Body: 
   
-  {:uid string,
+  {:nodeType string,
+   :uid string,
    :name string,
    :stateInfo {:updateInfo UpdateInfo},
    :sizeGb integer,
@@ -233,13 +234,19 @@
                          :pscConfig PscConfig}],
    :authorizationMode string,
    :state string,
+   :deletionProtectionEnabled boolean,
    :shardCount integer,
+   :redisConfigs {},
    :pscConfigs [{:network string}],
+   :persistenceConfig {:mode string,
+                       :rdbConfig RDBConfig,
+                       :aofConfig AOFConfig},
    :pscConnections [{:pscConnectionId string,
                      :address string,
                      :forwardingRule string,
                      :projectId string,
                      :network string}],
+   :preciseSizeGb number,
    :replicaCount integer,
    :transitEncryptionMode string}
   
@@ -299,7 +306,8 @@
   
   Body: 
   
-  {:uid string,
+  {:nodeType string,
+   :uid string,
    :name string,
    :stateInfo {:updateInfo UpdateInfo},
    :sizeGb integer,
@@ -309,13 +317,19 @@
                          :pscConfig PscConfig}],
    :authorizationMode string,
    :state string,
+   :deletionProtectionEnabled boolean,
    :shardCount integer,
+   :redisConfigs {},
    :pscConfigs [{:network string}],
+   :persistenceConfig {:mode string,
+                       :rdbConfig RDBConfig,
+                       :aofConfig AOFConfig},
    :pscConnections [{:pscConnectionId string,
                      :address string,
                      :forwardingRule string,
                      :projectId string,
                      :network string}],
+   :preciseSizeGb number,
    :replicaCount integer,
    :transitEncryptionMode string}
   

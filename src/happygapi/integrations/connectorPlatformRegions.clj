@@ -1,13 +1,13 @@
 (ns happygapi.integrations.connectorPlatformRegions
   "Application Integration API: connectorPlatformRegions.
   
-  See: https://cloud.google.com/application-integrationapi/reference/rest/v1alpha/connectorPlatformRegions"
+  See: https://cloud.google.com/application-integrationdocs/reference/rest/v1/connectorPlatformRegions"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
 (defn enumerate$
-  "https://cloud.google.com/application-integrationapi/reference/rest/v1alpha/connectorPlatformRegions/enumerate
+  "https://cloud.google.com/application-integrationapi/reference/rest/v1/connectorPlatformRegions/enumerate
   
   Required parameters: none
   
@@ -21,7 +21,7 @@
    (http/get
     (util/get-url
      "https://integrations.googleapis.com/"
-     "v1alpha/connectorPlatformRegions:enumerate"
+     "v1/connectorPlatformRegions:enumerate"
      #{}
      parameters)
     (merge-with

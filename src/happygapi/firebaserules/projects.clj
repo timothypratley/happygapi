@@ -1,7 +1,7 @@
 (ns happygapi.firebaserules.projects
   "Firebase Rules API: projects.
   Creates and manages rules that determine when a Firebase Rules-enabled service should permit a request. 
-  See: https://firebase.google.com/docs/storage/securityapi/reference/rest/v1/projects"
+  See: https://firebase.google.com/docs/storage/securitydocs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

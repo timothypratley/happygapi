@@ -314,6 +314,8 @@
                                                  :format "google-duration"},
                                    :filenameSuffix {:description "Optional. User-provided suffix for Cloud Storage filename. See the [object naming requirements](https://cloud.google.com/storage/docs/objects#naming). Must not end in \"/\".",
                                                     :type "string"},
+                                   :filenameDatetimeFormat {:description "Optional. User-provided format string specifying how to represent datetimes in Cloud Storage filenames. See the [datetime format guidance](https://cloud.google.com/pubsub/docs/create-cloudstorage-subscription#file_names).",
+                                                            :type "string"},
                                    :maxBytes {:description "Optional. The maximum bytes that can be written to a Cloud Storage file before a new file is created. Min 1 KB, max 10 GiB. The max_bytes limit may be exceeded in cases where messages are larger than the limit.",
                                               :type "string",
                                               :format "int64"},
@@ -324,12 +326,14 @@
                                                               "The subscription can actively send messages to Cloud Storage."
                                                               "Cannot write to the Cloud Storage bucket because of permission denied errors."
                                                               "Cannot write to the Cloud Storage bucket because it does not exist."
-                                                              "Cannot write to the destination because enforce_in_transit is set to true and the destination locations are not in the allowed regions."],
+                                                              "Cannot write to the destination because enforce_in_transit is set to true and the destination locations are not in the allowed regions."
+                                                              "Cannot write to the Cloud Storage bucket due to an incompatibility between the topic schema and subscription settings."],
                                            :enum ["STATE_UNSPECIFIED"
                                                   "ACTIVE"
                                                   "PERMISSION_DENIED"
                                                   "NOT_FOUND"
-                                                  "IN_TRANSIT_LOCATION_RESTRICTION"]},
+                                                  "IN_TRANSIT_LOCATION_RESTRICTION"
+                                                  "SCHEMA_MISMATCH"]},
                                    :serviceAccountEmail {:description "Optional. The service account to use to write to Cloud Storage. The subscription creator or updater that specifies this field must have `iam.serviceAccounts.actAs` permission on the service account. If not specified, the Pub/Sub [service agent](https://cloud.google.com/iam/docs/service-agents), service-{project_number}@gcp-sa-pubsub.iam.gserviceaccount.com, is used.",
                                                          :type "string"},
                                    :avroConfig {:description "Optional. If set, message data will be written to Cloud Storage in Avro format.",

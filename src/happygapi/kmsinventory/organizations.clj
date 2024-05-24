@@ -1,7 +1,7 @@
 (ns happygapi.kmsinventory.organizations
   "KMS Inventory API: organizations.
   
-  See: https://cloud.google.com/kms/api/reference/rest/v1/organizations"
+  See: https://cloud.google.com/kms/docs/reference/rest/v1/organizations"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -11,7 +11,7 @@
   
   Required parameters: scope
   
-  Optional parameters: pageSize, cryptoKey, pageToken, resourceTypes
+  Optional parameters: pageSize, pageToken, resourceTypes, cryptoKey
   
   Returns metadata about the resources protected by the given Cloud KMS CryptoKey in the given Cloud organization."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}

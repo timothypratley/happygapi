@@ -1,7 +1,7 @@
 (ns happygapi.cloudresourcemanager.effectiveTags
   "Cloud Resource Manager API: effectiveTags.
   Creates, reads, and updates metadata for Google Cloud Platform resource containers.
-  See: https://cloud.google.com/resource-managerapi/reference/rest/v3/effectiveTags"
+  See: https://cloud.google.com/resource-managerdocs/reference/rest/v3/effectiveTags"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

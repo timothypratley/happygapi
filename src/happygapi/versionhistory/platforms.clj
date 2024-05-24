@@ -1,7 +1,7 @@
 (ns happygapi.versionhistory.platforms
   "versionhistory.googleapis.com API: platforms.
   Version History API - Prod
-  See: https://developers.chrome.com/versionhistoryapi/reference/rest/v1/platforms"
+  See: https://developers.chrome.com/versionhistorydocs/reference/rest/v1/platforms"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

@@ -1010,12 +1010,13 @@
                                        :type "string"},
                              :projectMetadata {:description "The projects metadata for this project. required",
                                                :$ref "ProjectsMetadata"},
-                             :phase {:type "string",
+                             :phase {:description "Phase indicates when in the container event propagation this event is being communicated. Events are sent before and after the per-resource events are propagated. required",
+                                     :type "string",
                                      :enumDescriptions ["" "" ""],
-                                     :enum ["UNKNOWN"
+                                     :enum ["CONTAINER_EVENT_PHASE_UNSPECIFIED"
                                             "BEFORE_RESOURCE_HANDLING"
                                             "AFTER_RESOURCE_HANDLING"]},
-                             :state {:description "The state of the project that led to this event.",
+                             :state {:description "The state of the organization that led to this event.",
                                      :$ref "ContainerState"}}},
  :UrlDispatchRule {:id "UrlDispatchRule",
                    :description "Rules to match an HTTP request and dispatch that request to a service.",

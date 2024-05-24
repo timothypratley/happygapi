@@ -1,7 +1,7 @@
 (ns happygapi.policyanalyzer.projects
   "Policy Analyzer API: projects.
   
-  See: https://www.google.comapi/reference/rest/v1/projects"
+  See: https://www.google.comdocs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -11,7 +11,7 @@
   
   Required parameters: parent
   
-  Optional parameters: filter, pageSize, pageToken
+  Optional parameters: pageToken, pageSize, filter
   
   Queries policy activities on Google Cloud resources."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}

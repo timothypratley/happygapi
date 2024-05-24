@@ -1,7 +1,7 @@
 (ns happygapi.workloadmanager.projects
   "Workload Manager API: projects.
   Workload Manager is a service that provides tooling for enterprise workloads to automate the deployment and validation of your workloads against best practices and recommendations.
-  See: https://cloud.google.com/workload-manager/docsapi/reference/rest/v1/projects"
+  See: https://cloud.google.com/workload-manager/docsdocs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -53,43 +53,6 @@
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-insights-writeInsight$
-  "https://cloud.google.com/workload-manager/docsapi/reference/rest/v1/projects/locations/insights/writeInsight
-  
-  Required parameters: location
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:insight {:sentTime string,
-             :sapValidation SapValidation,
-             :sapDiscovery SapDiscovery,
-             :sqlserverValidation SqlserverValidation,
-             :instanceId string},
-   :requestId string}
-  
-  Write the data insights to workload manager data warehouse."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:location})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://workloadmanager.googleapis.com/"
-     "v1/{+location}/insights:writeInsight"
-     #{:location}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -309,7 +272,7 @@
   
   Required parameters: name
   
-  Optional parameters: requestId
+  Optional parameters: requestId, force
   
   Deletes a single Evaluation."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -392,14 +355,15 @@
   Body: 
   
   {:executionId string,
-   :execution {:name string,
+   :execution {:labels {},
                :startTime string,
+               :name string,
                :endTime string,
-               :inventoryTime string,
                :state string,
-               :evaluationId string,
-               :labels {},
-               :runType string},
+               :inventoryTime string,
+               :externalDataSources [ExternalDataSources],
+               :runType string,
+               :evaluationId string},
    :requestId string}
   
   Creates a new Execution in a given project and location."
@@ -527,53 +491,39 @@
       :as :json}
      auth))))
 
-(defn locations-workloadProfiles-list$
-  "https://cloud.google.com/workload-manager/docsapi/reference/rest/v1/projects/locations/workloadProfiles/list
+(defn locations-insights-writeInsight$
+  "https://cloud.google.com/workload-manager/docsapi/reference/rest/v1/projects/locations/insights/writeInsight
   
-  Required parameters: parent
-  
-  Optional parameters: pageSize, pageToken, filter
-  
-  List workloads"
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://workloadmanager.googleapis.com/"
-     "v1/{+parent}/workloadProfiles"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-workloadProfiles-get$
-  "https://cloud.google.com/workload-manager/docsapi/reference/rest/v1/projects/locations/workloadProfiles/get
-  
-  Required parameters: name
+  Required parameters: location
   
   Optional parameters: none
   
-  Gets details of a single workload."
+  Body: 
+  
+  {:insight {:sentTime string,
+             :sapValidation SapValidation,
+             :sapDiscovery SapDiscovery,
+             :sqlserverValidation SqlserverValidation,
+             :instanceId string},
+   :requestId string,
+   :agentVersion string}
+  
+  Write the data insights to workload manager data warehouse."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:location})]}
   (util/get-response
-   (http/get
+   (http/post
     (util/get-url
      "https://workloadmanager.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
+     "v1/{+location}/insights:writeInsight"
+     #{:location}
      parameters)
     (merge-with
      merge
-     {:throw-exceptions false,
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

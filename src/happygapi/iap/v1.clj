@@ -1,7 +1,7 @@
 (ns happygapi.iap.v1
   "Cloud Identity-Aware Proxy API: v1.
   Controls access to cloud applications running on Google Cloud Platform.
-  See: https://cloud.google.com/iapapi/reference/rest/v1/v1"
+  See: https://cloud.google.com/iapdocs/reference/rest/v1/v1"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -143,7 +143,9 @@
                     :oauthSettings OAuthSettings,
                     :policyDelegationSettings PolicyDelegationSettings,
                     :reauthSettings ReauthSettings,
-                    :allowedDomainsSettings AllowedDomainsSettings},
+                    :allowedDomainsSettings AllowedDomainsSettings,
+                    :workforceIdentitySettings WorkforceIdentitySettings,
+                    :identitySources [string]},
    :applicationSettings {:csmSettings CsmSettings,
                          :accessDeniedPageSettings AccessDeniedPageSettings,
                          :cookieDomain string,

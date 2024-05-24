@@ -29,13 +29,13 @@
                         :channelType {:description "Type of channel.",
                                       :type "string",
                                       :enumDescriptions [""
+                                                         "The Stable channel."
+                                                         "The Beta channel."
+                                                         "The Dev channel."
+                                                         "The Canary channel."
+                                                         "The Canary channel for Chrome, with DCHECK/ASAN enabled."
                                                          ""
-                                                         ""
-                                                         ""
-                                                         ""
-                                                         ""
-                                                         ""
-                                                         ""
+                                                         "The Extended Stable channel for Chrome."
                                                          "The Long-term support channel for ChromeOS."
                                                          "The Long-term support candidate channel for ChromeOS."],
                                       :enum ["CHANNEL_TYPE_UNSPECIFIED"
@@ -89,20 +89,21 @@
                          :platformType {:description "Type of platform.",
                                         :type "string",
                                         :enumDescriptions [""
+                                                           "Chrome Desktop for Windows (32-bit)."
+                                                           "Chrome Desktop for Windows (x86_64)."
+                                                           "Chrome Desktop for macOS (x86_64)."
+                                                           "Chrome Desktop for Linux."
+                                                           "Chrome for Android."
+                                                           "WebView for Android."
+                                                           "Chrome for iOS."
                                                            ""
-                                                           ""
-                                                           ""
-                                                           ""
-                                                           ""
-                                                           ""
-                                                           ""
-                                                           ""
-                                                           ""
-                                                           ""
-                                                           ""
-                                                           ""
-                                                           ""
-                                                           ""],
+                                                           "Chrome for macOS (ARM64)."
+                                                           "ChromeOS Lacros (x86_64)."
+                                                           "ChromeOS Lacros (ARM)."
+                                                           "ChromeOS."
+                                                           "ChromeOS Lacros (ARM64)."
+                                                           "Chrome for Fuchsia."
+                                                           "Chrome Desktop for Windows (ARM64)."],
                                         :enum ["PLATFORM_TYPE_UNSPECIFIED"
                                                "WIN"
                                                "WIN64"
@@ -117,7 +118,8 @@
                                                "LACROS_ARM32"
                                                "CHROMEOS"
                                                "LACROS_ARM64"
-                                               "FUCHSIA"]}}},
+                                               "FUCHSIA"
+                                               "WIN_ARM64"]}}},
  :Version {:id "Version",
            :description "Each Version is owned by a Channel. A Version only displays the Version number (e.g. 84.0.4147.38). A Version owns a collection of releases.",
            :type "object",

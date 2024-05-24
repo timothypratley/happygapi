@@ -1,7 +1,7 @@
 (ns happygapi.datamigration.projects
   "Database Migration API: projects.
   Manage Cloud Database Migration Service resources on Google Cloud Platform.
-  See: https://cloud.google.com/database-migration/api/reference/rest/v1/projects"
+  See: https://cloud.google.com/database-migration/docs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -330,6 +330,7 @@
   Body: 
   
   {:labels {},
+   :dumpType string,
    :reverseSshConnectivity {:vmIp string,
                             :vmPort integer,
                             :vm string,
@@ -459,6 +460,7 @@
   Body: 
   
   {:labels {},
+   :dumpType string,
    :reverseSshConnectivity {:vmIp string,
                             :vmPort integer,
                             :vm string,
@@ -662,6 +664,7 @@
   
   {:updateMask string,
    :migrationJob {:labels {},
+                  :dumpType string,
                   :reverseSshConnectivity ReverseSshConnectivity,
                   :destinationDatabase DatabaseType,
                   :dumpPath string,
@@ -717,7 +720,7 @@
   
   Body: 
   
-  {}
+  {:skipValidation boolean}
   
   Resume a migration job that is currently stopped and is resumable (was stopped during CDC phase)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}

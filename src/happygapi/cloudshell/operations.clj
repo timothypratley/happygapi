@@ -1,7 +1,7 @@
 (ns happygapi.cloudshell.operations
   "Cloud Shell API: operations.
   Allows users to start, configure, and connect to interactive shell sessions running in the cloud. 
-  See: https://cloud.google.com/shell/docs/api/reference/rest/v1/operations"
+  See: https://cloud.google.com/shell/docs/docs/reference/rest/v1/operations"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

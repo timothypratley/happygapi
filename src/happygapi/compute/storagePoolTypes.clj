@@ -1,7 +1,7 @@
 (ns happygapi.compute.storagePoolTypes
   "Compute Engine API: storagePoolTypes.
   Creates and runs virtual machines on Google Cloud Platform. 
-  See: https://cloud.google.com/compute/api/reference/rest/v1/storagePoolTypes"
+  See: https://cloud.google.com/compute/docs/reference/rest/v1/storagePoolTypes"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

@@ -1,7 +1,7 @@
 (ns happygapi.gkeonprem.projects
   "Anthos On-Prem API: projects.
   
-  See: https://cloud.google.com/anthos/clusters/docs/on-prem/api/reference/rest/v1/projects"
+  See: https://cloud.google.com/anthos/clusters/docs/on-prem/docs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

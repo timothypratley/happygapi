@@ -1,7 +1,7 @@
 (ns happygapi.alloydb.projects
   "AlloyDB API: projects.
   AlloyDB for PostgreSQL is an open source-compatible database service that provides a powerful option for migrating, modernizing, or building commercial-grade applications. It offers full compatibility with standard PostgreSQL, and is more than 4x faster for transactional workloads and up to 100x faster for analytical queries than standard PostgreSQL in our performance tests. AlloyDB for PostgreSQL offers a 99.99 percent availability SLA inclusive of maintenance. AlloyDB is optimized for the most demanding use cases, allowing you to build new applications that require high transaction throughput, large database sizes, or multiple read resources; scale existing PostgreSQL workloads with no application changes; and modernize legacy proprietary databases. 
-  See: https://cloud.google.com/alloydb/api/reference/rest/v1/projects"
+  See: https://cloud.google.com/alloydb/docs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -246,11 +246,14 @@
                           :schedule [string],
                           :earliestRestorableTime string},
    :createTime string,
+   :pscConfig {:pscEnabled boolean},
    :etag string,
+   :maintenanceSchedule {:startTime string},
    :state string,
    :networkConfig {:network string, :allocatedIpRange string},
    :updateTime string,
    :reconciling boolean,
+   :maintenanceUpdatePolicy {:maintenanceWindows [MaintenanceWindow]},
    :automatedBackupPolicy {:weeklySchedule WeeklySchedule,
                            :timeBasedRetention TimeBasedRetention,
                            :quantityBasedRetention QuantityBasedRetention,
@@ -318,11 +321,14 @@
                           :schedule [string],
                           :earliestRestorableTime string},
    :createTime string,
+   :pscConfig {:pscEnabled boolean},
    :etag string,
+   :maintenanceSchedule {:startTime string},
    :state string,
    :networkConfig {:network string, :allocatedIpRange string},
    :updateTime string,
    :reconciling boolean,
+   :maintenanceUpdatePolicy {:maintenanceWindows [MaintenanceWindow]},
    :automatedBackupPolicy {:weeklySchedule WeeklySchedule,
                            :timeBasedRetention TimeBasedRetention,
                            :quantityBasedRetention QuantityBasedRetention,
@@ -446,11 +452,14 @@
              :primaryConfig PrimaryConfig,
              :continuousBackupInfo ContinuousBackupInfo,
              :createTime string,
+             :pscConfig PscConfig,
              :etag string,
+             :maintenanceSchedule MaintenanceSchedule,
              :state string,
              :networkConfig NetworkConfig,
              :updateTime string,
              :reconciling boolean,
+             :maintenanceUpdatePolicy MaintenanceUpdatePolicy,
              :automatedBackupPolicy AutomatedBackupPolicy,
              :satisfiesPzs boolean,
              :migrationSource MigrationSource,
@@ -511,11 +520,14 @@
                           :schedule [string],
                           :earliestRestorableTime string},
    :createTime string,
+   :pscConfig {:pscEnabled boolean},
    :etag string,
+   :maintenanceSchedule {:startTime string},
    :state string,
    :networkConfig {:network string, :allocatedIpRange string},
    :updateTime string,
    :reconciling boolean,
+   :maintenanceUpdatePolicy {:maintenanceWindows [MaintenanceWindow]},
    :automatedBackupPolicy {:weeklySchedule WeeklySchedule,
                            :timeBasedRetention TimeBasedRetention,
                            :quantityBasedRetention QuantityBasedRetention,
@@ -690,6 +702,9 @@
   
   {:availabilityType string,
    :labels {},
+   :pscInstanceConfig {:serviceAttachmentLink string,
+                       :allowedConsumerProjects [string],
+                       :pscDnsName string},
    :databaseFlags {},
    :deleteTime string,
    :clientConnectionConfig {:requireConnectors boolean,
@@ -751,6 +766,9 @@
   
   {:availabilityType string,
    :labels {},
+   :pscInstanceConfig {:serviceAttachmentLink string,
+                       :allowedConsumerProjects [string],
+                       :pscDnsName string},
    :databaseFlags {},
    :deleteTime string,
    :clientConnectionConfig {:requireConnectors boolean,
@@ -838,6 +856,9 @@
   
   {:availabilityType string,
    :labels {},
+   :pscInstanceConfig {:serviceAttachmentLink string,
+                       :allowedConsumerProjects [string],
+                       :pscDnsName string},
    :databaseFlags {},
    :deleteTime string,
    :clientConnectionConfig {:requireConnectors boolean,

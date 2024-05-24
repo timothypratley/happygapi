@@ -1,7 +1,7 @@
 (ns happygapi.drive.comments
   "Google Drive API: comments.
   The Google Drive API allows clients to access resources from Google Drive.
-  See: https://developers.google.com/drive/api/reference/rest/v3/comments"
+  See: https://developers.google.com/drive/docs/reference/rest/v3/comments"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

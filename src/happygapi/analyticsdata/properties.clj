@@ -1,7 +1,7 @@
 (ns happygapi.analyticsdata.properties
   "Google Analytics Data API: properties.
   Accesses report data in Google Analytics. Warning: Creating multiple Customer Applications, Accounts, or Projects to simulate or act as a single Customer Application, Account, or Project (respectively) or to circumvent Service-specific usage limits or quotas is a direct violation of Google Cloud Platform Terms of Service as well as Google APIs Terms of Service. These actions can result in immediate termination of your GCP project(s) without any warning. 
-  See: https://developers.google.com/analytics/devguides/reporting/data/v1/api/reference/rest/v1beta/properties"
+  See: https://developers.google.com/analytics/devguides/reporting/data/v1/docs/reference/rest/v1beta/properties"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -34,6 +34,9 @@
    :returnPropertyQuota boolean,
    :keepEmptyRows boolean,
    :currencyCode string,
+   :comparisons [{:name string,
+                  :dimensionFilter FilterExpression,
+                  :comparison string}],
    :dateRanges [{:startDate string, :endDate string, :name string}],
    :orderBys [{:metric MetricOrderBy,
                :dimension DimensionOrderBy,
@@ -88,6 +91,9 @@
    :returnPropertyQuota boolean,
    :keepEmptyRows boolean,
    :currencyCode string,
+   :comparisons [{:name string,
+                  :dimensionFilter FilterExpression,
+                  :comparison string}],
    :pivots [{:fieldNames [string],
              :orderBys [OrderBy],
              :offset string,
@@ -138,6 +144,7 @@
                :returnPropertyQuota boolean,
                :keepEmptyRows boolean,
                :currencyCode string,
+               :comparisons [Comparison],
                :dateRanges [DateRange],
                :orderBys [OrderBy],
                :metrics [Metric]}]}
@@ -181,6 +188,7 @@
                :returnPropertyQuota boolean,
                :keepEmptyRows boolean,
                :currencyCode string,
+               :comparisons [Comparison],
                :pivots [Pivot],
                :dateRanges [DateRange],
                :metrics [Metric]}]}

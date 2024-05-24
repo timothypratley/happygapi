@@ -1,7 +1,7 @@
 (ns happygapi.orgpolicy.projects
   "Organization Policy API: projects.
   The Organization Policy API allows users to configure governance rules on their Google Cloud resources across the resource hierarchy.
-  See: https://cloud.google.com/orgpolicy/docs/reference/rest/index.htmlapi/reference/rest/v2/projects"
+  See: https://cloud.google.com/orgpolicy/docs/reference/rest/index.htmldocs/reference/rest/v2/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -27,50 +27,6 @@
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn policies-create$
-  "https://cloud.google.com/orgpolicy/docs/reference/rest/index.htmlapi/reference/rest/v2/projects/policies/create
-  
-  Required parameters: parent
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:spec {:updateTime string,
-          :etag string,
-          :rules [GoogleCloudOrgpolicyV2PolicySpecPolicyRule],
-          :inheritFromParent boolean,
-          :reset boolean},
-   :etag string,
-   :dryRunSpec {:updateTime string,
-                :etag string,
-                :rules [GoogleCloudOrgpolicyV2PolicySpecPolicyRule],
-                :inheritFromParent boolean,
-                :reset boolean},
-   :name string,
-   :alternate {:spec GoogleCloudOrgpolicyV2PolicySpec, :launch string}}
-  
-  Creates a policy. Returns a `google.rpc.Status` with `google.rpc.Code.NOT_FOUND` if the constraint does not exist. Returns a `google.rpc.Status` with `google.rpc.Code.ALREADY_EXISTS` if the policy already exists on the given Google Cloud resource."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://orgpolicy.googleapis.com/"
-     "v2/{+parent}/policies"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -107,7 +63,7 @@
   
   Required parameters: parent
   
-  Optional parameters: pageToken, pageSize
+  Optional parameters: pageSize, pageToken
   
   Retrieves all of the policies that exist on a particular resource."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
@@ -119,32 +75,6 @@
      "https://orgpolicy.googleapis.com/"
      "v2/{+parent}/policies"
      #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn policies-get$
-  "https://cloud.google.com/orgpolicy/docs/reference/rest/index.htmlapi/reference/rest/v2/projects/policies/get
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Gets a policy on a resource. If no policy is set on the resource, `NOT_FOUND` is returned. The `etag` value can be used with `UpdatePolicy()` to update a policy during read-modify-write."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://orgpolicy.googleapis.com/"
-     "v2/{+name}"
-     #{:name}
      parameters)
     (merge-with
      merge
@@ -180,6 +110,76 @@
       :as :json}
      auth))))
 
+(defn policies-create$
+  "https://cloud.google.com/orgpolicy/docs/reference/rest/index.htmlapi/reference/rest/v2/projects/policies/create
+  
+  Required parameters: parent
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:name string,
+   :alternate {:spec GoogleCloudOrgpolicyV2PolicySpec, :launch string},
+   :spec {:etag string,
+          :reset boolean,
+          :inheritFromParent boolean,
+          :rules [GoogleCloudOrgpolicyV2PolicySpecPolicyRule],
+          :updateTime string},
+   :dryRunSpec {:etag string,
+                :reset boolean,
+                :inheritFromParent boolean,
+                :rules [GoogleCloudOrgpolicyV2PolicySpecPolicyRule],
+                :updateTime string},
+   :etag string}
+  
+  Creates a policy. Returns a `google.rpc.Status` with `google.rpc.Code.NOT_FOUND` if the constraint does not exist. Returns a `google.rpc.Status` with `google.rpc.Code.ALREADY_EXISTS` if the policy already exists on the given Google Cloud resource."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://orgpolicy.googleapis.com/"
+     "v2/{+parent}/policies"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn policies-get$
+  "https://cloud.google.com/orgpolicy/docs/reference/rest/index.htmlapi/reference/rest/v2/projects/policies/get
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Gets a policy on a resource. If no policy is set on the resource, `NOT_FOUND` is returned. The `etag` value can be used with `UpdatePolicy()` to update a policy during read-modify-write."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://orgpolicy.googleapis.com/"
+     "v2/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn policies-patch$
   "https://cloud.google.com/orgpolicy/docs/reference/rest/index.htmlapi/reference/rest/v2/projects/policies/patch
   
@@ -189,19 +189,19 @@
   
   Body: 
   
-  {:spec {:updateTime string,
-          :etag string,
-          :rules [GoogleCloudOrgpolicyV2PolicySpecPolicyRule],
+  {:name string,
+   :alternate {:spec GoogleCloudOrgpolicyV2PolicySpec, :launch string},
+   :spec {:etag string,
+          :reset boolean,
           :inheritFromParent boolean,
-          :reset boolean},
-   :etag string,
-   :dryRunSpec {:updateTime string,
-                :etag string,
-                :rules [GoogleCloudOrgpolicyV2PolicySpecPolicyRule],
+          :rules [GoogleCloudOrgpolicyV2PolicySpecPolicyRule],
+          :updateTime string},
+   :dryRunSpec {:etag string,
+                :reset boolean,
                 :inheritFromParent boolean,
-                :reset boolean},
-   :name string,
-   :alternate {:spec GoogleCloudOrgpolicyV2PolicySpec, :launch string}}
+                :rules [GoogleCloudOrgpolicyV2PolicySpecPolicyRule],
+                :updateTime string},
+   :etag string}
   
   Updates a policy. Returns a `google.rpc.Status` with `google.rpc.Code.NOT_FOUND` if the constraint or the policy do not exist. Returns a `google.rpc.Status` with `google.rpc.Code.ABORTED` if the etag supplied in the request does not match the persisted etag of the policy Note: the supplied policy will perform a full overwrite of all fields."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}

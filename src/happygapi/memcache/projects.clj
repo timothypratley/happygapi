@@ -1,7 +1,7 @@
 (ns happygapi.memcache.projects
   "Cloud Memorystore for Memcached API: projects.
   Google Cloud Memorystore for Memcached API is used for creating and managing Memcached instances in GCP.
-  See: https://cloud.google.com/memorystore/api/reference/rest/v1/projects"
+  See: https://cloud.google.com/memorystore/docs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

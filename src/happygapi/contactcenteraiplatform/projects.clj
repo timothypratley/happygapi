@@ -1,7 +1,7 @@
 (ns happygapi.contactcenteraiplatform.projects
   "Contact Center AI Platform API: projects.
   
-  See: https://cloud.google.com/solutions/contact-center-ai-platformapi/reference/rest/v1alpha1/projects"
+  See: https://cloud.google.com/solutions/contact-center-ai-platformdocs/reference/rest/v1alpha1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -267,6 +267,8 @@
                 :emailMapping string},
    :privateComponents [string],
    :state string,
+   :normal {},
+   :early {},
    :updateTime string,
    :adminUser {:givenName string, :familyName string},
    :ccaipManagedUsers boolean,
@@ -320,6 +322,8 @@
                 :emailMapping string},
    :privateComponents [string],
    :state string,
+   :normal {},
+   :early {},
    :updateTime string,
    :adminUser {:givenName string, :familyName string},
    :ccaipManagedUsers boolean,

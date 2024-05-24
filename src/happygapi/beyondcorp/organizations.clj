@@ -1,7 +1,7 @@
 (ns happygapi.beyondcorp.organizations
   "BeyondCorp API: organizations.
   Beyondcorp Enterprise provides identity and context aware access controls for enterprise resources and enables zero-trust access. Using the Beyondcorp Enterprise APIs, enterprises can set up multi-cloud and on-prem connectivity solutions.
-  See: https://cloud.google.com/api/reference/rest/v1/organizations"
+  See: https://cloud.google.com/docs/reference/rest/v1/organizations"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

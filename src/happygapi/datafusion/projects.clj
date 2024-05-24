@@ -1,7 +1,7 @@
 (ns happygapi.datafusion.projects
   "Cloud Data Fusion API: projects.
   Cloud Data Fusion is a fully-managed, cloud native, enterprise data integration service for quickly building and managing data pipelines. It provides a graphical interface to increase time efficiency and reduce complexity, and allows business users, developers, and data scientists to easily and reliably build scalable data integration solutions to cleanse, prepare, blend, transfer and transform data without having to wrestle with infrastructure.
-  See: https://cloud.google.com/data-fusion/docsapi/reference/rest/v1/projects"
+  See: https://cloud.google.com/data-fusion/docsdocs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

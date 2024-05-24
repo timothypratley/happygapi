@@ -1,7 +1,7 @@
 (ns happygapi.youtubereporting.reportTypes
   "YouTube Reporting API: reportTypes.
   Schedules reporting jobs containing your YouTube Analytics data and downloads the resulting bulk data reports in the form of CSV files.
-  See: https://developers.google.com/youtube/reporting/v1/reports/api/reference/rest/v1/reportTypes"
+  See: https://developers.google.com/youtube/reporting/v1/reports/docs/reference/rest/v1/reportTypes"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -11,7 +11,7 @@
   
   Required parameters: none
   
-  Optional parameters: pageSize, includeSystemManaged, onBehalfOfContentOwner, pageToken
+  Optional parameters: onBehalfOfContentOwner, pageToken, pageSize, includeSystemManaged
   
   Lists report types."
   {:scopes ["https://www.googleapis.com/auth/yt-analytics-monetary.readonly"

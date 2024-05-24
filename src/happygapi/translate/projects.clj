@@ -1,7 +1,7 @@
 (ns happygapi.translate.projects
   "Cloud Translation API: projects.
   Integrates text translation into your website or application.
-  See: https://cloud.google.com/translate/docs/quickstartsapi/reference/rest/v3/projects"
+  See: https://cloud.google.com/translate/docs/quickstartsdocs/reference/rest/v3/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

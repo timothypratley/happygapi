@@ -1,7 +1,7 @@
 (ns happygapi.looker.projects
   "Looker (Google Cloud core) API: projects.
   
-  See: https://cloud.google.com/looker/docs/reference/rest/api/reference/rest/v1/projects"
+  See: https://cloud.google.com/looker/docs/reference/rest/docs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

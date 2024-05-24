@@ -2390,10 +2390,10 @@
  :BulkEditAdvertiserAssignedTargetingOptionsRequest {:id "BulkEditAdvertiserAssignedTargetingOptionsRequest",
                                                      :description "Request message for BulkEditAdvertiserAssignedTargetingOptions.",
                                                      :type "object",
-                                                     :properties {:deleteRequests {:description "The assigned targeting options to delete in batch, specified as a list of `DeleteAssignedTargetingOptionsRequest`. Supported targeting types: * `TARGETING_TYPE_CHANNEL` * `TARGETING_TYPE_DIGITAL_CONTENT_LABEL_EXCLUSION` * `TARGETING_TYPE_OMID` * `TARGETING_TYPE_SENSITIVE_CATEGORY_EXCLUSION`",
+                                                     :properties {:deleteRequests {:description "The assigned targeting options to delete in batch, specified as a list of `DeleteAssignedTargetingOptionsRequest`. Supported targeting types: * `TARGETING_TYPE_CHANNEL` * `TARGETING_TYPE_DIGITAL_CONTENT_LABEL_EXCLUSION` * `TARGETING_TYPE_OMID` * `TARGETING_TYPE_SENSITIVE_CATEGORY_EXCLUSION` * `TARGETING_TYPE_KEYWORD`",
                                                                                    :type "array",
                                                                                    :items {:$ref "DeleteAssignedTargetingOptionsRequest"}},
-                                                                  :createRequests {:description "The assigned targeting options to create in batch, specified as a list of `CreateAssignedTargetingOptionsRequest`. Supported targeting types: * `TARGETING_TYPE_CHANNEL` * `TARGETING_TYPE_DIGITAL_CONTENT_LABEL_EXCLUSION` * `TARGETING_TYPE_OMID` * `TARGETING_TYPE_SENSITIVE_CATEGORY_EXCLUSION`",
+                                                                  :createRequests {:description "The assigned targeting options to create in batch, specified as a list of `CreateAssignedTargetingOptionsRequest`. Supported targeting types: * `TARGETING_TYPE_CHANNEL` * `TARGETING_TYPE_DIGITAL_CONTENT_LABEL_EXCLUSION` * `TARGETING_TYPE_OMID` * `TARGETING_TYPE_SENSITIVE_CATEGORY_EXCLUSION` * `TARGETING_TYPE_KEYWORD`",
                                                                                    :type "array",
                                                                                    :items {:$ref "CreateAssignedTargetingOptionsRequest"}}}},
  :LineItem {:id "LineItem",
@@ -3308,12 +3308,18 @@
                                                  "The KPI is Viewability percentage."
                                                  "The KPI is CPIAVC (cost per impression audible and visible at completion)."
                                                  "The KPI is CPE (cost per engagement)."
+                                                 "The KPI is set in CPV (cost per view)."
                                                  "The KPI is click conversion rate (conversions per click) percentage."
                                                  "The KPI is impression conversion rate (conversions per impression) percentage."
                                                  "The KPI is VCPM (cost per thousand viewable impressions)."
                                                  "The KPI is YouTube view rate (YouTube views per impression) percentage."
                                                  "The KPI is audio completion rate (complete audio listens per impression) percentage."
                                                  "The KPI is video completion rate (complete video views per impression) percentage."
+                                                 "The KPI is set in CPCL (cost per complete audio listen)."
+                                                 "The KPI is set in CPCV (cost per complete video view)."
+                                                 "The KPI is set in rate of time on screen 10+ seconds (Percentage of measurable, non-skippable impressions that were on the screen for at least 10 seconds)."
+                                                 "The KPI is set to maximize brand impact while prioritizing spending the full budget."
+                                                 "The KPI is set in custom impression value divided by cost."
                                                  "The KPI is some other value."],
                               :enum ["KPI_TYPE_UNSPECIFIED"
                                      "KPI_TYPE_CPM"
@@ -3323,12 +3329,18 @@
                                      "KPI_TYPE_VIEWABILITY"
                                      "KPI_TYPE_CPIAVC"
                                      "KPI_TYPE_CPE"
+                                     "KPI_TYPE_CPV"
                                      "KPI_TYPE_CLICK_CVR"
                                      "KPI_TYPE_IMPRESSION_CVR"
                                      "KPI_TYPE_VCPM"
                                      "KPI_TYPE_VTR"
                                      "KPI_TYPE_AUDIO_COMPLETION_RATE"
                                      "KPI_TYPE_VIDEO_COMPLETION_RATE"
+                                     "KPI_TYPE_CPCL"
+                                     "KPI_TYPE_CPCV"
+                                     "KPI_TYPE_TOS10"
+                                     "KPI_TYPE_MAXIMIZE_PACING"
+                                     "KPI_TYPE_CUSTOM_IMPRESSION_VALUE_OVER_COST"
                                      "KPI_TYPE_OTHER"]},
                     :kpiAmountMicros {:description "The goal amount, in micros of the advertiser's currency. Applicable when kpi_type is one of: * `KPI_TYPE_CPM` * `KPI_TYPE_CPC` * `KPI_TYPE_CPA` * `KPI_TYPE_CPIAVC` * `KPI_TYPE_VCPM` For example: 1500000 represents 1.5 standard units of the currency.",
                                       :type "string",
@@ -3337,7 +3349,10 @@
                                           :type "string",
                                           :format "int64"},
                     :kpiString {:description "A KPI string, which can be empty. Must be UTF-8 encoded with a length of no more than 100 characters. Applicable when kpi_type is `KPI_TYPE_OTHER`.",
-                                :type "string"}}},
+                                :type "string"},
+                    :kpiAlgorithmId {:description "Optional. Custom Bidding Algorithm ID associated with KPI_CUSTOM_IMPRESSION_VALUE_OVER_COST. This field is ignored if the proper KPI is not selected.",
+                                     :type "string",
+                                     :format "int64"}}},
  :CustomBiddingAlgorithmRulesRef {:id "CustomBiddingAlgorithmRulesRef",
                                   :description "The reference to the uploaded AlgorithmRules file. Retrieve the location to upload new AlgorithmRules file to using customBiddingAlgorithms.uploadRules.",
                                   :type "object",
@@ -3878,6 +3893,7 @@
                                                                              "Connatix."
                                                                              "Reset Digital."
                                                                              "Hivestack."
+                                                                             "Drax."
                                                                              "AppLovin MAX."
                                                                              "DT Fairbid."
                                                                              "Unity LevelPlay."
@@ -3959,6 +3975,7 @@
                                                                  "EXCHANGE_CONNATIX"
                                                                  "EXCHANGE_RESET_DIGITAL"
                                                                  "EXCHANGE_HIVESTACK"
+                                                                 "EXCHANGE_DRAX"
                                                                  "EXCHANGE_APPLOVIN_GBID"
                                                                  "EXCHANGE_FYBER_GBID"
                                                                  "EXCHANGE_UNITY_GBID"
@@ -4281,6 +4298,7 @@
                                                                                      "Connatix."
                                                                                      "Reset Digital."
                                                                                      "Hivestack."
+                                                                                     "Drax."
                                                                                      "AppLovin MAX."
                                                                                      "DT Fairbid."
                                                                                      "Unity LevelPlay."
@@ -4362,6 +4380,7 @@
                                                                          "EXCHANGE_CONNATIX"
                                                                          "EXCHANGE_RESET_DIGITAL"
                                                                          "EXCHANGE_HIVESTACK"
+                                                                         "EXCHANGE_DRAX"
                                                                          "EXCHANGE_APPLOVIN_GBID"
                                                                          "EXCHANGE_FYBER_GBID"
                                                                          "EXCHANGE_UNITY_GBID"
@@ -4572,6 +4591,7 @@
                                                               "Connatix."
                                                               "Reset Digital."
                                                               "Hivestack."
+                                                              "Drax."
                                                               "AppLovin MAX."
                                                               "DT Fairbid."
                                                               "Unity LevelPlay."
@@ -4653,6 +4673,7 @@
                                                   "EXCHANGE_CONNATIX"
                                                   "EXCHANGE_RESET_DIGITAL"
                                                   "EXCHANGE_HIVESTACK"
+                                                  "EXCHANGE_DRAX"
                                                   "EXCHANGE_APPLOVIN_GBID"
                                                   "EXCHANGE_FYBER_GBID"
                                                   "EXCHANGE_UNITY_GBID"
@@ -5034,6 +5055,7 @@
                                                                    "Connatix."
                                                                    "Reset Digital."
                                                                    "Hivestack."
+                                                                   "Drax."
                                                                    "AppLovin MAX."
                                                                    "DT Fairbid."
                                                                    "Unity LevelPlay."
@@ -5115,6 +5137,7 @@
                                                        "EXCHANGE_CONNATIX"
                                                        "EXCHANGE_RESET_DIGITAL"
                                                        "EXCHANGE_HIVESTACK"
+                                                       "EXCHANGE_DRAX"
                                                        "EXCHANGE_APPLOVIN_GBID"
                                                        "EXCHANGE_FYBER_GBID"
                                                        "EXCHANGE_UNITY_GBID"
@@ -6311,6 +6334,7 @@
                                                                             "Connatix."
                                                                             "Reset Digital."
                                                                             "Hivestack."
+                                                                            "Drax."
                                                                             "AppLovin MAX."
                                                                             "DT Fairbid."
                                                                             "Unity LevelPlay."
@@ -6392,6 +6416,7 @@
                                                                 "EXCHANGE_CONNATIX"
                                                                 "EXCHANGE_RESET_DIGITAL"
                                                                 "EXCHANGE_HIVESTACK"
+                                                                "EXCHANGE_DRAX"
                                                                 "EXCHANGE_APPLOVIN_GBID"
                                                                 "EXCHANGE_FYBER_GBID"
                                                                 "EXCHANGE_UNITY_GBID"
@@ -7440,6 +7465,7 @@
                                                                                  "Connatix."
                                                                                  "Reset Digital."
                                                                                  "Hivestack."
+                                                                                 "Drax."
                                                                                  "AppLovin MAX."
                                                                                  "DT Fairbid."
                                                                                  "Unity LevelPlay."
@@ -7521,6 +7547,7 @@
                                                                      "EXCHANGE_CONNATIX"
                                                                      "EXCHANGE_RESET_DIGITAL"
                                                                      "EXCHANGE_HIVESTACK"
+                                                                     "EXCHANGE_DRAX"
                                                                      "EXCHANGE_APPLOVIN_GBID"
                                                                      "EXCHANGE_FYBER_GBID"
                                                                      "EXCHANGE_UNITY_GBID"
@@ -7952,6 +7979,7 @@
                                                               "Connatix."
                                                               "Reset Digital."
                                                               "Hivestack."
+                                                              "Drax."
                                                               "AppLovin MAX."
                                                               "DT Fairbid."
                                                               "Unity LevelPlay."
@@ -8033,6 +8061,7 @@
                                                   "EXCHANGE_CONNATIX"
                                                   "EXCHANGE_RESET_DIGITAL"
                                                   "EXCHANGE_HIVESTACK"
+                                                  "EXCHANGE_DRAX"
                                                   "EXCHANGE_APPLOVIN_GBID"
                                                   "EXCHANGE_FYBER_GBID"
                                                   "EXCHANGE_UNITY_GBID"

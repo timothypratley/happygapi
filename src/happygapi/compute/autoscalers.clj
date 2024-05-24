@@ -1,7 +1,7 @@
 (ns happygapi.compute.autoscalers
   "Compute Engine API: autoscalers.
   Creates and runs virtual machines on Google Cloud Platform. 
-  See: https://cloud.google.com/compute/api/reference/rest/v1/autoscalers"
+  See: https://cloud.google.com/compute/docs/reference/rest/v1/autoscalers"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

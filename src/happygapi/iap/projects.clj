@@ -1,7 +1,7 @@
 (ns happygapi.iap.projects
   "Cloud Identity-Aware Proxy API: projects.
   Controls access to cloud applications running on Google Cloud Platform.
-  See: https://cloud.google.com/iapapi/reference/rest/v1/projects"
+  See: https://cloud.google.com/iapdocs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

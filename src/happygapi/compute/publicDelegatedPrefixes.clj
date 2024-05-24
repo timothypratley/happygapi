@@ -1,7 +1,7 @@
 (ns happygapi.compute.publicDelegatedPrefixes
   "Compute Engine API: publicDelegatedPrefixes.
   Creates and runs virtual machines on Google Cloud Platform. 
-  See: https://cloud.google.com/compute/api/reference/rest/v1/publicDelegatedPrefixes"
+  See: https://cloud.google.com/compute/docs/reference/rest/v1/publicDelegatedPrefixes"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -74,10 +74,12 @@
   Body: 
   
   {:description string,
+   :allocatablePrefixLength integer,
    :creationTimestamp string,
    :isLiveMigration boolean,
    :name string,
    :ipCidrRange string,
+   :mode string,
    :selfLink string,
    :byoipApiVersion string,
    :region string,
@@ -85,12 +87,14 @@
    :id string,
    :kind string,
    :parentPrefix string,
-   :publicDelegatedSubPrefixs [{:name string,
-                                :description string,
+   :publicDelegatedSubPrefixs [{:description string,
+                                :allocatablePrefixLength integer,
+                                :delegateeProject string,
+                                :name string,
+                                :ipCidrRange string,
+                                :mode string,
                                 :region string,
                                 :status string,
-                                :ipCidrRange string,
-                                :delegateeProject string,
                                 :isAddress boolean}],
    :fingerprint string}
   
@@ -155,10 +159,12 @@
   Body: 
   
   {:description string,
+   :allocatablePrefixLength integer,
    :creationTimestamp string,
    :isLiveMigration boolean,
    :name string,
    :ipCidrRange string,
+   :mode string,
    :selfLink string,
    :byoipApiVersion string,
    :region string,
@@ -166,12 +172,14 @@
    :id string,
    :kind string,
    :parentPrefix string,
-   :publicDelegatedSubPrefixs [{:name string,
-                                :description string,
+   :publicDelegatedSubPrefixs [{:description string,
+                                :allocatablePrefixLength integer,
+                                :delegateeProject string,
+                                :name string,
+                                :ipCidrRange string,
+                                :mode string,
                                 :region string,
                                 :status string,
-                                :ipCidrRange string,
-                                :delegateeProject string,
                                 :isAddress boolean}],
    :fingerprint string}
   

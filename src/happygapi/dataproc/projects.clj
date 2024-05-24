@@ -1,7 +1,7 @@
 (ns happygapi.dataproc.projects
   "Cloud Dataproc API: projects.
   Manages Hadoop-based clusters and jobs on Google Cloud Platform.
-  See: https://cloud.google.com/dataproc/api/reference/rest/v1/projects"
+  See: https://cloud.google.com/dataproc/docs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

@@ -1,7 +1,7 @@
 (ns happygapi.pubsublite.cursor
   "Pub/Sub Lite API: cursor.
   
-  See: https://cloud.google.com/pubsub/lite/docsapi/reference/rest/v1/cursor"
+  See: https://cloud.google.com/pubsub/lite/docsdocs/reference/rest/v1/cursor"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

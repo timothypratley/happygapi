@@ -1,5 +1,5 @@
 {:ContactCenter {:id "ContactCenter",
-                 :description "Message describing ContactCenter object Next ID: 20",
+                 :description "Message describing ContactCenter object Next ID: 22",
                  :type "object",
                  :properties {:labels {:description "Labels as key value pairs",
                                        :type "object",
@@ -39,6 +39,10 @@
                                              "STATE_TERMINATING_FAILED"
                                              "STATE_TERMINATED"
                                              "STATE_IN_GRACE_PERIOD"]},
+                              :normal {:description "Optional. Normal release channel.",
+                                       :$ref "Normal"},
+                              :early {:description "Optional. Early release channel.",
+                                      :$ref "Early"},
                               :updateTime {:description "Output only. [Output only] Update time stamp",
                                            :readOnly true,
                                            :type "string",
@@ -56,6 +60,10 @@
                                      :$ref "URIs"},
                               :userEmail {:description "Optional. Email address of the first admin user.",
                                           :type "string"}}},
+ :Normal {:id "Normal",
+          :description "Instances in this Channel will receive updates after all instances in `Early` were updated + 2 days.",
+          :type "object",
+          :properties {}},
  :Operation {:id "Operation",
              :description "This resource represents a long-running operation that is the result of a network API call.",
              :type "object",
@@ -77,6 +85,10 @@
                           :description "The request message for Operations.CancelOperation.",
                           :type "object",
                           :properties {}},
+ :Early {:id "Early",
+         :description "First Channel to receive the updates. Meant to dev/test instances",
+         :type "object",
+         :properties {}},
  :AdminUser {:id "AdminUser",
              :description "Message storing info about the first admin user. Next ID: 3",
              :type "object",
@@ -108,7 +120,13 @@
                                                                  "Instance Size STANDARD_XLARGE."
                                                                  "Instance Size STANDARD_2XLARGE."
                                                                  "Instance Size STANDARD_3XLARGE."
-                                                                 "Instance Size DEV_EXTRA_SMALL."],
+                                                                 "Instance Size DEV_EXTRA_SMALL."
+                                                                 "Instance Size MULTIREGION_SMALL"
+                                                                 "Instance Size MULTIREGION_MEDIUM"
+                                                                 "Instance Size MULTIREGION_LARGE"
+                                                                 "Instance Size MULTIREGION_XLARGE"
+                                                                 "Instance Size MULTIREGION_2XLARGE."
+                                                                 "Instance Size MULTIREGION_3XLARGE."],
                                               :enum ["INSTANCE_SIZE_UNSPECIFIED"
                                                      "STANDARD_SMALL"
                                                      "STANDARD_MEDIUM"
@@ -116,7 +134,13 @@
                                                      "STANDARD_XLARGE"
                                                      "STANDARD_2XLARGE"
                                                      "STANDARD_3XLARGE"
-                                                     "DEV_XSMALL"]}}},
+                                                     "DEV_XSMALL"
+                                                     "MULTIREGION_SMALL"
+                                                     "MULTIREGION_MEDIUM"
+                                                     "MULTIREGION_LARGE"
+                                                     "MULTIREGION_XLARGE"
+                                                     "MULTIREGION_2XLARGE"
+                                                     "MULTIREGION_3XLARGE"]}}},
  :GoogleCloudCommonOperationMetadata {:id "GoogleCloudCommonOperationMetadata",
                                       :description "Represents the metadata of the long-running operation.",
                                       :type "object",
@@ -263,7 +287,13 @@
                                                                      "Instance Size STANDARD_XLARGE."
                                                                      "Instance Size STANDARD_2XLARGE."
                                                                      "Instance Size STANDARD_3XLARGE."
-                                                                     "Instance Size DEV_EXTRA_SMALL."],
+                                                                     "Instance Size DEV_EXTRA_SMALL."
+                                                                     "Instance Size MULTIREGION_SMALL"
+                                                                     "Instance Size MULTIREGION_MEDIUM"
+                                                                     "Instance Size MULTIREGION_LARGE"
+                                                                     "Instance Size MULTIREGION_XLARGE"
+                                                                     "Instance Size MULTIREGION_2XLARGE."
+                                                                     "Instance Size MULTIREGION_3XLARGE."],
                                                   :enum ["INSTANCE_SIZE_UNSPECIFIED"
                                                          "STANDARD_SMALL"
                                                          "STANDARD_MEDIUM"
@@ -271,7 +301,13 @@
                                                          "STANDARD_XLARGE"
                                                          "STANDARD_2XLARGE"
                                                          "STANDARD_3XLARGE"
-                                                         "DEV_XSMALL"]}}},
+                                                         "DEV_XSMALL"
+                                                         "MULTIREGION_SMALL"
+                                                         "MULTIREGION_MEDIUM"
+                                                         "MULTIREGION_LARGE"
+                                                         "MULTIREGION_XLARGE"
+                                                         "MULTIREGION_2XLARGE"
+                                                         "MULTIREGION_3XLARGE"]}}},
  :Status {:id "Status",
           :description "The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).",
           :type "object",

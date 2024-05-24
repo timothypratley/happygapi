@@ -1,7 +1,7 @@
 (ns happygapi.beyondcorp.projects
   "BeyondCorp API: projects.
   Beyondcorp Enterprise provides identity and context aware access controls for enterprise resources and enables zero-trust access. Using the Beyondcorp Enterprise APIs, enterprises can set up multi-cloud and on-prem connectivity solutions.
-  See: https://cloud.google.com/api/reference/rest/v1/projects"
+  See: https://cloud.google.com/docs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -241,6 +241,7 @@
   
   {:labels {},
    :connectors [string],
+   :satisfiesPzi boolean,
    :displayName string,
    :uid string,
    :name string,
@@ -253,6 +254,7 @@
              :appGateway string,
              :l7psc string},
    :updateTime string,
+   :satisfiesPzs boolean,
    :applicationEndpoint {:host string, :port integer}}
   
   Updates the parameters of a single AppConnection."
@@ -319,6 +321,7 @@
   
   {:labels {},
    :connectors [string],
+   :satisfiesPzi boolean,
    :displayName string,
    :uid string,
    :name string,
@@ -331,6 +334,7 @@
              :appGateway string,
              :l7psc string},
    :updateTime string,
+   :satisfiesPzs boolean,
    :applicationEndpoint {:host string, :port integer}}
   
   Creates a new AppConnection in a given project and location."
@@ -844,6 +848,7 @@
   Body: 
   
   {:labels {},
+   :satisfiesPzi boolean,
    :displayName string,
    :uid string,
    :name string,
@@ -852,6 +857,7 @@
    :state string,
    :updateTime string,
    :hostType string,
+   :satisfiesPzs boolean,
    :allocatedConnections [{:pscUri string, :ingressPort integer}],
    :uri string}
   

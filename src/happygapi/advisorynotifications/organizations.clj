@@ -1,10 +1,42 @@
 (ns happygapi.advisorynotifications.organizations
   "Advisory Notifications API: organizations.
   An API for accessing Advisory Notifications in Google Cloud
-  See: https://cloud.google.com/advisory-notificationsapi/reference/rest/v1/organizations"
+  See: https://cloud.google.com/advisory-notificationsdocs/reference/rest/v1/organizations"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
+
+(defn locations-updateSettings$
+  "https://cloud.google.com/advisory-notificationsapi/reference/rest/v1/organizations/locations/updateSettings
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:etag string, :notificationSettings {}, :name string}
+  
+  Update notification settings."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/patch
+    (util/get-url
+     "https://advisorynotifications.googleapis.com/"
+     "v1/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
 
 (defn locations-getSettings$
   "https://cloud.google.com/advisory-notificationsapi/reference/rest/v1/organizations/locations/getSettings
@@ -27,38 +59,6 @@
     (merge-with
      merge
      {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn locations-updateSettings$
-  "https://cloud.google.com/advisory-notificationsapi/reference/rest/v1/organizations/locations/updateSettings
-  
-  Required parameters: name
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:notificationSettings {}, :name string, :etag string}
-  
-  Update notification settings."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/patch
-    (util/get-url
-     "https://advisorynotifications.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -95,7 +95,7 @@
   
   Required parameters: parent
   
-  Optional parameters: pageToken, pageSize, view, languageCode
+  Optional parameters: languageCode, pageSize, pageToken, view
   
   Lists notifications under a given parent."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}

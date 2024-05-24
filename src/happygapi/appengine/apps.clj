@@ -1,7 +1,7 @@
 (ns happygapi.appengine.apps
   "App Engine Admin API: apps.
   Provisions and manages developers' App Engine applications.
-  See: https://cloud.google.com/appengine/docs/admin-api/api/reference/rest/v1/apps"
+  See: https://cloud.google.com/appengine/docs/admin-api/docs/reference/rest/v1/apps"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

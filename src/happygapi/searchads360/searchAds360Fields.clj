@@ -1,7 +1,7 @@
 (ns happygapi.searchads360.searchAds360Fields
   "Search Ads 360 Reporting API: searchAds360Fields.
   The Search Ads 360 API allows developers to automate downloading reports from Search Ads 360.
-  See: https://developers.google.com/search-ads/reportingapi/reference/rest/v0/searchAds360Fields"
+  See: https://developers.google.com/search-ads/reportingdocs/reference/rest/v0/searchAds360Fields"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -43,7 +43,7 @@
   
   {:query string, :pageToken string, :pageSize integer}
   
-  Returns all fields that match the search query. List of thrown errors: [AuthenticationError]() [AuthorizationError]() [HeaderError]() [InternalError]() [QueryError]() [QuotaError]() [RequestError]()"
+  Returns all fields that match the search [query](/search-ads/reporting/concepts/field-service#use_a_query_to_get_field_details). List of thrown errors: [AuthenticationError]() [AuthorizationError]() [HeaderError]() [InternalError]() [QueryError]() [QuotaError]() [RequestError]()"
   {:scopes ["https://www.googleapis.com/auth/doubleclicksearch"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{})]}

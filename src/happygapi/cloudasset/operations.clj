@@ -1,7 +1,7 @@
 (ns happygapi.cloudasset.operations
   "Cloud Asset API: operations.
   The Cloud Asset API manages the history and inventory of Google Cloud resources.
-  See: https://cloud.google.com/asset-inventory/docs/quickstartapi/reference/rest/v1/operations"
+  See: https://cloud.google.com/asset-inventory/docs/quickstartdocs/reference/rest/v1/operations"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

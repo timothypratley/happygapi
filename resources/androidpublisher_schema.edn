@@ -127,6 +127,12 @@
                                    :properties {:requests {:description "Required. Individual update requests. At least one request is required. Can contain up to 100 requests. All requests must correspond to different in-app products.",
                                                            :type "array",
                                                            :items {:$ref "InappproductsUpdateRequest"}}}},
+ :RestrictedPaymentCountries {:id "RestrictedPaymentCountries",
+                              :description "Countries where the purchase of this product is restricted to payment methods registered in the same country. If empty, no payment location restrictions are imposed.",
+                              :type "object",
+                              :properties {:regionCodes {:description "Required. Region codes to impose payment restrictions on, as defined by ISO 3166-2, e.g. \"US\".",
+                                                         :type "array",
+                                                         :items {:type "string"}}}},
  :DeployAppRecoveryRequest {:id "DeployAppRecoveryRequest",
                             :description "Request message for DeployAppRecovery.",
                             :type "object",
@@ -147,7 +153,9 @@
                                                                                  "USER_CHOICE_BILLING"
                                                                                  "ALTERNATIVE_BILLING_ONLY"]},
                                              :externalSubscription {:description "Details of an external subscription.",
-                                                                    :$ref "ExternalSubscription"}}},
+                                                                    :$ref "ExternalSubscription"},
+                                             :otherRecurringProduct {:description "Details of a recurring external transaction product which doesn't belong to any other specific category.",
+                                                                     :$ref "OtherRecurringProduct"}}},
  :ApksAddExternallyHostedResponse {:id "ApksAddExternallyHostedResponse",
                                    :description "Response for creating a new externally hosted APK.",
                                    :type "object",
@@ -165,6 +173,42 @@
                               :type "object",
                               :properties {:price {:description "The intital price to convert other regions from. Tax exclusive.",
                                                    :$ref "Money"}}},
+ :InstallmentsBasePlanType {:id "InstallmentsBasePlanType",
+                            :description "Represents an installments base plan where a user commits to a specified number of payments.",
+                            :type "object",
+                            :properties {:billingPeriodDuration {:description "Required. Subscription period, specified in ISO 8601 format. For a list of acceptable billing periods, refer to the help center.",
+                                                                 :type "string"},
+                                         :committedPaymentsCount {:description "Required. The number of payments the user is committed to.",
+                                                                  :type "integer",
+                                                                  :format "int32"},
+                                         :renewalType {:description "Required. Installments base plan renewal type. Determines the behavior at the end of the initial commitment.",
+                                                       :type "string",
+                                                       :enumDescriptions ["Unspecified state."
+                                                                          "Renews periodically for the billing period duration without commitment."
+                                                                          "Renews with the commitment of the same duration as the initial one."],
+                                                       :enum ["RENEWAL_TYPE_UNSPECIFIED"
+                                                              "RENEWAL_TYPE_RENEWS_WITHOUT_COMMITMENT"
+                                                              "RENEWAL_TYPE_RENEWS_WITH_COMMITMENT"]},
+                                         :gracePeriodDuration {:description "Grace period of the subscription, specified in ISO 8601 format. Acceptable values are P0D (zero days), P3D (3 days), P7D (7 days), P14D (14 days), and P30D (30 days). If not specified, a default value will be used based on the recurring period duration.",
+                                                               :type "string"},
+                                         :accountHoldDuration {:description "Optional. Account hold period of the subscription, specified exclusively in days and in ISO 8601 format. Acceptable values are P0D (zero days) to P30D (30days). If not specified, the default value is P30D (30 days).",
+                                                               :type "string"},
+                                         :resubscribeState {:description "Whether users should be able to resubscribe to this base plan in Google Play surfaces. Defaults to RESUBSCRIBE_STATE_ACTIVE if not specified.",
+                                                            :type "string",
+                                                            :enumDescriptions ["Unspecified state."
+                                                                               "Resubscribe is active."
+                                                                               "Resubscribe is inactive."],
+                                                            :enum ["RESUBSCRIBE_STATE_UNSPECIFIED"
+                                                                   "RESUBSCRIBE_STATE_ACTIVE"
+                                                                   "RESUBSCRIBE_STATE_INACTIVE"]},
+                                         :prorationMode {:description "The proration mode for the base plan determines what happens when a user switches to this plan from another base plan. If unspecified, defaults to CHARGE_ON_NEXT_BILLING_DATE.",
+                                                         :type "string",
+                                                         :enumDescriptions ["Unspecified mode."
+                                                                            "Users will be charged for their new base plan at the end of their current billing period."
+                                                                            "Users will be charged for their new base plan immediately and in full. Any remaining period of their existing subscription will be used to extend the duration of the new billing plan."],
+                                                         :enum ["SUBSCRIPTION_PRORATION_MODE_UNSPECIFIED"
+                                                                "SUBSCRIPTION_PRORATION_MODE_CHARGE_ON_NEXT_BILLING_DATE"
+                                                                "SUBSCRIPTION_PRORATION_MODE_CHARGE_FULL_PRICE_IMMEDIATELY"]}}},
  :BatchMigrateBasePlanPricesRequest {:id "BatchMigrateBasePlanPricesRequest",
                                      :description "Request message for BatchMigrateBasePlanPrices.",
                                      :type "object",
@@ -214,7 +258,7 @@
                    :properties {:refundableQuantity {:description "The quantity eligible for refund, i.e. quantity that hasn't been refunded. The value reflects quantity-based partial refunds and full refunds.",
                                                      :type "integer",
                                                      :format "int32"},
-                                :purchaseType {:description "The type of purchase of the inapp product. This field is only set if this purchase was not made using the standard in-app billing flow. Possible values are: 0. Test (i.e. purchased from a license testing account) 1. Promo (i.e. purchased using a promo code) 2. Rewarded (i.e. from watching a video ad instead of paying)",
+                                :purchaseType {:description "The type of purchase of the inapp product. This field is only set if this purchase was not made using the standard in-app billing flow. Possible values are: 0. Test (i.e. purchased from a license testing account) 1. Promo (i.e. purchased using a promo code). Does not include Play Points purchases. 2. Rewarded (i.e. from watching a video ad instead of paying)",
                                                :type "integer",
                                                :format "int32"},
                                 :purchaseState {:description "The purchase state of the order. Possible values are: 0. Purchased 1. Canceled 2. Pending",
@@ -266,7 +310,9 @@
                     :properties {:autoRenewEnabled {:description "If the subscription is currently set to auto-renew, e.g. the user has not canceled the subscription",
                                                     :type "boolean"},
                                  :priceChangeDetails {:description "The information of the last price change for the item since subscription signup.",
-                                                      :$ref "SubscriptionItemPriceChangeDetails"}}},
+                                                      :$ref "SubscriptionItemPriceChangeDetails"},
+                                 :installmentDetails {:description "The installment plan commitment and state related info for the auto renewing plan.",
+                                                      :$ref "InstallmentPlan"}}},
  :ImagesUploadResponse {:id "ImagesUploadResponse",
                         :description "Response for uploading an image.",
                         :type "object",
@@ -430,7 +476,7 @@
                                        :type "integer",
                                        :format "int32"}}},
  :CanceledStateContext {:id "CanceledStateContext",
-                        :description "Information specific to a subscription in canceled state.",
+                        :description "Information specific to a subscription in the SUBSCRIPTION_STATE_CANCELED or SUBSCRIPTION_STATE_EXPIRED state.",
                         :type "object",
                         :properties {:userInitiatedCancellation {:description "Subscription was canceled by user.",
                                                                  :$ref "UserInitiatedCancellation"},
@@ -684,6 +730,10 @@
                                  :type "string"},
                           :sha256 {:description "A sha256 hash of the APK payload, encoded as a hex string and matching the output of the sha256sum command.",
                                    :type "string"}}},
+ :RegionalSubscriptionOfferPhaseFreePriceOverride {:id "RegionalSubscriptionOfferPhaseFreePriceOverride",
+                                                   :description "Represents the free price override configuration for a single phase of a subscription offer",
+                                                   :type "object",
+                                                   :properties {}},
  :ProductPurchasesAcknowledgeRequest {:id "ProductPurchasesAcknowledgeRequest",
                                       :description "Request for the product.purchases.acknowledge API.",
                                       :type "object",
@@ -724,6 +774,10 @@
                                                               :enum ["PRODUCT_UPDATE_LATENCY_TOLERANCE_UNSPECIFIED"
                                                                      "PRODUCT_UPDATE_LATENCY_TOLERANCE_LATENCY_SENSITIVE"
                                                                      "PRODUCT_UPDATE_LATENCY_TOLERANCE_LATENCY_TOLERANT"]}}},
+ :TargetingRuleScopeAnySubscriptionInApp {:id "TargetingRuleScopeAnySubscriptionInApp",
+                                          :description "Represents the targeting rule scope corresponding to any subscription in the parent app.",
+                                          :type "object",
+                                          :properties {}},
  :GeneratedStandaloneApk {:id "GeneratedStandaloneApk",
                           :description "Download metadata for a standalone APK.",
                           :type "object",
@@ -861,6 +915,10 @@
                                                    "CANCEL_SURVEY_REASON_OTHERS"]},
                                    :reasonUserInput {:description "Only set for CANCEL_SURVEY_REASON_OTHERS. This is the user's freeform response to the survey.",
                                                      :type "string"}}},
+ :PendingCancellation {:id "PendingCancellation",
+                       :description "This is an indicator of whether there is a pending cancellation on the virtual installment plan. The cancellation will happen only after the user finished all committed payments.",
+                       :type "object",
+                       :properties {}},
  :LocalizedText {:id "LocalizedText",
                  :description "Localized text in given language.",
                  :type "object",
@@ -970,9 +1028,11 @@
                                                                        "Manage orders and subscriptions."
                                                                        "Manage policy related pages."
                                                                        "View app information (read-only)."
-                                                                       "View app quality data such as Vitals, Crashes etc."],
+                                                                       "View app quality data such as Vitals, Crashes etc."
+                                                                       "Manage the deep links setup of an app."],
                                                     :enumDeprecated [false
                                                                      true
+                                                                     false
                                                                      false
                                                                      false
                                                                      false
@@ -998,7 +1058,8 @@
                                                            "CAN_MANAGE_ORDERS"
                                                            "CAN_MANAGE_APP_CONTENT"
                                                            "CAN_VIEW_NON_FINANCIAL_DATA"
-                                                           "CAN_VIEW_APP_QUALITY"]}}}},
+                                                           "CAN_VIEW_APP_QUALITY"
+                                                           "CAN_MANAGE_DEEPLINKS"]}}}},
  :RevocationContext {:id "RevocationContext",
                      :description "Revocation context of the purchases.subscriptionsv2.revoke API.",
                      :type "object",
@@ -1218,7 +1279,9 @@
                                         :deprecated true,
                                         :type "boolean"},
                              :taxAndComplianceSettings {:description "Details about taxes and legal compliance.",
-                                                        :$ref "SubscriptionTaxAndComplianceSettings"}}},
+                                                        :$ref "SubscriptionTaxAndComplianceSettings"},
+                             :restrictedPaymentCountries {:description "Optional. Countries where the purchase of this subscription is restricted to payment methods registered in the same country. If empty, no payment location restrictions are imposed.",
+                                                          :$ref "RestrictedPaymentCountries"}}},
  :UserCountriesTargeting {:id "UserCountriesTargeting",
                           :description "Describes an inclusive/exclusive list of country codes that module targets.",
                           :type "object",
@@ -1250,11 +1313,23 @@
                                     :properties {:subscriptions {:description "The updated subscriptions list.",
                                                                  :type "array",
                                                                  :items {:$ref "Subscription"}}}},
+ :OtherRegionsSubscriptionOfferPhaseFreePriceOverride {:id "OtherRegionsSubscriptionOfferPhaseFreePriceOverride",
+                                                       :description "Represents the free price override configuration for any new locations Play may launch for a single offer phase.",
+                                                       :type "object",
+                                                       :properties {}},
  :TargetingRuleScope {:id "TargetingRuleScope",
                       :description "Defines the scope of subscriptions which a targeting rule can match to target offers to users based on past or current entitlement.",
                       :type "object",
-                      :properties {:specificSubscriptionInApp {:description "The scope of the current targeting rule is the subscription with the specified subscription ID. Must be a subscription within the same parent app.",
+                      :properties {:thisSubscription {:description "The scope of the current targeting rule is the subscription in which this offer is defined.",
+                                                      :$ref "TargetingRuleScopeThisSubscription"},
+                                   :anySubscriptionInApp {:description "The scope of the current targeting rule is any subscription in the parent app.",
+                                                          :$ref "TargetingRuleScopeAnySubscriptionInApp"},
+                                   :specificSubscriptionInApp {:description "The scope of the current targeting rule is the subscription with the specified subscription ID. Must be a subscription within the same parent app.",
                                                                :type "string"}}},
+ :OtherRecurringProduct {:id "OtherRecurringProduct",
+                         :description "Details of a recurring external transaction product which doesn't belong to any other more specific category.",
+                         :type "object",
+                         :properties {}},
  :Price {:id "Price",
          :description "Definition of a price, i.e. currency and units.",
          :type "object",
@@ -1281,7 +1356,8 @@
                                                                               "Subscription is in grace period. The state is only available when the subscription is an auto renewing plan. In this state, all items are in grace period."
                                                                               "Subscription is on hold (suspended). The state is only available when the subscription is an auto renewing plan. In this state, all items are on hold."
                                                                               "Subscription is canceled but not expired yet. The state is only available when the subscription is an auto renewing plan. All items have auto_renew_enabled set to false."
-                                                                              "Subscription is expired. All items have expiry_time in the past."],
+                                                                              "Subscription is expired. All items have expiry_time in the past."
+                                                                              "Pending transaction for subscription is canceled. If this pending purchase was for an existing subscription, use linked_purchase_token to get the current state of that subscription."],
                                                            :enum ["SUBSCRIPTION_STATE_UNSPECIFIED"
                                                                   "SUBSCRIPTION_STATE_PENDING"
                                                                   "SUBSCRIPTION_STATE_ACTIVE"
@@ -1289,7 +1365,8 @@
                                                                   "SUBSCRIPTION_STATE_IN_GRACE_PERIOD"
                                                                   "SUBSCRIPTION_STATE_ON_HOLD"
                                                                   "SUBSCRIPTION_STATE_CANCELED"
-                                                                  "SUBSCRIPTION_STATE_EXPIRED"]},
+                                                                  "SUBSCRIPTION_STATE_EXPIRED"
+                                                                  "SUBSCRIPTION_STATE_PENDING_PURCHASE_CANCELED"]},
                                        :linkedPurchaseToken {:description "The purchase token of the old subscription if this subscription is one of the following: * Re-signup of a canceled but non-lapsed subscription * Upgrade/downgrade from a previous subscription. * Convert from prepaid to auto renewing subscription. * Convert from an auto renewing subscription to prepaid. * Topup a prepaid subscription.",
                                                              :type "string"},
                                        :startTime {:description "Time at which the subscription was granted. Not set for pending subscriptions (subscription was created but awaiting payment during signup).",
@@ -1310,7 +1387,7 @@
                                                               :enum ["ACKNOWLEDGEMENT_STATE_UNSPECIFIED"
                                                                      "ACKNOWLEDGEMENT_STATE_PENDING"
                                                                      "ACKNOWLEDGEMENT_STATE_ACKNOWLEDGED"]},
-                                       :canceledStateContext {:description "Additional context around canceled subscriptions. Only present if the subscription currently has subscription_state SUBSCRIPTION_STATE_CANCELED.",
+                                       :canceledStateContext {:description "Additional context around canceled subscriptions. Only present if the subscription currently has subscription_state SUBSCRIPTION_STATE_CANCELED or SUBSCRIPTION_STATE_EXPIRED.",
                                                               :$ref "CanceledStateContext"},
                                        :kind {:description "This kind represents a SubscriptionPurchaseV2 object in the androidpublisher service.",
                                               :type "string"},
@@ -1364,6 +1441,8 @@
                                                     :$ref "AutoRenewingBasePlanType"},
                          :prepaidBasePlanType {:description "Set when the base plan does not automatically renew at the end of the billing period.",
                                                :$ref "PrepaidBasePlanType"},
+                         :installmentsBasePlanType {:description "Set for installments base plans where a user is committed to a specified number of payments.",
+                                                    :$ref "InstallmentsBasePlanType"},
                          :regionalConfigs {:description "Region-specific information for this base plan.",
                                            :type "array",
                                            :items {:$ref "RegionalBasePlanConfig"}},
@@ -1427,9 +1506,11 @@
                                                                               "Manage orders and subscriptions."
                                                                               "Manage policy related pages on all apps for the developer."
                                                                               "View app information and download bulk reports (read-only)."
-                                                                              "View app quality information for all apps for the developer."],
+                                                                              "View app quality information for all apps for the developer."
+                                                                              "Manage the deep links setup for all apps for the developer."],
                                                            :enumDeprecated [false
                                                                             true
+                                                                            false
                                                                             false
                                                                             false
                                                                             false
@@ -1463,11 +1544,26 @@
                                                                   "CAN_MANAGE_ORDERS_GLOBAL"
                                                                   "CAN_MANAGE_APP_CONTENT_GLOBAL"
                                                                   "CAN_VIEW_NON_FINANCIAL_DATA_GLOBAL"
-                                                                  "CAN_VIEW_APP_QUALITY_GLOBAL"]}},
+                                                                  "CAN_VIEW_APP_QUALITY_GLOBAL"
+                                                                  "CAN_MANAGE_DEEPLINKS_GLOBAL"]}},
                      :grants {:description "Output only. Per-app permissions for the user.",
                               :readOnly true,
                               :type "array",
                               :items {:$ref "Grant"}}}},
+ :InstallmentPlan {:id "InstallmentPlan",
+                   :description "Information to a installment plan.",
+                   :type "object",
+                   :properties {:initialCommittedPaymentsCount {:description "Total number of payments the user is initially committed for.",
+                                                                :type "integer",
+                                                                :format "int32"},
+                                :subsequentCommittedPaymentsCount {:description "Total number of payments the user will be committed for after each commitment period. Empty means the installment plan will fall back to a normal auto-renew subscription after initial commitment.",
+                                                                   :type "integer",
+                                                                   :format "int32"},
+                                :remainingCommittedPaymentsCount {:description "Total number of committed payments remaining to be paid for in this renewal cycle.",
+                                                                  :type "integer",
+                                                                  :format "int32"},
+                                :pendingCancellation {:description "If present, this installment plan is pending to be canceled. The cancellation will happen only after the user finished all committed payments.",
+                                                      :$ref "PendingCancellation"}}},
  :OtherRegionsSubscriptionOfferPhaseConfig {:id "OtherRegionsSubscriptionOfferPhaseConfig",
                                             :description "Configuration for any new locations Play may launch in for a single offer phase.",
                                             :type "object",
@@ -1477,7 +1573,9 @@
                                                                             :type "number",
                                                                             :format "double"},
                                                          :absoluteDiscounts {:description "The absolute amount of money subtracted from the base plan price prorated over the phase duration that the user pays for this offer phase. For example, if the base plan price for this region is $12 for a period of 1 year, then a $1 absolute discount for a phase of a duration of 3 months would correspond to a price of $2. The resulting price may not be smaller than the minimum price allowed for any new locations Play may launch in.",
-                                                                             :$ref "OtherRegionsSubscriptionOfferPhasePrices"}}},
+                                                                             :$ref "OtherRegionsSubscriptionOfferPhasePrices"},
+                                                         :free {:description "Set to specify this offer is free to obtain.",
+                                                                :$ref "OtherRegionsSubscriptionOfferPhaseFreePriceOverride"}}},
  :ArchiveSubscriptionRequest {:id "ArchiveSubscriptionRequest",
                               :deprecated true,
                               :description "Deprecated: subscription archiving is not supported.",
@@ -1799,6 +1897,10 @@
                                         :type "string"},
                                  :lastModified {:description "The last time at which this comment was updated.",
                                                 :$ref "Timestamp"}}},
+ :TargetingRuleScopeThisSubscription {:id "TargetingRuleScopeThisSubscription",
+                                      :description "Represents the targeting rule scope corresponding to the subscriptions in which this offer is defined.",
+                                      :type "object",
+                                      :properties {}},
  :CancelAppRecoveryResponse {:id "CancelAppRecoveryResponse",
                              :description "Response message for CancelAppRecovery.",
                              :type "object",
@@ -1848,7 +1950,9 @@
                                                                         :type "number",
                                                                         :format "double"},
                                                      :absoluteDiscount {:description "The absolute amount of money subtracted from the base plan price prorated over the phase duration that the user pays for this offer phase. For example, if the base plan price for this region is $12 for a period of 1 year, then a $1 absolute discount for a phase of a duration of 3 months would correspond to a price of $2. The resulting price may not be smaller than the minimum price allowed for this region.",
-                                                                        :$ref "Money"}}},
+                                                                        :$ref "Money"},
+                                                     :free {:description "Set to specify this offer is free to obtain.",
+                                                            :$ref "RegionalSubscriptionOfferPhaseFreePriceOverride"}}},
  :PausedStateContext {:id "PausedStateContext",
                       :description "Information specific to a subscription in paused state.",
                       :type "object",

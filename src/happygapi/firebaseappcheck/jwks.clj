@@ -1,7 +1,7 @@
 (ns happygapi.firebaseappcheck.jwks
   "Firebase App Check API: jwks.
   Firebase App Check works alongside other Firebase services to help protect your backend resources from abuse, such as billing fraud or phishing.
-  See: https://firebase.google.com/docs/app-checkapi/reference/rest/v1/jwks"
+  See: https://firebase.google.com/docs/app-checkdocs/reference/rest/v1/jwks"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

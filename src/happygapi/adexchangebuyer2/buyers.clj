@@ -1,7 +1,7 @@
 (ns happygapi.adexchangebuyer2.buyers
   "Ad Exchange Buyer API II: buyers.
   Accesses the latest features for managing Authorized Buyers accounts, Real-Time Bidding configurations and auction metrics, and Marketplace programmatic deals.
-  See: https://developers.google.com/authorized-buyers/apis/reference/rest/api/reference/rest/v2beta1/buyers"
+  See: https://developers.google.com/authorized-buyers/apis/reference/rest/docs/reference/rest/v2beta1/buyers"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

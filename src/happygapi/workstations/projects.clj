@@ -1,7 +1,7 @@
 (ns happygapi.workstations.projects
   "Cloud Workstations API: projects.
   Allows administrators to create managed developer environments in the cloud. 
-  See: https://cloud.google.com/workstationsapi/reference/rest/v1/projects"
+  See: https://cloud.google.com/workstationsdocs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

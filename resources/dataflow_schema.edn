@@ -169,7 +169,7 @@
                                         :type "object",
                                         :additionalProperties {:type "any",
                                                                :description "Properties of the object."}},
-                            :serviceOptions {:description "The list of service options to enable. This field should be used for service related experiments only. These experiments, when graduating to GA, should be replaced by dedicated fields or become default (i.e. always on).",
+                            :serviceOptions {:description "Optional. The list of service options to enable. This field should be used for service related experiments only. These experiments, when graduating to GA, should be replaced by dedicated fields or become default (i.e. always on).",
                                              :type "array",
                                              :items {:type "string"}},
                             :workerZone {:description "The Compute Engine zone (https://cloud.google.com/compute/docs/regions-zones/regions-zones) in which worker processing should occur, e.g. \"us-west1-a\". Mutually exclusive with worker_region. If neither worker_region nor worker_zone is specified, a zone in the control plane's region is chosen based on available capacity.",
@@ -630,7 +630,8 @@
                                                                  "The parameter specifies a Worker Zone."
                                                                  "The parameter specifies a boolean input."
                                                                  "The parameter specifies an enum input."
-                                                                 "The parameter specifies a number input."],
+                                                                 "The parameter specifies a number input."
+                                                                 "The parameter specifies the fully-qualified name of an Apache Kafka topic. This can be either a Google Managed Kafka topic or a non-managed Kafka topic."],
                                               :enum ["DEFAULT"
                                                      "TEXT"
                                                      "GCS_READ_BUCKET"
@@ -650,7 +651,8 @@
                                                      "WORKER_ZONE"
                                                      "BOOLEAN"
                                                      "ENUM"
-                                                     "NUMBER"]},
+                                                     "NUMBER"
+                                                     "KAFKA_TOPIC"]},
                                   :groupName {:description "Optional. Specifies a group name for this parameter to be rendered under. Group header text will be rendered exactly as specified in this field. Only considered when parent_name is NOT provided.",
                                               :type "string"},
                                   :parentName {:description "Optional. Specifies the name of the parent parameter. Used in conjunction with 'parent_trigger_values' to make this parameter conditional (will only be rendered conditionally). Should be mappable to a ParameterMetadata.name field.",
@@ -1076,6 +1078,33 @@
                                  :inputCollectionName {:description "User names for all collection inputs to this transform.",
                                                        :type "array",
                                                        :items {:type "string"}}}},
+ :StreamingOperationalLimits {:id "StreamingOperationalLimits",
+                              :description "Operational limits imposed on streaming jobs by the backend.",
+                              :type "object",
+                              :properties {:maxProductionOutputBytes {:description "The maximum size for a single output element.",
+                                                                      :type "string",
+                                                                      :format "int64"},
+                                           :maxKeyBytes {:description "The maximum size allowed for a key.",
+                                                         :type "string",
+                                                         :format "int64"},
+                                           :maxTagBytes {:description "The maximum size for a state tag.",
+                                                         :type "string",
+                                                         :format "int64"},
+                                           :maxValueBytes {:description "The maximum size for a value state field.",
+                                                           :type "string",
+                                                           :format "int64"},
+                                           :maxBagElementBytes {:description "The maximum size for an element in bag state.",
+                                                                :type "string",
+                                                                :format "int64"},
+                                           :maxSortedListElementBytes {:description "The maximum size for an element in sorted list state.",
+                                                                       :type "string",
+                                                                       :format "int64"},
+                                           :maxGlobalDataBytes {:description "The maximum size for an element in global data.",
+                                                                :type "string",
+                                                                :format "int64"},
+                                           :maxSourceStateBytes {:description "The maximum size for a source state update.",
+                                                                 :type "string",
+                                                                 :format "int64"}}},
  :ProgressTimeseries {:id "ProgressTimeseries",
                       :description "Information about the progress of some component of job execution.",
                       :type "object",
@@ -1335,7 +1364,7 @@
                     :stageStates {:description "This field may be mutated by the Cloud Dataflow service; callers cannot mutate it.",
                                   :type "array",
                                   :items {:$ref "ExecutionStageState"}},
-                    :name {:description "The user-specified Dataflow job name. Only one active job with a given name can exist in a project within one region at any given time. Jobs in different regions can have the same name. If a caller attempts to create a job with the same name as an active job that already exists, the attempt returns the existing job. The name must match the regular expression `[a-z]([-a-z0-9]{0,1022}[a-z0-9])?`",
+                    :name {:description "Optional. The user-specified Dataflow job name. Only one active job with a given name can exist in a project within one region at any given time. Jobs in different regions can have the same name. If a caller attempts to create a job with the same name as an active job that already exists, the attempt returns the existing job. The name must match the regular expression `[a-z]([-a-z0-9]{0,1022}[a-z0-9])?`",
                            :type "string"},
                     :steps {:description "Exactly one of step or steps_location should be specified. The top-level steps that constitute the entire job. Only retrieved with JOB_VIEW_ALL.",
                             :type "array",
@@ -1346,7 +1375,7 @@
                     :currentStateTime {:description "The timestamp associated with the current state.",
                                        :type "string",
                                        :format "google-datetime"},
-                    :type {:description "The type of Dataflow job.",
+                    :type {:description "Optional. The type of Dataflow job.",
                            :type "string",
                            :enumDescriptions ["The type of the job is unspecified, or unknown."
                                               "A batch job with a well-defined end point: data is read, data is processed, data is written, and the job is done."
@@ -1400,7 +1429,7 @@
                          :type "string"},
                     :createdFromSnapshotId {:description "If this is specified, the job's initial state is populated from the given snapshot.",
                                             :type "string"},
-                    :environment {:description "The environment for the job.",
+                    :environment {:description "Optional. The environment for the job.",
                                   :$ref "Environment"},
                     :projectId {:description "The ID of the Google Cloud project that the job belongs to.",
                                 :type "string"},
@@ -2088,7 +2117,9 @@
                                  :supportsAtLeastOnce {:description "Optional. Indicates if the streaming template supports at least once mode.",
                                                        :type "boolean"},
                                  :supportsExactlyOnce {:description "Optional. Indicates if the streaming template supports exactly once mode.",
-                                                       :type "boolean"}}},
+                                                       :type "boolean"},
+                                 :defaultStreamingMode {:description "Optional. Indicates the default streaming mode for a streaming template. Only valid if both supports_at_least_once and supports_exactly_once are true. Possible values: UNSPECIFIED, EXACTLY_ONCE and AT_LEAST_ONCE",
+                                                        :type "string"}}},
  :MemInfo {:id "MemInfo",
            :description "Information about the memory usage of a worker or a container within a worker.",
            :type "object",
@@ -2261,7 +2292,9 @@
                                                                  :format "int64"},
                                     :getDataStreamChunkSizeBytes {:description "Chunk size for get data streams from the harness to windmill.",
                                                                   :type "string",
-                                                                  :format "int64"}}},
+                                                                  :format "int64"},
+                                    :operationalLimits {:description "Operational limits for the streaming job. Can be used by the worker to validate outputs sent to the backend.",
+                                                        :$ref "StreamingOperationalLimits"}}},
  :ListSnapshotsResponse {:id "ListSnapshotsResponse",
                          :description "List of snapshots.",
                          :type "object",

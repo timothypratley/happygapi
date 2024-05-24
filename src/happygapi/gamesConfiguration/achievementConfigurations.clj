@@ -1,7 +1,7 @@
 (ns happygapi.gamesConfiguration.achievementConfigurations
   "Google Play Game Services Publishing API: achievementConfigurations.
   The Google Play Game Services Publishing API allows developers to configure their games in Game Services.
-  See: https://developers.google.com/games/api/reference/rest/v1configuration/achievementConfigurations"
+  See: https://developers.google.com/games/docs/reference/rest/v1configuration/achievementConfigurations"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

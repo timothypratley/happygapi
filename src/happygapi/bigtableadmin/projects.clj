@@ -1,7 +1,7 @@
 (ns happygapi.bigtableadmin.projects
   "Cloud Bigtable Admin API: projects.
   Administer your Cloud Bigtable tables and instances.
-  See: https://cloud.google.com/bigtable/api/reference/rest/v2/projects"
+  See: https://cloud.google.com/bigtable/docs/reference/rest/v2/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -133,7 +133,8 @@
               :type string,
               :labels {},
               :createTime string,
-              :satisfiesPzs boolean},
+              :satisfiesPzs boolean,
+              :satisfiesPzi boolean},
    :clusters {}}
   
   Create an instance within a project. Note that exactly one of Cluster.serve_nodes and Cluster.cluster_config.cluster_autoscaling_config can be set. If serve_nodes is set to non-zero, then the cluster is manually scaled. If cluster_config.cluster_autoscaling_config is non-empty, then autoscaling is enabled."
@@ -177,7 +178,8 @@
    :type string,
    :labels {},
    :createTime string,
-   :satisfiesPzs boolean}
+   :satisfiesPzs boolean,
+   :satisfiesPzi boolean}
   
   Updates an instance within a project. This method updates only the display name and type for an Instance. To update other Instance properties, such as labels, use PartialUpdateInstance."
   {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
@@ -320,7 +322,8 @@
    :type string,
    :labels {},
    :createTime string,
-   :satisfiesPzs boolean}
+   :satisfiesPzs boolean,
+   :satisfiesPzi boolean}
   
   Partially updates an instance within a project. This method can modify all fields of an Instance and is the preferred way to update an Instance."
   {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
@@ -684,7 +687,7 @@
             :etag string},
    :updateMask string}
   
-  Sets the access control policy on a Table or Backup resource. Replaces any existing policy."
+  Sets the access control policy on a Bigtable resource. Replaces any existing policy."
   {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
             "https://www.googleapis.com/auth/bigtable.admin.table"
             "https://www.googleapis.com/auth/cloud-bigtable.admin"
@@ -766,7 +769,7 @@
   
   {:permissions [string]}
   
-  Returns permissions that the caller has on the specified Table or Backup resource."
+  Returns permissions that the caller has on the specified Bigtable resource."
   {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
             "https://www.googleapis.com/auth/bigtable.admin.table"
             "https://www.googleapis.com/auth/cloud-bigtable.admin"
@@ -878,7 +881,7 @@
   
   {:options {:requestedPolicyVersion integer}}
   
-  Gets the access control policy for a Table or Backup resource. Returns an empty policy if the resource exists but does not have a policy set."
+  Gets the access control policy for a Bigtable resource. Returns an empty policy if the resource exists but does not have a policy set."
   {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
             "https://www.googleapis.com/auth/bigtable.admin.table"
             "https://www.googleapis.com/auth/cloud-bigtable.admin"
@@ -1163,7 +1166,7 @@
             :etag string},
    :updateMask string}
   
-  Sets the access control policy on a Table or Backup resource. Replaces any existing policy."
+  Sets the access control policy on a Bigtable resource. Replaces any existing policy."
   {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
             "https://www.googleapis.com/auth/bigtable.admin.table"
             "https://www.googleapis.com/auth/cloud-bigtable.admin"
@@ -1246,7 +1249,7 @@
   
   {:permissions [string]}
   
-  Returns permissions that the caller has on the specified Table or Backup resource."
+  Returns permissions that the caller has on the specified Bigtable resource."
   {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
             "https://www.googleapis.com/auth/bigtable.admin.table"
             "https://www.googleapis.com/auth/cloud-bigtable.admin"
@@ -1471,7 +1474,7 @@
   
   {:options {:requestedPolicyVersion integer}}
   
-  Gets the access control policy for a Table or Backup resource. Returns an empty policy if the resource exists but does not have a policy set."
+  Gets the access control policy for a Bigtable resource. Returns an empty policy if the resource exists but does not have a policy set."
   {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
             "https://www.googleapis.com/auth/bigtable.admin.table"
             "https://www.googleapis.com/auth/cloud-bigtable.admin"
@@ -1800,6 +1803,118 @@
     (merge-with
      merge
      {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn instances-tables-authorizedViews-getIamPolicy$
+  "https://cloud.google.com/bigtable/api/reference/rest/v2/projects/instances/tables/authorizedViews/getIamPolicy
+  
+  Required parameters: resource
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:options {:requestedPolicyVersion integer}}
+  
+  Gets the access control policy for a Bigtable resource. Returns an empty policy if the resource exists but does not have a policy set."
+  {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
+            "https://www.googleapis.com/auth/bigtable.admin.table"
+            "https://www.googleapis.com/auth/cloud-bigtable.admin"
+            "https://www.googleapis.com/auth/cloud-bigtable.admin.table"
+            "https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://bigtableadmin.googleapis.com/"
+     "v2/{+resource}:getIamPolicy"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn instances-tables-authorizedViews-setIamPolicy$
+  "https://cloud.google.com/bigtable/api/reference/rest/v2/projects/instances/tables/authorizedViews/setIamPolicy
+  
+  Required parameters: resource
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:policy {:version integer,
+            :bindings [Binding],
+            :auditConfigs [AuditConfig],
+            :etag string},
+   :updateMask string}
+  
+  Sets the access control policy on a Bigtable resource. Replaces any existing policy."
+  {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
+            "https://www.googleapis.com/auth/bigtable.admin.table"
+            "https://www.googleapis.com/auth/cloud-bigtable.admin"
+            "https://www.googleapis.com/auth/cloud-bigtable.admin.table"
+            "https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://bigtableadmin.googleapis.com/"
+     "v2/{+resource}:setIamPolicy"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn instances-tables-authorizedViews-testIamPermissions$
+  "https://cloud.google.com/bigtable/api/reference/rest/v2/projects/instances/tables/authorizedViews/testIamPermissions
+  
+  Required parameters: resource
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:permissions [string]}
+  
+  Returns permissions that the caller has on the specified Bigtable resource."
+  {:scopes ["https://www.googleapis.com/auth/bigtable.admin"
+            "https://www.googleapis.com/auth/bigtable.admin.table"
+            "https://www.googleapis.com/auth/cloud-bigtable.admin"
+            "https://www.googleapis.com/auth/cloud-bigtable.admin.table"
+            "https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:resource})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://bigtableadmin.googleapis.com/"
+     "v2/{+resource}:testIamPermissions"
+     #{:resource}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

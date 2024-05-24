@@ -1,24 +1,33 @@
 (ns happygapi.tasks.tasklists
   "Google Tasks API: tasklists.
   The Google Tasks API lets you manage your tasks and task lists.
-  See: https://developers.google.com/tasks/api/reference/rest/v1/tasklists"
+  See: https://developers.google.com/tasks/docs/reference/rest/v1/tasklists"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn delete$
-  "https://developers.google.com/tasks/api/reference/rest/v1/tasklists/delete
+(defn patch$
+  "https://developers.google.com/tasks/api/reference/rest/v1/tasklists/patch
   
   Required parameters: tasklist
   
   Optional parameters: none
   
-  Deletes the authenticated user's specified task list."
+  Body: 
+  
+  {:id string,
+   :selfLink string,
+   :title string,
+   :kind string,
+   :updated string,
+   :etag string}
+  
+  Updates the authenticated user's specified task list. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/tasks"]}
-  [auth parameters]
+  [auth parameters body]
   {:pre [(util/has-keys? parameters #{:tasklist})]}
   (util/get-response
-   (http/delete
+   (http/patch
     (util/get-url
      "https://tasks.googleapis.com/"
      "tasks/v1/users/@me/lists/{tasklist}"
@@ -26,7 +35,73 @@
      parameters)
     (merge-with
      merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn list$
+  "https://developers.google.com/tasks/api/reference/rest/v1/tasklists/list
+  
+  Required parameters: none
+  
+  Optional parameters: maxResults, pageToken
+  
+  Returns all the authenticated user's task lists. A user can have up to 2000 lists at a time."
+  {:scopes ["https://www.googleapis.com/auth/tasks"
+            "https://www.googleapis.com/auth/tasks.readonly"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://tasks.googleapis.com/"
+     "tasks/v1/users/@me/lists"
+     #{}
+     parameters)
+    (merge-with
+     merge
      {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn update$
+  "https://developers.google.com/tasks/api/reference/rest/v1/tasklists/update
+  
+  Required parameters: tasklist
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:id string,
+   :selfLink string,
+   :title string,
+   :kind string,
+   :updated string,
+   :etag string}
+  
+  Updates the authenticated user's specified task list."
+  {:scopes ["https://www.googleapis.com/auth/tasks"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:tasklist})]}
+  (util/get-response
+   (http/put
+    (util/get-url
+     "https://tasks.googleapis.com/"
+     "tasks/v1/users/@me/lists/{tasklist}"
+     #{:tasklist}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -59,70 +134,6 @@
       :as :json}
      auth))))
 
-(defn list$
-  "https://developers.google.com/tasks/api/reference/rest/v1/tasklists/list
-  
-  Required parameters: none
-  
-  Optional parameters: pageToken, maxResults
-  
-  Returns all the authenticated user's task lists."
-  {:scopes ["https://www.googleapis.com/auth/tasks"
-            "https://www.googleapis.com/auth/tasks.readonly"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://tasks.googleapis.com/"
-     "tasks/v1/users/@me/lists"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn update$
-  "https://developers.google.com/tasks/api/reference/rest/v1/tasklists/update
-  
-  Required parameters: tasklist
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:updated string,
-   :etag string,
-   :id string,
-   :selfLink string,
-   :kind string,
-   :title string}
-  
-  Updates the authenticated user's specified task list."
-  {:scopes ["https://www.googleapis.com/auth/tasks"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{:tasklist})]}
-  (util/get-response
-   (http/put
-    (util/get-url
-     "https://tasks.googleapis.com/"
-     "tasks/v1/users/@me/lists/{tasklist}"
-     #{:tasklist}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn insert$
   "https://developers.google.com/tasks/api/reference/rest/v1/tasklists/insert
   
@@ -132,14 +143,14 @@
   
   Body: 
   
-  {:updated string,
-   :etag string,
-   :id string,
+  {:id string,
    :selfLink string,
+   :title string,
    :kind string,
-   :title string}
+   :updated string,
+   :etag string}
   
-  Creates a new task list and adds it to the authenticated user's task lists."
+  Creates a new task list and adds it to the authenticated user's task lists. A user can have up to 2000 lists at a time."
   {:scopes ["https://www.googleapis.com/auth/tasks"]}
   [auth parameters body]
   {:pre [(util/has-keys? parameters #{})]}
@@ -160,28 +171,19 @@
       :as :json}
      auth))))
 
-(defn patch$
-  "https://developers.google.com/tasks/api/reference/rest/v1/tasklists/patch
+(defn delete$
+  "https://developers.google.com/tasks/api/reference/rest/v1/tasklists/delete
   
   Required parameters: tasklist
   
   Optional parameters: none
   
-  Body: 
-  
-  {:updated string,
-   :etag string,
-   :id string,
-   :selfLink string,
-   :kind string,
-   :title string}
-  
-  Updates the authenticated user's specified task list. This method supports patch semantics."
+  Deletes the authenticated user's specified task list."
   {:scopes ["https://www.googleapis.com/auth/tasks"]}
-  [auth parameters body]
+  [auth parameters]
   {:pre [(util/has-keys? parameters #{:tasklist})]}
   (util/get-response
-   (http/patch
+   (http/delete
     (util/get-url
      "https://tasks.googleapis.com/"
      "tasks/v1/users/@me/lists/{tasklist}"
@@ -189,9 +191,7 @@
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

@@ -1,7 +1,7 @@
 (ns happygapi.ml.projects
   "AI Platform Training & Prediction API: projects.
   An API to enable creating and using machine learning models.
-  See: https://cloud.google.com/ml/api/reference/rest/v1/projects"
+  See: https://cloud.google.com/ml/docs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

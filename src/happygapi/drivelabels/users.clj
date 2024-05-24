@@ -1,7 +1,7 @@
 (ns happygapi.drivelabels.users
   "Drive Labels API: users.
   An API for managing Drive Labels
-  See: https://developers.google.com/drive/labelsapi/reference/rest/v2/users"
+  See: https://developers.google.com/drive/labelsdocs/reference/rest/v2/users"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

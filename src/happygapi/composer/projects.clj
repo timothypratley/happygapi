@@ -1,7 +1,7 @@
 (ns happygapi.composer.projects
   "Cloud Composer API: projects.
   Manages Apache Airflow environments on Google Cloud Platform.
-  See: https://cloud.google.com/composer/api/reference/rest/v1/projects"
+  See: https://cloud.google.com/composer/docs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -157,6 +157,38 @@
      "https://composer.googleapis.com/"
      "v1/{+name}"
      #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn locations-environments-checkUpgrade$
+  "https://cloud.google.com/composer/api/reference/rest/v1/projects/locations/environments/checkUpgrade
+  
+  Required parameters: environment
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:imageVersion string}
+  
+  Check if an upgrade operation on the environment will succeed. In case of problems detailed info can be found in the returned Operation."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{:environment})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://composer.googleapis.com/"
+     "v1/{+environment}:checkUpgrade"
+     #{:environment}
      parameters)
     (merge-with
      merge

@@ -1,7 +1,7 @@
 (ns happygapi.playgrouping.apps
   "Google Play Grouping API: apps.
   playgrouping.googleapis.com API.
-  See: https://cloud.google.com/playgrouping/api/reference/rest/v1alpha1/apps"
+  See: https://cloud.google.com/playgrouping/docs/reference/rest/v1alpha1/apps"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -47,11 +47,11 @@
   
   Body: 
   
-  {:tags [{:key string,
+  {:tags [{:stringValue string,
+           :timeValue string,
+           :key string,
            :int64Value string,
-           :booleanValue boolean,
-           :stringValue string,
-           :timeValue string}]}
+           :booleanValue boolean}]}
   
   Create or update tags for the user and app that are represented by the given token."
   {:scopes nil}

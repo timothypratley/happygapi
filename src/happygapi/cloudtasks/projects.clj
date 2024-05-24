@@ -1,7 +1,7 @@
 (ns happygapi.cloudtasks.projects
   "Cloud Tasks API: projects.
   Manages the execution of large numbers of distributed requests.
-  See: https://cloud.google.com/tasks/api/reference/rest/v2/projects"
+  See: https://cloud.google.com/tasks/docs/reference/rest/v2/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

@@ -1,7 +1,7 @@
 (ns happygapi.libraryagent.shelves
   "Library Agent API: shelves.
   A simple Google Example Library API.
-  See: https://cloud.google.com/docs/quotaapi/reference/rest/v1/shelves"
+  See: https://cloud.google.com/docs/quotadocs/reference/rest/v1/shelves"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -110,32 +110,6 @@
       :as :json}
      auth))))
 
-(defn books-list$
-  "https://cloud.google.com/docs/quotaapi/reference/rest/v1/shelves/books/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageToken, pageSize
-  
-  Lists books in a shelf. The order is unspecified but deterministic. Newly created books will not necessarily be added to the end of this list. Returns NOT_FOUND if the shelf does not exist."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://libraryagent.googleapis.com/"
-     "v1/{+parent}/books"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn books-get$
   "https://cloud.google.com/docs/quotaapi/reference/rest/v1/shelves/books/get
   
@@ -153,6 +127,32 @@
      "https://libraryagent.googleapis.com/"
      "v1/{+name}"
      #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn books-list$
+  "https://cloud.google.com/docs/quotaapi/reference/rest/v1/shelves/books/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageToken, pageSize
+  
+  Lists books in a shelf. The order is unspecified but deterministic. Newly created books will not necessarily be added to the end of this list. Returns NOT_FOUND if the shelf does not exist."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://libraryagent.googleapis.com/"
+     "v1/{+parent}/books"
+     #{:parent}
      parameters)
     (merge-with
      merge

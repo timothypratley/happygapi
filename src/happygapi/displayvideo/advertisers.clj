@@ -1,7 +1,7 @@
 (ns happygapi.displayvideo.advertisers
   "Display & Video 360 API: advertisers.
   Display & Video 360 API allows users to automate complex Display & Video 360 workflows, such as creating insertion orders and setting targeting options for individual line items.
-  See: https://developers.google.com/display-video/api/reference/rest/v3/advertisers"
+  See: https://developers.google.com/display-video/docs/reference/rest/v3/advertisers"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -2951,7 +2951,8 @@
    :kpi {:kpiType string,
          :kpiAmountMicros string,
          :kpiPercentageMicros string,
-         :kpiString string},
+         :kpiString string,
+         :kpiAlgorithmId string},
    :bidStrategy {:fixedBid FixedBidStrategy,
                  :maximizeSpendAutoBid MaximizeSpendBidStrategy,
                  :performanceGoalAutoBid PerformanceGoalBidStrategy,
@@ -3017,7 +3018,8 @@
    :kpi {:kpiType string,
          :kpiAmountMicros string,
          :kpiPercentageMicros string,
-         :kpiString string},
+         :kpiString string,
+         :kpiAlgorithmId string},
    :bidStrategy {:fixedBid FixedBidStrategy,
                  :maximizeSpendAutoBid MaximizeSpendBidStrategy,
                  :performanceGoalAutoBid PerformanceGoalBidStrategy,

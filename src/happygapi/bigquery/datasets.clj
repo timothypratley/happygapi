@@ -1,7 +1,7 @@
 (ns happygapi.bigquery.datasets
   "BigQuery API: datasets.
   A data platform for customers to create, manage, share and query data.
-  See: https://cloud.google.com/bigquery/api/reference/rest/v2/datasets"
+  See: https://cloud.google.com/bigquery/docs/reference/rest/v2/datasets"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -72,10 +72,13 @@
   
   {:creationTime string,
    :description string,
+   :externalCatalogDatasetOptions {:defaultStorageLocationUri string,
+                                   :parameters {}},
    :defaultEncryptionConfiguration {:kmsKeyName string},
    :defaultPartitionExpirationMs string,
    :tags [{:tagKey string, :tagValue string}],
    :labels {},
+   :restrictions {:type string},
    :satisfiesPzi boolean,
    :linkedDatasetSource {:sourceDataset DatasetReference},
    :maxTimeTravelHours string,
@@ -172,10 +175,13 @@
   
   {:creationTime string,
    :description string,
+   :externalCatalogDatasetOptions {:defaultStorageLocationUri string,
+                                   :parameters {}},
    :defaultEncryptionConfiguration {:kmsKeyName string},
    :defaultPartitionExpirationMs string,
    :tags [{:tagKey string, :tagValue string}],
    :labels {},
+   :restrictions {:type string},
    :satisfiesPzi boolean,
    :linkedDatasetSource {:sourceDataset DatasetReference},
    :maxTimeTravelHours string,
@@ -277,10 +283,13 @@
   
   {:creationTime string,
    :description string,
+   :externalCatalogDatasetOptions {:defaultStorageLocationUri string,
+                                   :parameters {}},
    :defaultEncryptionConfiguration {:kmsKeyName string},
    :defaultPartitionExpirationMs string,
    :tags [{:tagKey string, :tagValue string}],
    :labels {},
+   :restrictions {:type string},
    :satisfiesPzi boolean,
    :linkedDatasetSource {:sourceDataset DatasetReference},
    :maxTimeTravelHours string,

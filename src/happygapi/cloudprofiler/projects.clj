@@ -1,7 +1,7 @@
 (ns happygapi.cloudprofiler.projects
   "Cloud Profiler API: projects.
   Manages continuous profiling information.
-  See: https://cloud.google.com/profiler/api/reference/rest/v2/projects"
+  See: https://cloud.google.com/profiler/docs/reference/rest/v2/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

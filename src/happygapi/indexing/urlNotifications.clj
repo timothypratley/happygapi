@@ -1,7 +1,7 @@
 (ns happygapi.indexing.urlNotifications
   "Web Search Indexing API: urlNotifications.
   Notifies Google Web Search when your web pages change.
-  See: https://developers.google.com/search/apis/indexing-api/api/reference/rest/v3/urlNotifications"
+  See: https://developers.google.com/search/apis/indexing-api/docs/reference/rest/v3/urlNotifications"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

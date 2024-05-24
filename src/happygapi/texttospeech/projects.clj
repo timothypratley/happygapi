@@ -1,7 +1,7 @@
 (ns happygapi.texttospeech.projects
   "Cloud Text-to-Speech API: projects.
   Synthesizes natural-sounding speech by applying powerful neural network models.
-  See: https://cloud.google.com/text-to-speech/api/reference/rest/v1/projects"
+  See: https://cloud.google.com/text-to-speech/docs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

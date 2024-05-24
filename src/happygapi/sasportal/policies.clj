@@ -1,10 +1,45 @@
 (ns happygapi.sasportal.policies
   "SAS Portal API: policies.
   
-  See: https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/policies"
+  See: https://developers.google.com/spectrum-access-system/docs/reference/rest/v1alpha1/policies"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
+
+(defn set$
+  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/policies/set
+  
+  Required parameters: none
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:disableNotification boolean,
+   :resource string,
+   :policy {:etag string, :assignments [SasPortalAssignment]}}
+  
+  Sets the access control policy on the specified resource. Replaces any existing policy."
+  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/sasportal"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://sasportal.googleapis.com/"
+     "v1alpha1/policies:set"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
 
 (defn test$
   "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/policies/test
@@ -27,41 +62,6 @@
     (util/get-url
      "https://sasportal.googleapis.com/"
      "v1alpha1/policies:test"
-     #{}
-     parameters)
-    (merge-with
-     merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn set$
-  "https://developers.google.com/spectrum-access-system/api/reference/rest/v1alpha1/policies/set
-  
-  Required parameters: none
-  
-  Optional parameters: none
-  
-  Body: 
-  
-  {:policy {:etag string, :assignments [SasPortalAssignment]},
-   :resource string,
-   :disableNotification boolean}
-  
-  Sets the access control policy on the specified resource. Replaces any existing policy."
-  {:scopes ["https://www.googleapis.com/auth/cloud-platform"
-            "https://www.googleapis.com/auth/sasportal"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{})]}
-  (util/get-response
-   (http/post
-    (util/get-url
-     "https://sasportal.googleapis.com/"
-     "v1alpha1/policies:set"
      #{}
      parameters)
     (merge-with

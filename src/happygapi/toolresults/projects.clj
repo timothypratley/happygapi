@@ -1,7 +1,7 @@
 (ns happygapi.toolresults.projects
   "Cloud Tool Results API: projects.
   API to publish and access results from developer tools.
-  See: https://firebase.google.com/docs/test-lab/api/reference/rest/v1beta3/projects"
+  See: https://firebase.google.com/docs/test-lab/docs/reference/rest/v1beta3/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

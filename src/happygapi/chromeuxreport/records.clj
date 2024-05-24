@@ -1,7 +1,7 @@
 (ns happygapi.chromeuxreport.records
   "Chrome UX Report API: records.
   The Chrome UX Report API lets you view real user experience data for millions of websites. 
-  See: https://developers.google.com/web/tools/chrome-user-experience-report/api/referenceapi/reference/rest/v1/records"
+  See: https://developers.google.com/web/tools/chrome-user-experience-report/api/referencedocs/reference/rest/v1/records"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

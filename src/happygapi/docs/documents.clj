@@ -1,7 +1,7 @@
 (ns happygapi.docs.documents
   "Google Docs API: documents.
   Reads and writes Google Docs documents.
-  See: https://developers.google.com/docs/api/reference/rest/v1/documents"
+  See: https://developers.google.com/docs/docs/reference/rest/v1/documents"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

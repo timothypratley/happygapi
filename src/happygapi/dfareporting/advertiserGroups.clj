@@ -1,7 +1,7 @@
 (ns happygapi.dfareporting.advertiserGroups
   "Campaign Manager 360 API: advertiserGroups.
   Build applications to efficiently manage large or complex trafficking, reporting, and attribution workflows for Campaign Manager 360.
-  See: https://developers.google.com/doubleclick-advertisers/api/reference/rest/v4/advertiserGroups"
+  See: https://developers.google.com/doubleclick-advertisers/docs/reference/rest/v4/advertiserGroups"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

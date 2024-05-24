@@ -1,7 +1,7 @@
 (ns happygapi.playdeveloperreporting.anomalies
   "Google Play Developer Reporting API: anomalies.
   
-  See: https://developers.google.com/play/developer/reportingapi/reference/rest/v1beta1/anomalies"
+  See: https://developers.google.com/play/developer/reportingdocs/reference/rest/v1beta1/anomalies"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -11,7 +11,7 @@
   
   Required parameters: parent
   
-  Optional parameters: pageSize, filter, pageToken
+  Optional parameters: filter, pageSize, pageToken
   
   Lists anomalies in any of the datasets."
   {:scopes ["https://www.googleapis.com/auth/playdeveloperreporting"]}

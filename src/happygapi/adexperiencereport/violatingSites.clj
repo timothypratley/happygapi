@@ -1,7 +1,7 @@
 (ns happygapi.adexperiencereport.violatingSites
   "Ad Experience Report API: violatingSites.
   Views Ad Experience Report data, and gets a list of sites that have a significant number of annoying ads.
-  See: https://developers.google.com/ad-experience-report/api/reference/rest/v1/violatingSites"
+  See: https://developers.google.com/ad-experience-report/docs/reference/rest/v1/violatingSites"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

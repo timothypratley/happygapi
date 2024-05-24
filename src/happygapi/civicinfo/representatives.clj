@@ -1,7 +1,7 @@
 (ns happygapi.civicinfo.representatives
   "Google Civic Information API: representatives.
   Provides polling places, early vote locations, contest data, election officials, and government representatives for U.S. residential addresses.
-  See: https://developers.google.com/civic-information/api/reference/rest/v2/representatives"
+  See: https://developers.google.com/civic-information/docs/reference/rest/v2/representatives"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

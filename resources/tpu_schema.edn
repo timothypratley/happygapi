@@ -23,11 +23,13 @@
                                          :enumDescriptions ["Unspecified version."
                                                             "TPU v2."
                                                             "TPU v3."
-                                                            "TPU v4."],
+                                                            "TPU v4."
+                                                            "TPU v5p"],
                                          :enum ["TYPE_UNSPECIFIED"
                                                 "V2"
                                                 "V3"
-                                                "V4"]},
+                                                "V4"
+                                                "V5P"]},
                                   :topology {:description "Required. Topology of TPU in chips.",
                                              :type "string"}}},
  :ProvisioningData {:id "ProvisioningData",

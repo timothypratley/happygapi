@@ -1,7 +1,7 @@
 (ns happygapi.logging.entries
   "Cloud Logging API: entries.
   Writes log entries and manages your Cloud Logging configuration.
-  See: https://cloud.google.com/logging/docs/api/reference/rest/v2/entries"
+  See: https://cloud.google.com/logging/docs/docs/reference/rest/v2/entries"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

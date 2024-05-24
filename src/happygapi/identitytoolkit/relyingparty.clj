@@ -1,7 +1,7 @@
 (ns happygapi.identitytoolkit.relyingparty
   "Google Identity Toolkit API: relyingparty.
   Help the third party sites to implement federated login.
-  See: https://developers.google.com/identity-toolkit/v3/api/reference/rest/v3/relyingparty"
+  See: https://developers.google.com/identity-toolkit/v3/docs/reference/rest/v3/relyingparty"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

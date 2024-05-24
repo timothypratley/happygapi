@@ -1,10 +1,36 @@
 (ns happygapi.groupssettings.groups
   "Groups Settings API: groups.
   Manages permission levels and related settings of a group.
-  See: https://developers.google.com/google-apps/groups-settings/get_startedapi/reference/rest/v1/groups"
+  See: https://developers.google.com/google-apps/groups-settings/get_starteddocs/reference/rest/v1/groups"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
+
+(defn get$
+  "https://developers.google.com/google-apps/groups-settings/get_startedapi/reference/rest/v1/groups/get
+  
+  Required parameters: groupUniqueId
+  
+  Optional parameters: none
+  
+  Gets one resource by id."
+  {:scopes ["https://www.googleapis.com/auth/apps.groups.settings"]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:groupUniqueId})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://www.googleapis.com/groups/v1/groups/"
+     "{groupUniqueId}"
+     #{:groupUniqueId}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
 
 (defn update$
   "https://developers.google.com/google-apps/groups-settings/get_startedapi/reference/rest/v1/groups/update
@@ -187,32 +213,6 @@
      {:content-type :json,
       :body (json/generate-string body),
       :throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn get$
-  "https://developers.google.com/google-apps/groups-settings/get_startedapi/reference/rest/v1/groups/get
-  
-  Required parameters: groupUniqueId
-  
-  Optional parameters: none
-  
-  Gets one resource by id."
-  {:scopes ["https://www.googleapis.com/auth/apps.groups.settings"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:groupUniqueId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://www.googleapis.com/groups/v1/groups/"
-     "{groupUniqueId}"
-     #{:groupUniqueId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}

@@ -1,7 +1,7 @@
 (ns happygapi.healthcare.projects
   "Cloud Healthcare API: projects.
   Manage, store, and access healthcare data in Google Cloud Platform.
-  See: https://cloud.google.com/healthcareapi/reference/rest/v1/projects"
+  See: https://cloud.google.com/healthcaredocs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

@@ -1,111 +1,32 @@
 (ns happygapi.walletobjects.giftcardclass
   "Google Wallet API: giftcardclass.
   API for issuers to save and manage Google Wallet Objects.
-  See: https://developers.google.com/pay/passesapi/reference/rest/v1/giftcardclass"
+  See: https://developers.google.com/pay/passesdocs/reference/rest/v1/giftcardclass"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn insert$
-  "https://developers.google.com/pay/passesapi/reference/rest/v1/giftcardclass/insert
+(defn get$
+  "https://developers.google.com/pay/passesapi/reference/rest/v1/giftcardclass/get
   
-  Required parameters: none
+  Required parameters: resourceId
   
   Optional parameters: none
   
-  Body: 
-  
-  {:wordMark {:contentDescription LocalizedString,
-              :kind string,
-              :sourceUri ImageUri},
-   :reviewStatus string,
-   :wideProgramLogo {:contentDescription LocalizedString,
-                     :kind string,
-                     :sourceUri ImageUri},
-   :textModulesData [{:id string,
-                      :localizedBody LocalizedString,
-                      :localizedHeader LocalizedString,
-                      :body string,
-                      :header string}],
-   :issuerName string,
-   :securityAnimation {:animationType string},
-   :multipleDevicesAndHoldersAllowedStatus string,
-   :localizedEventNumberLabel {:defaultValue TranslatedString,
-                               :translatedValues [TranslatedString],
-                               :kind string},
-   :pinLabel string,
-   :merchantName string,
-   :localizedMerchantName {:defaultValue TranslatedString,
-                           :translatedValues [TranslatedString],
-                           :kind string},
-   :homepageUri {:kind string,
-                 :uri string,
-                 :description string,
-                 :localizedDescription LocalizedString,
-                 :id string},
-   :callbackOptions {:url string, :updateRequestUrl string},
-   :linksModuleData {:uris [Uri]},
-   :imageModulesData [{:mainImage Image, :id string}],
-   :locations [{:latitude number, :kind string, :longitude number}],
-   :allowMultipleUsersPerObject boolean,
-   :hexBackgroundColor string,
-   :messages [{:body string,
-               :messageType string,
-               :header string,
-               :id string,
-               :kind string,
-               :displayInterval TimeInterval,
-               :localizedHeader LocalizedString,
-               :localizedBody LocalizedString}],
-   :localizedIssuerName {:defaultValue TranslatedString,
-                         :translatedValues [TranslatedString],
-                         :kind string},
-   :redemptionIssuers [string],
-   :review {:comments string},
-   :programLogo {:contentDescription LocalizedString,
-                 :kind string,
-                 :sourceUri ImageUri},
-   :id string,
-   :kind string,
-   :localizedPinLabel {:defaultValue TranslatedString,
-                       :translatedValues [TranslatedString],
-                       :kind string},
-   :classTemplateInfo {:listTemplateOverride ListTemplateOverride,
-                       :detailsTemplateOverride DetailsTemplateOverride,
-                       :cardBarcodeSectionDetails CardBarcodeSectionDetails,
-                       :cardTemplateOverride CardTemplateOverride},
-   :enableSmartTap boolean,
-   :cardNumberLabel string,
-   :version string,
-   :viewUnlockRequirement string,
-   :infoModuleData {:labelValueRows [LabelValueRow],
-                    :showLastUpdateTime boolean},
-   :heroImage {:contentDescription LocalizedString,
-               :kind string,
-               :sourceUri ImageUri},
-   :allowBarcodeRedemption boolean,
-   :eventNumberLabel string,
-   :countryCode string,
-   :localizedCardNumberLabel {:defaultValue TranslatedString,
-                              :translatedValues [TranslatedString],
-                              :kind string}}
-  
-  Inserts an gift card class with the given ID and properties."
+  Returns the gift card class with the given class ID."
   {:scopes ["https://www.googleapis.com/auth/wallet_object.issuer"]}
-  [auth parameters body]
-  {:pre [(util/has-keys? parameters #{})]}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:resourceId})]}
   (util/get-response
-   (http/post
+   (http/get
     (util/get-url
      "https://walletobjects.googleapis.com/"
-     "walletobjects/v1/giftCardClass"
-     #{}
+     "walletobjects/v1/giftCardClass/{resourceId}"
+     #{:resourceId}
      parameters)
     (merge-with
      merge
-     {:content-type :json,
-      :body (json/generate-string body),
-      :throw-exceptions false,
+     {:throw-exceptions false,
       :query-params parameters,
       :accept :json,
       :as :json}
@@ -137,6 +58,114 @@
       :as :json}
      auth))))
 
+(defn insert$
+  "https://developers.google.com/pay/passesapi/reference/rest/v1/giftcardclass/insert
+  
+  Required parameters: none
+  
+  Optional parameters: none
+  
+  Body: 
+  
+  {:wordMark {:sourceUri ImageUri,
+              :kind string,
+              :contentDescription LocalizedString},
+   :reviewStatus string,
+   :wideProgramLogo {:sourceUri ImageUri,
+                     :kind string,
+                     :contentDescription LocalizedString},
+   :textModulesData [{:localizedHeader LocalizedString,
+                      :header string,
+                      :localizedBody LocalizedString,
+                      :id string,
+                      :body string}],
+   :issuerName string,
+   :securityAnimation {:animationType string},
+   :multipleDevicesAndHoldersAllowedStatus string,
+   :localizedEventNumberLabel {:kind string,
+                               :translatedValues [TranslatedString],
+                               :defaultValue TranslatedString},
+   :pinLabel string,
+   :merchantName string,
+   :localizedMerchantName {:kind string,
+                           :translatedValues [TranslatedString],
+                           :defaultValue TranslatedString},
+   :homepageUri {:id string,
+                 :uri string,
+                 :localizedDescription LocalizedString,
+                 :kind string,
+                 :description string},
+   :callbackOptions {:updateRequestUrl string, :url string},
+   :linksModuleData {:uris [Uri]},
+   :imageModulesData [{:mainImage Image, :id string}],
+   :locations [{:latitude number, :kind string, :longitude number}],
+   :allowMultipleUsersPerObject boolean,
+   :hexBackgroundColor string,
+   :messages [{:messageType string,
+               :displayInterval TimeInterval,
+               :body string,
+               :id string,
+               :localizedBody LocalizedString,
+               :header string,
+               :localizedHeader LocalizedString,
+               :kind string}],
+   :localizedIssuerName {:kind string,
+                         :translatedValues [TranslatedString],
+                         :defaultValue TranslatedString},
+   :redemptionIssuers [string],
+   :review {:comments string},
+   :programLogo {:sourceUri ImageUri,
+                 :kind string,
+                 :contentDescription LocalizedString},
+   :id string,
+   :kind string,
+   :appLinkData {:webAppLinkInfo AppLinkDataAppLinkInfo,
+                 :iosAppLinkInfo AppLinkDataAppLinkInfo,
+                 :androidAppLinkInfo AppLinkDataAppLinkInfo},
+   :localizedPinLabel {:kind string,
+                       :translatedValues [TranslatedString],
+                       :defaultValue TranslatedString},
+   :classTemplateInfo {:detailsTemplateOverride DetailsTemplateOverride,
+                       :listTemplateOverride ListTemplateOverride,
+                       :cardTemplateOverride CardTemplateOverride,
+                       :cardBarcodeSectionDetails CardBarcodeSectionDetails},
+   :enableSmartTap boolean,
+   :cardNumberLabel string,
+   :version string,
+   :viewUnlockRequirement string,
+   :infoModuleData {:showLastUpdateTime boolean,
+                    :labelValueRows [LabelValueRow]},
+   :heroImage {:sourceUri ImageUri,
+               :kind string,
+               :contentDescription LocalizedString},
+   :allowBarcodeRedemption boolean,
+   :eventNumberLabel string,
+   :countryCode string,
+   :localizedCardNumberLabel {:kind string,
+                              :translatedValues [TranslatedString],
+                              :defaultValue TranslatedString}}
+  
+  Inserts an gift card class with the given ID and properties."
+  {:scopes ["https://www.googleapis.com/auth/wallet_object.issuer"]}
+  [auth parameters body]
+  {:pre [(util/has-keys? parameters #{})]}
+  (util/get-response
+   (http/post
+    (util/get-url
+     "https://walletobjects.googleapis.com/"
+     "walletobjects/v1/giftCardClass"
+     #{}
+     parameters)
+    (merge-with
+     merge
+     {:content-type :json,
+      :body (json/generate-string body),
+      :throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn update$
   "https://developers.google.com/pay/passesapi/reference/rest/v1/giftcardclass/update
   
@@ -146,80 +175,83 @@
   
   Body: 
   
-  {:wordMark {:contentDescription LocalizedString,
+  {:wordMark {:sourceUri ImageUri,
               :kind string,
-              :sourceUri ImageUri},
+              :contentDescription LocalizedString},
    :reviewStatus string,
-   :wideProgramLogo {:contentDescription LocalizedString,
+   :wideProgramLogo {:sourceUri ImageUri,
                      :kind string,
-                     :sourceUri ImageUri},
-   :textModulesData [{:id string,
+                     :contentDescription LocalizedString},
+   :textModulesData [{:localizedHeader LocalizedString,
+                      :header string,
                       :localizedBody LocalizedString,
-                      :localizedHeader LocalizedString,
-                      :body string,
-                      :header string}],
+                      :id string,
+                      :body string}],
    :issuerName string,
    :securityAnimation {:animationType string},
    :multipleDevicesAndHoldersAllowedStatus string,
-   :localizedEventNumberLabel {:defaultValue TranslatedString,
+   :localizedEventNumberLabel {:kind string,
                                :translatedValues [TranslatedString],
-                               :kind string},
+                               :defaultValue TranslatedString},
    :pinLabel string,
    :merchantName string,
-   :localizedMerchantName {:defaultValue TranslatedString,
+   :localizedMerchantName {:kind string,
                            :translatedValues [TranslatedString],
-                           :kind string},
-   :homepageUri {:kind string,
+                           :defaultValue TranslatedString},
+   :homepageUri {:id string,
                  :uri string,
-                 :description string,
                  :localizedDescription LocalizedString,
-                 :id string},
-   :callbackOptions {:url string, :updateRequestUrl string},
+                 :kind string,
+                 :description string},
+   :callbackOptions {:updateRequestUrl string, :url string},
    :linksModuleData {:uris [Uri]},
    :imageModulesData [{:mainImage Image, :id string}],
    :locations [{:latitude number, :kind string, :longitude number}],
    :allowMultipleUsersPerObject boolean,
    :hexBackgroundColor string,
-   :messages [{:body string,
-               :messageType string,
-               :header string,
-               :id string,
-               :kind string,
+   :messages [{:messageType string,
                :displayInterval TimeInterval,
+               :body string,
+               :id string,
+               :localizedBody LocalizedString,
+               :header string,
                :localizedHeader LocalizedString,
-               :localizedBody LocalizedString}],
-   :localizedIssuerName {:defaultValue TranslatedString,
+               :kind string}],
+   :localizedIssuerName {:kind string,
                          :translatedValues [TranslatedString],
-                         :kind string},
+                         :defaultValue TranslatedString},
    :redemptionIssuers [string],
    :review {:comments string},
-   :programLogo {:contentDescription LocalizedString,
+   :programLogo {:sourceUri ImageUri,
                  :kind string,
-                 :sourceUri ImageUri},
+                 :contentDescription LocalizedString},
    :id string,
    :kind string,
-   :localizedPinLabel {:defaultValue TranslatedString,
+   :appLinkData {:webAppLinkInfo AppLinkDataAppLinkInfo,
+                 :iosAppLinkInfo AppLinkDataAppLinkInfo,
+                 :androidAppLinkInfo AppLinkDataAppLinkInfo},
+   :localizedPinLabel {:kind string,
                        :translatedValues [TranslatedString],
-                       :kind string},
-   :classTemplateInfo {:listTemplateOverride ListTemplateOverride,
-                       :detailsTemplateOverride DetailsTemplateOverride,
-                       :cardBarcodeSectionDetails CardBarcodeSectionDetails,
-                       :cardTemplateOverride CardTemplateOverride},
+                       :defaultValue TranslatedString},
+   :classTemplateInfo {:detailsTemplateOverride DetailsTemplateOverride,
+                       :listTemplateOverride ListTemplateOverride,
+                       :cardTemplateOverride CardTemplateOverride,
+                       :cardBarcodeSectionDetails CardBarcodeSectionDetails},
    :enableSmartTap boolean,
    :cardNumberLabel string,
    :version string,
    :viewUnlockRequirement string,
-   :infoModuleData {:labelValueRows [LabelValueRow],
-                    :showLastUpdateTime boolean},
-   :heroImage {:contentDescription LocalizedString,
+   :infoModuleData {:showLastUpdateTime boolean,
+                    :labelValueRows [LabelValueRow]},
+   :heroImage {:sourceUri ImageUri,
                :kind string,
-               :sourceUri ImageUri},
+               :contentDescription LocalizedString},
    :allowBarcodeRedemption boolean,
    :eventNumberLabel string,
    :countryCode string,
-   :localizedCardNumberLabel {:defaultValue TranslatedString,
+   :localizedCardNumberLabel {:kind string,
                               :translatedValues [TranslatedString],
-                              :kind string}}
+                              :defaultValue TranslatedString}}
   
   Updates the gift card class referenced by the given class ID."
   {:scopes ["https://www.googleapis.com/auth/wallet_object.issuer"]}
@@ -242,32 +274,6 @@
       :as :json}
      auth))))
 
-(defn get$
-  "https://developers.google.com/pay/passesapi/reference/rest/v1/giftcardclass/get
-  
-  Required parameters: resourceId
-  
-  Optional parameters: none
-  
-  Returns the gift card class with the given class ID."
-  {:scopes ["https://www.googleapis.com/auth/wallet_object.issuer"]}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:resourceId})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://walletobjects.googleapis.com/"
-     "walletobjects/v1/giftCardClass/{resourceId}"
-     #{:resourceId}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
 (defn addmessage$
   "https://developers.google.com/pay/passesapi/reference/rest/v1/giftcardclass/addmessage
   
@@ -277,14 +283,14 @@
   
   Body: 
   
-  {:message {:body string,
-             :messageType string,
-             :header string,
-             :id string,
-             :kind string,
+  {:message {:messageType string,
              :displayInterval TimeInterval,
+             :body string,
+             :id string,
+             :localizedBody LocalizedString,
+             :header string,
              :localizedHeader LocalizedString,
-             :localizedBody LocalizedString}}
+             :kind string}}
   
   Adds a message to the gift card class referenced by the given class ID."
   {:scopes ["https://www.googleapis.com/auth/wallet_object.issuer"]}
@@ -316,80 +322,83 @@
   
   Body: 
   
-  {:wordMark {:contentDescription LocalizedString,
+  {:wordMark {:sourceUri ImageUri,
               :kind string,
-              :sourceUri ImageUri},
+              :contentDescription LocalizedString},
    :reviewStatus string,
-   :wideProgramLogo {:contentDescription LocalizedString,
+   :wideProgramLogo {:sourceUri ImageUri,
                      :kind string,
-                     :sourceUri ImageUri},
-   :textModulesData [{:id string,
+                     :contentDescription LocalizedString},
+   :textModulesData [{:localizedHeader LocalizedString,
+                      :header string,
                       :localizedBody LocalizedString,
-                      :localizedHeader LocalizedString,
-                      :body string,
-                      :header string}],
+                      :id string,
+                      :body string}],
    :issuerName string,
    :securityAnimation {:animationType string},
    :multipleDevicesAndHoldersAllowedStatus string,
-   :localizedEventNumberLabel {:defaultValue TranslatedString,
+   :localizedEventNumberLabel {:kind string,
                                :translatedValues [TranslatedString],
-                               :kind string},
+                               :defaultValue TranslatedString},
    :pinLabel string,
    :merchantName string,
-   :localizedMerchantName {:defaultValue TranslatedString,
+   :localizedMerchantName {:kind string,
                            :translatedValues [TranslatedString],
-                           :kind string},
-   :homepageUri {:kind string,
+                           :defaultValue TranslatedString},
+   :homepageUri {:id string,
                  :uri string,
-                 :description string,
                  :localizedDescription LocalizedString,
-                 :id string},
-   :callbackOptions {:url string, :updateRequestUrl string},
+                 :kind string,
+                 :description string},
+   :callbackOptions {:updateRequestUrl string, :url string},
    :linksModuleData {:uris [Uri]},
    :imageModulesData [{:mainImage Image, :id string}],
    :locations [{:latitude number, :kind string, :longitude number}],
    :allowMultipleUsersPerObject boolean,
    :hexBackgroundColor string,
-   :messages [{:body string,
-               :messageType string,
-               :header string,
-               :id string,
-               :kind string,
+   :messages [{:messageType string,
                :displayInterval TimeInterval,
+               :body string,
+               :id string,
+               :localizedBody LocalizedString,
+               :header string,
                :localizedHeader LocalizedString,
-               :localizedBody LocalizedString}],
-   :localizedIssuerName {:defaultValue TranslatedString,
+               :kind string}],
+   :localizedIssuerName {:kind string,
                          :translatedValues [TranslatedString],
-                         :kind string},
+                         :defaultValue TranslatedString},
    :redemptionIssuers [string],
    :review {:comments string},
-   :programLogo {:contentDescription LocalizedString,
+   :programLogo {:sourceUri ImageUri,
                  :kind string,
-                 :sourceUri ImageUri},
+                 :contentDescription LocalizedString},
    :id string,
    :kind string,
-   :localizedPinLabel {:defaultValue TranslatedString,
+   :appLinkData {:webAppLinkInfo AppLinkDataAppLinkInfo,
+                 :iosAppLinkInfo AppLinkDataAppLinkInfo,
+                 :androidAppLinkInfo AppLinkDataAppLinkInfo},
+   :localizedPinLabel {:kind string,
                        :translatedValues [TranslatedString],
-                       :kind string},
-   :classTemplateInfo {:listTemplateOverride ListTemplateOverride,
-                       :detailsTemplateOverride DetailsTemplateOverride,
-                       :cardBarcodeSectionDetails CardBarcodeSectionDetails,
-                       :cardTemplateOverride CardTemplateOverride},
+                       :defaultValue TranslatedString},
+   :classTemplateInfo {:detailsTemplateOverride DetailsTemplateOverride,
+                       :listTemplateOverride ListTemplateOverride,
+                       :cardTemplateOverride CardTemplateOverride,
+                       :cardBarcodeSectionDetails CardBarcodeSectionDetails},
    :enableSmartTap boolean,
    :cardNumberLabel string,
    :version string,
    :viewUnlockRequirement string,
-   :infoModuleData {:labelValueRows [LabelValueRow],
-                    :showLastUpdateTime boolean},
-   :heroImage {:contentDescription LocalizedString,
+   :infoModuleData {:showLastUpdateTime boolean,
+                    :labelValueRows [LabelValueRow]},
+   :heroImage {:sourceUri ImageUri,
                :kind string,
-               :sourceUri ImageUri},
+               :contentDescription LocalizedString},
    :allowBarcodeRedemption boolean,
    :eventNumberLabel string,
    :countryCode string,
-   :localizedCardNumberLabel {:defaultValue TranslatedString,
+   :localizedCardNumberLabel {:kind string,
                               :translatedValues [TranslatedString],
-                              :kind string}}
+                              :defaultValue TranslatedString}}
   
   Updates the gift card class referenced by the given class ID. This method supports patch semantics."
   {:scopes ["https://www.googleapis.com/auth/wallet_object.issuer"]}

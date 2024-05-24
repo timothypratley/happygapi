@@ -1,7 +1,7 @@
 (ns happygapi.deploymentmanager.resources
   "Cloud Deployment Manager V2 API: resources.
   The Google Cloud Deployment Manager v2 API provides services for configuring, deploying, and viewing Google Cloud services and APIs via templates which specify deployments of Cloud resources.
-  See: https://cloud.google.com/deployment-managerapi/reference/rest/v2/resources"
+  See: https://cloud.google.com/deployment-managerdocs/reference/rest/v2/resources"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

@@ -1,7 +1,7 @@
 (ns happygapi.playcustomapp.accounts
   "Google Play Custom App Publishing API: accounts.
   API to create and publish custom Android apps
-  See: https://developers.google.com/android/work/play/custom-app-api/api/reference/rest/v1/accounts"
+  See: https://developers.google.com/android/work/play/custom-app-api/docs/reference/rest/v1/accounts"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -15,10 +15,10 @@
   
   Body: 
   
-  {:packageName string,
-   :title string,
+  {:organizations [{:organizationId string, :organizationName string}],
+   :packageName string,
    :languageCode string,
-   :organizations [{:organizationName string, :organizationId string}]}
+   :title string}
   
   Creates a new custom app."
   {:scopes ["https://www.googleapis.com/auth/androidpublisher"]}

@@ -29,9 +29,14 @@
                                           :type "string",
                                           :enumDescriptions ["The network has not been specified, but should be."
                                                              "The Ethereum Mainnet."
-                                                             "The Ethereum Testnet based on Goerli protocol."
+                                                             "Deprecated: The Ethereum Testnet based on Goerli protocol. Please use another test network."
                                                              "The Ethereum Testnet based on Sepolia/Bepolia protocol. See https://github.com/eth-clients/sepolia."
                                                              "The Ethereum Testnet based on Holesky specification. See https://github.com/eth-clients/holesky."],
+                                          :enumDeprecated [false
+                                                           false
+                                                           true
+                                                           false
+                                                           false],
                                           :enum ["NETWORK_UNSPECIFIED"
                                                  "MAINNET"
                                                  "TESTNET_GOERLI_PRATER"
@@ -101,7 +106,8 @@
                                                           "The node is in an unexpected or errored state."
                                                           "The node is currently being updated."
                                                           "The node is currently being repaired."
-                                                          "The node is currently being reconciled."],
+                                                          "The node is currently being reconciled."
+                                                          "The node is syncing, which is the process by which it obtains the latest block and current global state."],
                                        :enum ["STATE_UNSPECIFIED"
                                               "CREATING"
                                               "DELETING"
@@ -109,7 +115,8 @@
                                               "ERROR"
                                               "UPDATING"
                                               "REPAIRING"
-                                              "RECONCILING"]},
+                                              "RECONCILING"
+                                              "SYNCING"]},
                                :ethereumDetails {:description "Ethereum-specific blockchain node details.",
                                                  :$ref "EthereumDetails"},
                                :updateTime {:description "Output only. The timestamp at which the blockchain node was last updated.",

@@ -1,7 +1,7 @@
 (ns happygapi.cloudidentity.inboundSamlSsoProfiles
   "Cloud Identity API: inboundSamlSsoProfiles.
   API for provisioning and managing identity resources.
-  See: https://cloud.google.com/identity/api/reference/rest/v1/inboundSamlSsoProfiles"
+  See: https://cloud.google.com/identity/docs/reference/rest/v1/inboundSamlSsoProfiles"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

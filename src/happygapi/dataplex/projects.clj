@@ -1,7 +1,7 @@
 (ns happygapi.dataplex.projects
   "Cloud Dataplex API: projects.
   Dataplex API is used to manage the lifecycle of data lakes.
-  See: https://cloud.google.com/dataplex/docsapi/reference/rest/v1/projects"
+  See: https://cloud.google.com/dataplex/docsdocs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -934,7 +934,6 @@
                      :postScanActions GoogleCloudDataplexV1DataProfileSpecPostScanActions,
                      :includeFields GoogleCloudDataplexV1DataProfileSpecSelectedFields,
                      :excludeFields GoogleCloudDataplexV1DataProfileSpecSelectedFields},
-   :dataDocumentationSpec {},
    :dataQualitySpec {:rules [GoogleCloudDataplexV1DataQualityRule],
                      :samplingPercent number,
                      :rowFilter string,
@@ -947,7 +946,6 @@
                        :rowCount string,
                        :scannedData GoogleCloudDataplexV1ScannedData,
                        :postScanActionsResult GoogleCloudDataplexV1DataQualityResultPostScanActionsResult},
-   :dataDocumentationResult {:queries [GoogleCloudDataplexV1DataDocumentationResultQuery]},
    :data {:entity string, :resource string}}
   
   Updates a DataScan resource."
@@ -1065,7 +1063,6 @@
                      :postScanActions GoogleCloudDataplexV1DataProfileSpecPostScanActions,
                      :includeFields GoogleCloudDataplexV1DataProfileSpecSelectedFields,
                      :excludeFields GoogleCloudDataplexV1DataProfileSpecSelectedFields},
-   :dataDocumentationSpec {},
    :dataQualitySpec {:rules [GoogleCloudDataplexV1DataQualityRule],
                      :samplingPercent number,
                      :rowFilter string,
@@ -1078,7 +1075,6 @@
                        :rowCount string,
                        :scannedData GoogleCloudDataplexV1ScannedData,
                        :postScanActionsResult GoogleCloudDataplexV1DataQualityResultPostScanActionsResult},
-   :dataDocumentationResult {:queries [GoogleCloudDataplexV1DataDocumentationResultQuery]},
    :data {:entity string, :resource string}}
   
   Creates a DataScan resource."

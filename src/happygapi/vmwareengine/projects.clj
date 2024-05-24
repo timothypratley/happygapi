@@ -1,7 +1,7 @@
 (ns happygapi.vmwareengine.projects
   "VMware Engine API: projects.
   The Google VMware Engine API lets you programmatically manage VMware environments.
-  See: https://cloud.google.com/solutions/vmware-as-a-serviceapi/reference/rest/v1/projects"
+  See: https://cloud.google.com/solutions/vmware-as-a-servicedocs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

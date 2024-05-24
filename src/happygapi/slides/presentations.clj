@@ -1,7 +1,7 @@
 (ns happygapi.slides.presentations
   "Google Slides API: presentations.
   Reads and writes Google Slides presentations.
-  See: https://developers.google.com/slides/api/reference/rest/v1/presentations"
+  See: https://developers.google.com/slides/docs/reference/rest/v1/presentations"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

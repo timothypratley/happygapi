@@ -1,36 +1,10 @@
 (ns happygapi.checks.accounts
   "Checks API: accounts.
   The Checks API contains powerful and easy-to-use privacy and compliance APIs that interact with the Checks product and its underlying technology.
-  See: https://developers.google.com/checksapi/reference/rest/v1alpha/accounts"
+  See: https://developers.google.com/checksdocs/reference/rest/v1alpha/accounts"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
-
-(defn apps-list$
-  "https://developers.google.com/checksapi/reference/rest/v1alpha/accounts/apps/list
-  
-  Required parameters: parent
-  
-  Optional parameters: pageSize, pageToken
-  
-  Lists the apps under the given account."
-  {:scopes nil}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://checks.googleapis.com/"
-     "v1alpha/{+parent}/apps"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
 
 (defn apps-get$
   "https://developers.google.com/checksapi/reference/rest/v1alpha/accounts/apps/get
@@ -58,23 +32,75 @@
       :as :json}
      auth))))
 
-(defn apps-operations-delete$
-  "https://developers.google.com/checksapi/reference/rest/v1alpha/accounts/apps/operations/delete
+(defn apps-list$
+  "https://developers.google.com/checksapi/reference/rest/v1alpha/accounts/apps/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageToken, pageSize
+  
+  Lists the apps under the given account."
+  {:scopes nil}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://checks.googleapis.com/"
+     "v1alpha/{+parent}/apps"
+     #{:parent}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn apps-reports-get$
+  "https://developers.google.com/checksapi/reference/rest/v1alpha/accounts/apps/reports/get
   
   Required parameters: name
   
-  Optional parameters: none
+  Optional parameters: checksFilter
   
-  Deletes a long-running operation. This method indicates that the client is no longer interested in the operation result. It does not cancel the operation. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`."
+  Gets a report. By default, only the name and results_uri fields are returned. You can include other fields by listing them in the `fields` URL query parameter. For example, `?fields=name,checks` will return the name and checks fields."
   {:scopes nil}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
-   (http/delete
+   (http/get
     (util/get-url
      "https://checks.googleapis.com/"
      "v1alpha/{+name}"
      #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
+(defn apps-reports-list$
+  "https://developers.google.com/checksapi/reference/rest/v1alpha/accounts/apps/reports/list
+  
+  Required parameters: parent
+  
+  Optional parameters: pageToken, filter, pageSize, checksFilter
+  
+  Lists reports for the specified app. By default, only the name and results_uri fields are returned. You can include other fields by listing them in the `fields` URL query parameter. For example, `?fields=reports(name,checks)` will return the name and checks fields."
+  {:scopes nil}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:parent})]}
+  (util/get-response
+   (http/get
+    (util/get-url
+     "https://checks.googleapis.com/"
+     "v1alpha/{+parent}/reports"
+     #{:parent}
      parameters)
     (merge-with
      merge
@@ -148,6 +174,32 @@
       :as :json}
      auth))))
 
+(defn apps-operations-delete$
+  "https://developers.google.com/checksapi/reference/rest/v1alpha/accounts/apps/operations/delete
+  
+  Required parameters: name
+  
+  Optional parameters: none
+  
+  Deletes a long-running operation. This method indicates that the client is no longer interested in the operation result. It does not cancel the operation. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`."
+  {:scopes nil}
+  [auth parameters]
+  {:pre [(util/has-keys? parameters #{:name})]}
+  (util/get-response
+   (http/delete
+    (util/get-url
+     "https://checks.googleapis.com/"
+     "v1alpha/{+name}"
+     #{:name}
+     parameters)
+    (merge-with
+     merge
+     {:throw-exceptions false,
+      :query-params parameters,
+      :accept :json,
+      :as :json}
+     auth))))
+
 (defn apps-operations-get$
   "https://developers.google.com/checksapi/reference/rest/v1alpha/accounts/apps/operations/get
   
@@ -179,7 +231,7 @@
   
   Required parameters: name
   
-  Optional parameters: filter, pageSize, pageToken
+  Optional parameters: pageToken, filter, pageSize
   
   Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns `UNIMPLEMENTED`."
   {:scopes nil}
@@ -190,58 +242,6 @@
     (util/get-url
      "https://checks.googleapis.com/"
      "v1alpha/{+name}/operations"
-     #{:name}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn apps-reports-list$
-  "https://developers.google.com/checksapi/reference/rest/v1alpha/accounts/apps/reports/list
-  
-  Required parameters: parent
-  
-  Optional parameters: checksFilter, pageSize, filter, pageToken
-  
-  Lists reports for the specified app. By default, only the name and results_uri fields are returned. You can include other fields by listing them in the `fields` URL query parameter. For example, `?fields=reports(name,checks)` will return the name and checks fields."
-  {:scopes nil}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://checks.googleapis.com/"
-     "v1alpha/{+parent}/reports"
-     #{:parent}
-     parameters)
-    (merge-with
-     merge
-     {:throw-exceptions false,
-      :query-params parameters,
-      :accept :json,
-      :as :json}
-     auth))))
-
-(defn apps-reports-get$
-  "https://developers.google.com/checksapi/reference/rest/v1alpha/accounts/apps/reports/get
-  
-  Required parameters: name
-  
-  Optional parameters: checksFilter
-  
-  Gets a report. By default, only the name and results_uri fields are returned. You can include other fields by listing them in the `fields` URL query parameter. For example, `?fields=name,checks` will return the name and checks fields."
-  {:scopes nil}
-  [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
-  (util/get-response
-   (http/get
-    (util/get-url
-     "https://checks.googleapis.com/"
-     "v1alpha/{+name}"
      #{:name}
      parameters)
     (merge-with

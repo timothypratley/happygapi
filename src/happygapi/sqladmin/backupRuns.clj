@@ -1,7 +1,7 @@
 (ns happygapi.sqladmin.backupRuns
   "Cloud SQL Admin API: backupRuns.
   API for Cloud SQL database instance management
-  See: https://developers.google.com/cloud-sql/api/reference/rest/v1/backupRuns"
+  See: https://developers.google.com/cloud-sql/docs/reference/rest/v1/backupRuns"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

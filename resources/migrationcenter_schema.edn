@@ -359,6 +359,64 @@
                        :summary {:description "Output only. Summary view of the Report.",
                                  :readOnly true,
                                  :$ref "ReportSummary"}}},
+ :DiscoveryClient {:id "DiscoveryClient",
+                   :description "Represents an installed Migration Center Discovery Client instance.",
+                   :type "object",
+                   :properties {:description {:description "Optional. Free text description. Maximum length is 1000 characters.",
+                                              :type "string"},
+                                :serviceAccount {:description "Required. Service account used by the discovery client for various operation.",
+                                                 :type "string"},
+                                :labels {:description "Optional. Labels as key value pairs.",
+                                         :type "object",
+                                         :additionalProperties {:type "string"}},
+                                :errors {:description "Output only. Errors affecting client functionality.",
+                                         :readOnly true,
+                                         :type "array",
+                                         :items {:$ref "Status"}},
+                                :heartbeatTime {:description "Output only. Last heartbeat time. Healthy clients are expected to send heartbeats regularly (normally every few minutes).",
+                                                :readOnly true,
+                                                :type "string",
+                                                :format "google-datetime"},
+                                :displayName {:description "Optional. Free text display name. Maximum length is 63 characters.",
+                                              :type "string"},
+                                :name {:description "Output only. Identifier. Full name of this discovery client.",
+                                       :readOnly true,
+                                       :type "string"},
+                                :createTime {:description "Output only. Time when the discovery client was first created.",
+                                             :readOnly true,
+                                             :type "string",
+                                             :format "google-datetime"},
+                                :state {:description "Output only. Current state of the discovery client.",
+                                        :readOnly true,
+                                        :type "string",
+                                        :enumDescriptions ["Client state is unspecified."
+                                                           "Client is active."
+                                                           "Client is offline."
+                                                           "Client is in a degraded state. See the `errors` field for details."
+                                                           "Client has expired. See the expire_time field for the expire time."],
+                                        :enum ["STATE_UNSPECIFIED"
+                                               "ACTIVE"
+                                               "OFFLINE"
+                                               "DEGRADED"
+                                               "EXPIRED"]},
+                                :source {:description "Required. Immutable. Full name of the source object associated with this discovery client.",
+                                         :type "string"},
+                                :updateTime {:description "Output only. Time when the discovery client was last updated. This value is not updated by heartbeats, to view the last heartbeat time please refer to the `heartbeat_time` field.",
+                                             :readOnly true,
+                                             :type "string",
+                                             :format "google-datetime"},
+                                :ttl {:description "Optional. Input only. Client time-to-live. If specified, the backend will not accept new frames after this time. This field is input only. The derived expiration time is provided as output through the `expire_time` field.",
+                                      :type "string",
+                                      :format "google-duration"},
+                                :expireTime {:description "Optional. Client expiration time in UTC. If specified, the backend will not accept new frames after this time.",
+                                             :type "string",
+                                             :format "google-datetime"},
+                                :signalsEndpoint {:description "Output only. This field is intended for internal use.",
+                                                  :readOnly true,
+                                                  :type "string"},
+                                :version {:description "Output only. Client version, as reported in recent heartbeat.",
+                                          :readOnly true,
+                                          :type "string"}}},
  :AddAssetsToGroupRequest {:id "AddAssetsToGroupRequest",
                            :description "A request to add assets to a group.",
                            :type "object",
@@ -405,7 +463,7 @@
                                             :type "string"},
                               :description {:description "A description of the preference set.",
                                             :type "string"},
-                              :virtualMachinePreferences {:description "A set of preferences that applies to all virtual machines in the context.",
+                              :virtualMachinePreferences {:description "Optional. A set of preferences that applies to all virtual machines in the context.",
                                                           :$ref "VirtualMachinePreferences"}}},
  :NetworkConnection {:id "NetworkConnection",
                      :type "object",
@@ -554,9 +612,9 @@
                           :type "object",
                           :properties {}},
  :MachineSeries {:id "MachineSeries",
-                 :description "A Compute Engine machine series.",
+                 :description "A machine series, for a target product (e.g. Compute Engine, Google Cloud VMware Engine).",
                  :type "object",
-                 :properties {:code {:description "Code to identify a Compute Engine machine series. Consult https://cloud.google.com/compute/docs/machine-resource#machine_type_comparison for more details on the available series.",
+                 :properties {:code {:description "Code to identify a machine series. Consult this for more details on the available series for Compute Engine: https://cloud.google.com/compute/docs/machine-resource#machine_type_comparison Consult this for more details on the available series for Google Cloud VMware Engine: https://cloud.google.com/vmware-engine/pricing",
                                      :type "string"}}},
  :AggregationResultSum {:id "AggregationResultSum",
                         :description "The result of a sum aggregation.",
@@ -1308,6 +1366,17 @@
                                                                           :$ref "Money"},
                                                        :monthlyCostCompute {:description "Compute monthly cost for this preference set.",
                                                                             :$ref "Money"}}},
+ :ListDiscoveryClientsResponse {:id "ListDiscoveryClientsResponse",
+                                :description "Response message for listing discovery clients.",
+                                :type "object",
+                                :properties {:discoveryClients {:description "List of discovery clients.",
+                                                                :type "array",
+                                                                :items {:$ref "DiscoveryClient"}},
+                                             :nextPageToken {:description "A token that can be sent as `page_token` to retrieve the next page. If this field is omitted, there are no subsequent pages.",
+                                                             :type "string"},
+                                             :unreachable {:description "Locations that could not be reached.",
+                                                           :type "array",
+                                                           :items {:type "string"}}}},
  :ReportSummaryHistogramChartDataBucket {:id "ReportSummaryHistogramChartDataBucket",
                                          :description "A histogram bucket with a lower and upper bound, and a count of items with a field value between those bounds. The lower bound is inclusive and the upper bound is exclusive. Lower bound may be -infinity and upper bound may be infinity.",
                                          :type "object",
@@ -1397,7 +1466,7 @@
                                 :properties {:aggregations {:description "Array of aggregations to perform. Up to 25 aggregations can be defined.",
                                                             :type "array",
                                                             :items {:$ref "Aggregation"}},
-                                             :filter {:description "The aggregation will be performed on assets that match the provided filter.",
+                                             :filter {:description "Optional. The aggregation will be performed on assets that match the provided filter.",
                                                       :type "string"}}},
  :MigrationInsight {:id "MigrationInsight",
                     :description "An insight about potential migrations for an asset.",
@@ -1622,12 +1691,14 @@
                                                  "Manually uploaded file (e.g. CSV)"
                                                  "Guest-level info"
                                                  "Inventory-level scan"
-                                                 "Third-party owned sources."],
+                                                 "Third-party owned sources."
+                                                 "Discovery clients"],
                               :enum ["SOURCE_TYPE_UNKNOWN"
                                      "SOURCE_TYPE_UPLOAD"
                                      "SOURCE_TYPE_GUEST_OS_SCAN"
                                      "SOURCE_TYPE_INVENTORY_SCAN"
-                                     "SOURCE_TYPE_CUSTOM"]},
+                                     "SOURCE_TYPE_CUSTOM"
+                                     "SOURCE_TYPE_DISCOVERY_CLIENT"]},
                        :state {:description "Output only. The state of the source.",
                                :readOnly true,
                                :type "string",
@@ -1666,6 +1737,14 @@
                                                    :readOnly true,
                                                    :type "string",
                                                    :format "google-datetime"}}},
+ :SendDiscoveryClientHeartbeatRequest {:id "SendDiscoveryClientHeartbeatRequest",
+                                       :description "A request to send a discovery client heartbeat.",
+                                       :type "object",
+                                       :properties {:version {:description "Optional. Client application version.",
+                                                              :type "string"},
+                                                    :errors {:description "Optional. Errors affecting client functionality.",
+                                                             :type "array",
+                                                             :items {:$ref "Status"}}}},
  :AssetList {:id "AssetList",
              :description "Lists the asset IDs of all assets.",
              :type "object",
@@ -1856,7 +1935,21 @@
                                                 :type "array",
                                                 :items {:$ref "PerformanceSample"}},
                            :traceToken {:description "Optional. Trace token is optionally provided to assist with debugging and traceability.",
-                                        :type "string"}}},
+                                        :type "string"},
+                           :collectionType {:description "Optional. Frame collection type, if not specified the collection type will be based on the source type of the source the frame was reported on.",
+                                            :type "string",
+                                            :enumDescriptions ["Unspecified"
+                                                               "Manually uploaded file (e.g. CSV)"
+                                                               "Guest-level info"
+                                                               "Inventory-level scan"
+                                                               "Third-party owned sources."
+                                                               "Discovery clients"],
+                                            :enum ["SOURCE_TYPE_UNKNOWN"
+                                                   "SOURCE_TYPE_UPLOAD"
+                                                   "SOURCE_TYPE_GUEST_OS_SCAN"
+                                                   "SOURCE_TYPE_INVENTORY_SCAN"
+                                                   "SOURCE_TYPE_CUSTOM"
+                                                   "SOURCE_TYPE_DISCOVERY_CLIENT"]}}},
  :DailyResourceUsageAggregationDisk {:id "DailyResourceUsageAggregationDisk",
                                      :description "Statistical aggregation of disk usage.",
                                      :type "object",

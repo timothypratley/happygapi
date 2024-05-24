@@ -1,7 +1,7 @@
 (ns happygapi.youtubereporting.media
   "YouTube Reporting API: media.
   Schedules reporting jobs containing your YouTube Analytics data and downloads the resulting bulk data reports in the form of CSV files.
-  See: https://developers.google.com/youtube/reporting/v1/reports/api/reference/rest/v1/media"
+  See: https://developers.google.com/youtube/reporting/v1/reports/docs/reference/rest/v1/media"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

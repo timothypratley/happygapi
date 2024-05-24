@@ -1,7 +1,7 @@
 (ns happygapi.dns.resourceRecordSets
   "Cloud DNS API: resourceRecordSets.
   
-  See: https://cloud.google.com/dns/docsapi/reference/rest/v1/resourceRecordSets"
+  See: https://cloud.google.com/dns/docsdocs/reference/rest/v1/resourceRecordSets"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -52,7 +52,6 @@
    :routingPolicy {:geo RRSetRoutingPolicyGeoPolicy,
                    :wrr RRSetRoutingPolicyWrrPolicy,
                    :primaryBackup RRSetRoutingPolicyPrimaryBackupPolicy,
-                   :healthCheck string,
                    :kind string},
    :kind string}
   
@@ -155,7 +154,6 @@
    :routingPolicy {:geo RRSetRoutingPolicyGeoPolicy,
                    :wrr RRSetRoutingPolicyWrrPolicy,
                    :primaryBackup RRSetRoutingPolicyPrimaryBackupPolicy,
-                   :healthCheck string,
                    :kind string},
    :kind string}
   

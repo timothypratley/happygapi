@@ -1,7 +1,7 @@
 (ns happygapi.compute.httpsHealthChecks
   "Compute Engine API: httpsHealthChecks.
   Creates and runs virtual machines on Google Cloud Platform. 
-  See: https://cloud.google.com/compute/api/reference/rest/v1/httpsHealthChecks"
+  See: https://cloud.google.com/compute/docs/reference/rest/v1/httpsHealthChecks"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

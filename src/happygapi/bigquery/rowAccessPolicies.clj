@@ -1,7 +1,7 @@
 (ns happygapi.bigquery.rowAccessPolicies
   "BigQuery API: rowAccessPolicies.
   A data platform for customers to create, manage, share and query data.
-  See: https://cloud.google.com/bigquery/api/reference/rest/v2/rowAccessPolicies"
+  See: https://cloud.google.com/bigquery/docs/reference/rest/v2/rowAccessPolicies"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

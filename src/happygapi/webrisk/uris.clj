@@ -1,7 +1,7 @@
 (ns happygapi.webrisk.uris
   "Web Risk API: uris.
   
-  See: https://cloud.google.com/web-risk/api/reference/rest/v1/uris"
+  See: https://cloud.google.com/web-risk/docs/reference/rest/v1/uris"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

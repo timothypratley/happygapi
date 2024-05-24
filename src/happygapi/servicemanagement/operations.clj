@@ -1,7 +1,7 @@
 (ns happygapi.servicemanagement.operations
   "Service Management API: operations.
   Google Service Management allows service producers to publish their services on Google Cloud Platform so that they can be discovered and used by service consumers.
-  See: https://cloud.google.com/service-management/api/reference/rest/v1/operations"
+  See: https://cloud.google.com/service-management/docs/reference/rest/v1/operations"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

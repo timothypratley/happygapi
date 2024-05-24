@@ -1,7 +1,7 @@
 (ns happygapi.digitalassetlinks.assetlinks
   "Digital Asset Links API: assetlinks.
   Discovers relationships between online assets such as websites or mobile apps.
-  See: https://developers.google.com/digital-asset-links/api/reference/rest/v1/assetlinks"
+  See: https://developers.google.com/digital-asset-links/docs/reference/rest/v1/assetlinks"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

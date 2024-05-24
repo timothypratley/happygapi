@@ -1,7 +1,7 @@
 (ns happygapi.firebaseml.operations
   "Firebase ML API: operations.
   Access custom machine learning models hosted via Firebase ML.
-  See: https://firebase.google.comapi/reference/rest/v1/operations"
+  See: https://firebase.google.comdocs/reference/rest/v1/operations"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

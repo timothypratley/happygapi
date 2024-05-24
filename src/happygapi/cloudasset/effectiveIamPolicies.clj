@@ -1,7 +1,7 @@
 (ns happygapi.cloudasset.effectiveIamPolicies
   "Cloud Asset API: effectiveIamPolicies.
   The Cloud Asset API manages the history and inventory of Google Cloud resources.
-  See: https://cloud.google.com/asset-inventory/docs/quickstartapi/reference/rest/v1/effectiveIamPolicies"
+  See: https://cloud.google.com/asset-inventory/docs/quickstartdocs/reference/rest/v1/effectiveIamPolicies"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

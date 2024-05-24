@@ -1,7 +1,7 @@
 (ns happygapi.bigquery.tables
   "BigQuery API: tables.
   A data platform for customers to create, manage, share and query data.
-  See: https://cloud.google.com/bigquery/api/reference/rest/v2/tables"
+  See: https://cloud.google.com/bigquery/docs/reference/rest/v2/tables"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -84,8 +84,10 @@
    :description string,
    :maxStaleness string,
    :numBytes string,
-   :schema {:fields [TableFieldSchema]},
+   :schema {:fields [TableFieldSchema],
+            :foreignTypeInfo ForeignTypeInfo},
    :labels {},
+   :restrictions {:type string},
    :numTimeTravelPhysicalBytes string,
    :numLongTermBytes string,
    :numPhysicalBytes string,
@@ -133,6 +135,9 @@
    :partitionDefinition {:partitionedColumn [PartitionedColumn]},
    :resourceTags {},
    :defaultRoundingMode string,
+   :externalCatalogTableOptions {:connectionId string,
+                                 :parameters {},
+                                 :storageDescriptor StorageDescriptor},
    :clustering {:fields [string]},
    :friendlyName string,
    :tableReference {:datasetId string,
@@ -222,8 +227,10 @@
    :description string,
    :maxStaleness string,
    :numBytes string,
-   :schema {:fields [TableFieldSchema]},
+   :schema {:fields [TableFieldSchema],
+            :foreignTypeInfo ForeignTypeInfo},
    :labels {},
+   :restrictions {:type string},
    :numTimeTravelPhysicalBytes string,
    :numLongTermBytes string,
    :numPhysicalBytes string,
@@ -271,6 +278,9 @@
    :partitionDefinition {:partitionedColumn [PartitionedColumn]},
    :resourceTags {},
    :defaultRoundingMode string,
+   :externalCatalogTableOptions {:connectionId string,
+                                 :parameters {},
+                                 :storageDescriptor StorageDescriptor},
    :clustering {:fields [string]},
    :friendlyName string,
    :tableReference {:datasetId string,
@@ -394,8 +404,10 @@
    :description string,
    :maxStaleness string,
    :numBytes string,
-   :schema {:fields [TableFieldSchema]},
+   :schema {:fields [TableFieldSchema],
+            :foreignTypeInfo ForeignTypeInfo},
    :labels {},
+   :restrictions {:type string},
    :numTimeTravelPhysicalBytes string,
    :numLongTermBytes string,
    :numPhysicalBytes string,
@@ -443,6 +455,9 @@
    :partitionDefinition {:partitionedColumn [PartitionedColumn]},
    :resourceTags {},
    :defaultRoundingMode string,
+   :externalCatalogTableOptions {:connectionId string,
+                                 :parameters {},
+                                 :storageDescriptor StorageDescriptor},
    :clustering {:fields [string]},
    :friendlyName string,
    :tableReference {:datasetId string,

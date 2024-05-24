@@ -1,7 +1,7 @@
 (ns happygapi.storage.operations
   "Cloud Storage JSON API: operations.
   Stores and retrieves potentially large, immutable data objects.
-  See: https://developers.google.com/storage/docs/json_api/api/reference/rest/v1/operations"
+  See: https://developers.google.com/storage/docs/json_api/docs/reference/rest/v1/operations"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

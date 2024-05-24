@@ -1,7 +1,7 @@
 (ns happygapi.youtube.abuseReports
   "YouTube Data API v3: abuseReports.
   The YouTube Data API v3 is an API that provides access to YouTube data, such as videos, playlists, and channels.
-  See: https://developers.google.com/youtube/api/reference/rest/v3/abuseReports"
+  See: https://developers.google.com/youtube/docs/reference/rest/v3/abuseReports"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -15,10 +15,10 @@
   
   Body: 
   
-  {:relatedEntities [{:entity Entity}],
-   :abuseTypes [{:id string}],
+  {:subject {:id string, :url string, :typeId string},
    :description string,
-   :subject {:url string, :typeId string, :id string}}
+   :abuseTypes [{:id string}],
+   :relatedEntities [{:entity Entity}]}
   
   Inserts a new resource into this collection."
   {:scopes ["https://www.googleapis.com/auth/youtube"

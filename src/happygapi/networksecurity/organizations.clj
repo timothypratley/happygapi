@@ -1,7 +1,7 @@
 (ns happygapi.networksecurity.organizations
   "Network Security API: organizations.
   
-  See: https://cloud.google.com/networkingapi/reference/rest/v1/organizations"
+  See: https://cloud.google.com/networkingdocs/reference/rest/v1/organizations"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

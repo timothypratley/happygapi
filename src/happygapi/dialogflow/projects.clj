@@ -1,7 +1,7 @@
 (ns happygapi.dialogflow.projects
   "Dialogflow API: projects.
   Builds conversational interfaces (for example, chatbots, and voice-powered apps and devices).
-  See: https://cloud.google.com/dialogflow/api/reference/rest/v3/projects"
+  See: https://cloud.google.com/dialogflow/docs/reference/rest/v3/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -234,7 +234,8 @@
   {:audioExportSettings {:gcsBucket string,
                          :audioExportPattern string,
                          :enableAudioRedaction boolean,
-                         :audioFormat string},
+                         :audioFormat string,
+                         :storeTtsAudio boolean},
    :displayName string,
    :redactionStrategy string,
    :name string,
@@ -307,7 +308,8 @@
   {:audioExportSettings {:gcsBucket string,
                          :audioExportPattern string,
                          :enableAudioRedaction boolean,
-                         :audioFormat string},
+                         :audioFormat string,
+                         :storeTtsAudio boolean},
    :displayName string,
    :redactionStrategy string,
    :name string,
@@ -485,7 +487,8 @@
    :locked boolean,
    :personalizationSettings {:defaultEndUserMetadata {}},
    :enableStackdriverLogging boolean,
-   :avatarUri string}
+   :avatarUri string,
+   :enableMultiLanguageTraining boolean}
   
   Updates the specified agent. Note: You should always train flows prior to sending them queries. See the [training documentation](https://cloud.google.com/dialogflow/cx/docs/concept/training)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -602,7 +605,8 @@
    :locked boolean,
    :personalizationSettings {:defaultEndUserMetadata {}},
    :enableStackdriverLogging boolean,
-   :avatarUri string}
+   :avatarUri string,
+   :enableMultiLanguageTraining boolean}
   
   Creates an agent in the specified location. Note: You should always train flows prior to sending them queries. See the [training documentation](https://cloud.google.com/dialogflow/cx/docs/concept/training)."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"
@@ -1660,6 +1664,8 @@
                       :dtmfSettings GoogleCloudDialogflowCxV3AdvancedSettingsDtmfSettings,
                       :loggingSettings GoogleCloudDialogflowCxV3AdvancedSettingsLoggingSettings},
    :description string,
+   :multiLanguageSettings {:enableMultiLanguageDetection boolean,
+                           :supportedResponseLanguageCodes [string]},
    :transitionRouteGroups [string],
    :transitionRoutes [{:name string,
                        :description string,
@@ -1720,6 +1726,8 @@
                       :dtmfSettings GoogleCloudDialogflowCxV3AdvancedSettingsDtmfSettings,
                       :loggingSettings GoogleCloudDialogflowCxV3AdvancedSettingsLoggingSettings},
    :description string,
+   :multiLanguageSettings {:enableMultiLanguageDetection boolean,
+                           :supportedResponseLanguageCodes [string]},
    :transitionRouteGroups [string],
    :transitionRoutes [{:name string,
                        :description string,

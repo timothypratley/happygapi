@@ -1,19 +1,19 @@
 (ns happygapi.serviceconsumermanagement.operations
   "Service Consumer Management API: operations.
   Manages the service consumers of a Service Infrastructure service.
-  See: https://cloud.google.com/service-consumer-management/docs/overviewapi/reference/rest/v1/operations"
+  See: https://cloud.google.com/service-consumer-management/docs/overviewdocs/reference/rest/v1/operations"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
 
-(defn get$
-  "https://cloud.google.com/service-consumer-management/docs/overviewapi/reference/rest/v1/operations/get
+(defn list$
+  "https://cloud.google.com/service-consumer-management/docs/overviewapi/reference/rest/v1/operations/list
   
   Required parameters: name
   
-  Optional parameters: none
+  Optional parameters: filter, pageToken, pageSize
   
-  Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service."
+  Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns `UNIMPLEMENTED`."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}
@@ -32,14 +32,14 @@
       :as :json}
      auth))))
 
-(defn list$
-  "https://cloud.google.com/service-consumer-management/docs/overviewapi/reference/rest/v1/operations/list
+(defn get$
+  "https://cloud.google.com/service-consumer-management/docs/overviewapi/reference/rest/v1/operations/get
   
   Required parameters: name
   
-  Optional parameters: pageSize, filter, pageToken
+  Optional parameters: none
   
-  Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns `UNIMPLEMENTED`."
+  Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}
   [auth parameters]
   {:pre [(util/has-keys? parameters #{:name})]}

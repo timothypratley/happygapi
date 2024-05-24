@@ -1,7 +1,7 @@
 (ns happygapi.smartdevicemanagement.enterprises
   "Smart Device Management API: enterprises.
   Allow select enterprise partners to access, control, and manage Google and Nest devices programmatically.
-  See: https://developers.google.com/nest/device-accessapi/reference/rest/v1/enterprises"
+  See: https://developers.google.com/nest/device-accessdocs/reference/rest/v1/enterprises"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -110,23 +110,23 @@
       :as :json}
      auth))))
 
-(defn devices-get$
-  "https://developers.google.com/nest/device-accessapi/reference/rest/v1/enterprises/devices/get
+(defn devices-list$
+  "https://developers.google.com/nest/device-accessapi/reference/rest/v1/enterprises/devices/list
   
-  Required parameters: name
+  Required parameters: parent
   
-  Optional parameters: none
+  Optional parameters: filter
   
-  Gets a device managed by the enterprise."
+  Lists devices managed by the enterprise."
   {:scopes ["https://www.googleapis.com/auth/sdm.service"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:name})]}
+  {:pre [(util/has-keys? parameters #{:parent})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://smartdevicemanagement.googleapis.com/"
-     "v1/{+name}"
-     #{:name}
+     "v1/{+parent}/devices"
+     #{:parent}
      parameters)
     (merge-with
      merge
@@ -145,7 +145,7 @@
   
   Body: 
   
-  {:command string, :params {}}
+  {:params {}, :command string}
   
   Executes a command to device managed by the enterprise."
   {:scopes ["https://www.googleapis.com/auth/sdm.service"]}
@@ -168,23 +168,23 @@
       :as :json}
      auth))))
 
-(defn devices-list$
-  "https://developers.google.com/nest/device-accessapi/reference/rest/v1/enterprises/devices/list
+(defn devices-get$
+  "https://developers.google.com/nest/device-accessapi/reference/rest/v1/enterprises/devices/get
   
-  Required parameters: parent
+  Required parameters: name
   
-  Optional parameters: filter
+  Optional parameters: none
   
-  Lists devices managed by the enterprise."
+  Gets a device managed by the enterprise."
   {:scopes ["https://www.googleapis.com/auth/sdm.service"]}
   [auth parameters]
-  {:pre [(util/has-keys? parameters #{:parent})]}
+  {:pre [(util/has-keys? parameters #{:name})]}
   (util/get-response
    (http/get
     (util/get-url
      "https://smartdevicemanagement.googleapis.com/"
-     "v1/{+parent}/devices"
-     #{:parent}
+     "v1/{+name}"
+     #{:name}
      parameters)
     (merge-with
      merge

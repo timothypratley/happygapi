@@ -1,7 +1,7 @@
 (ns happygapi.monitoring.folders
   "Cloud Monitoring API: folders.
   Manages your Cloud Monitoring data and configurations.
-  See: https://cloud.google.com/monitoring/api/api/reference/rest/v3/folders"
+  See: https://cloud.google.com/monitoring/api/docs/reference/rest/v3/folders"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

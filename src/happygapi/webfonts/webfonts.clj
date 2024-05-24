@@ -1,7 +1,7 @@
 (ns happygapi.webfonts.webfonts
   "Web Fonts Developer API: webfonts.
   The Google Web Fonts Developer API lets you retrieve information about web fonts served by Google.
-  See: https://developers.google.com/fonts/docs/developer_apiapi/reference/rest/v1/webfonts"
+  See: https://developers.google.com/fonts/docs/developer_apidocs/reference/rest/v1/webfonts"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

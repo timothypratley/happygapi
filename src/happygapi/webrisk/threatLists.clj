@@ -1,7 +1,7 @@
 (ns happygapi.webrisk.threatLists
   "Web Risk API: threatLists.
   
-  See: https://cloud.google.com/web-risk/api/reference/rest/v1/threatLists"
+  See: https://cloud.google.com/web-risk/docs/reference/rest/v1/threatLists"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -11,7 +11,7 @@
   
   Required parameters: none
   
-  Optional parameters: constraints.supportedCompressions, versionToken, threatType, constraints.maxDiffEntries, constraints.maxDatabaseEntries
+  Optional parameters: constraints.supportedCompressions, versionToken, constraints.maxDiffEntries, constraints.maxDatabaseEntries, threatType
   
   Gets the most recent threat list diffs. These diffs should be applied to a local database of hashes to keep it up-to-date. If the local database is empty or excessively out-of-date, a complete snapshot of the database will be returned. This Method only updates a single ThreatList at a time. To update multiple ThreatList databases, this method needs to be called once for each list."
   {:scopes ["https://www.googleapis.com/auth/cloud-platform"]}

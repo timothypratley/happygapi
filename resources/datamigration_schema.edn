@@ -1097,7 +1097,8 @@
  :ResumeMigrationJobRequest {:id "ResumeMigrationJobRequest",
                              :description "Request message for 'ResumeMigrationJob' request.",
                              :type "object",
-                             :properties {}},
+                             :properties {:skipValidation {:description "Optional. Resume the migration job without running prior configuration verification. Defaults to `false`.",
+                                                           :type "boolean"}}},
  :ListConversionWorkspacesResponse {:id "ListConversionWorkspacesResponse",
                                     :description "Response message for 'ListConversionWorkspaces' request.",
                                     :type "object",
@@ -1112,7 +1113,7 @@
  :SqlServerHomogeneousMigrationJobConfig {:id "SqlServerHomogeneousMigrationJobConfig",
                                           :description "Configuration for homogeneous migration to Cloud SQL for SQL Server.",
                                           :type "object",
-                                          :properties {:backupFilePattern {:description "Required. Pattern that describes the default backup naming strategy. The specified pattern should ensure lexicographical order of backups. The pattern must define one of the following capture group sets: Capture group set #1 yy/yyyy - year, 2 or 4 digits mm - month number, 1-12 dd - day of month, 1-31 hh - hour of day, 00-23 mi - minutes, 00-59 ss - seconds, 00-59 Example: For backup file TestDB_backup_20230802_155400.trn, use pattern: (?.*)_backup_(?\\d{4})(?\\d{2})(?\\d{2})_(?\\d{2})(?\\d{2})(?\\d{2}).trn Capture group set #2 timestamp - unix timestamp Example: For backup file TestDB_backup_1691448254.trn, use pattern: (?.*)_backup_(?.*).trn",
+                                          :properties {:backupFilePattern {:description "Required. Pattern that describes the default backup naming strategy. The specified pattern should ensure lexicographical order of backups. The pattern must define one of the following capture group sets: Capture group set #1 yy/yyyy - year, 2 or 4 digits mm - month number, 1-12 dd - day of month, 1-31 hh - hour of day, 00-23 mi - minutes, 00-59 ss - seconds, 00-59 Example: For backup file TestDB_20230802_155400.trn, use pattern: (?.*)_backup_(?\\d{4})(?\\d{2})(?\\d{2})_(?\\d{2})(?\\d{2})(?\\d{2}).trn Capture group set #2 timestamp - unix timestamp Example: For backup file TestDB.1691448254.trn, use pattern: (?.*)\\.(?\\d*).trn or (?.*)\\.(?\\d*).trn",
                                                                            :type "string"},
                                                        :databaseBackups {:description "Required. Backup details per database in Cloud Storage.",
                                                                          :type "array",
@@ -1263,6 +1264,14 @@
                 :properties {:labels {:description "The resource labels for migration job to use to annotate any related underlying resources such as Compute Engine VMs. An object containing a list of \"key\": \"value\" pairs. Example: `{ \"name\": \"wrench\", \"mass\": \"1.3kg\", \"count\": \"3\" }`.",
                                       :type "object",
                                       :additionalProperties {:type "string"}},
+                             :dumpType {:description "Optional. The type of the data dump. Supported for MySQL to CloudSQL for MySQL migrations only.",
+                                        :type "string",
+                                        :enumDescriptions ["If not specified, defaults to LOGICAL"
+                                                           "Logical dump."
+                                                           "Physical file-based dump. Supported for MySQL to CloudSQL for MySQL migrations only."],
+                                        :enum ["DUMP_TYPE_UNSPECIFIED"
+                                               "LOGICAL"
+                                               "PHYSICAL"]},
                              :reverseSshConnectivity {:description "The details needed to communicate to the source over Reverse SSH tunnel connectivity.",
                                                       :$ref "ReverseSshConnectivity"},
                              :destinationDatabase {:description "The database engine type and provider of the destination.",
@@ -1348,7 +1357,7 @@
                                             "RESUMING"]},
                              :source {:description "Required. The resource name (URI) of the source connection profile.",
                                       :type "string"},
-                             :performanceConfig {:description "Optional. Data dump parallelism settings used by the migration. Currently applicable only for MySQL to Cloud SQL for MySQL migrations only.",
+                             :performanceConfig {:description "Optional. Data dump parallelism settings used by the migration.",
                                                  :$ref "PerformanceConfig"},
                              :dumpFlags {:description "The initial dump flags. This field and the \"dump_path\" field are mutually exclusive.",
                                          :$ref "DumpFlags"},
@@ -1428,6 +1437,9 @@
                             :tableColumns {:description "Table columns used as part of the Index, for example B-TREE index should list the columns which constitutes the index.",
                                            :type "array",
                                            :items {:type "string"}},
+                            :tableColumnsDescending {:description "For each table_column, mark whether it's sorting order is ascending (false) or descending (true). If no value is defined, assume all columns are sorted in ascending order. Otherwise, the number of items must match that of table_columns with each value specifying the direction of the matched column by its index.",
+                                                     :type "array",
+                                                     :items {:type "boolean"}},
                             :unique {:description "Boolean value indicating whether the index is unique.",
                                      :type "boolean"},
                             :customFeatures {:description "Custom engine specific features.",
@@ -1586,6 +1598,7 @@
                                                                       "The database major version is MySQL 8.0 and the minor version is 33."
                                                                       "The database major version is MySQL 8.0 and the minor version is 34."
                                                                       "The database major version is MySQL 8.0 and the minor version is 35."
+                                                                      "The database major version is MySQL 8.0 and the minor version is 36."
                                                                       "PostgreSQL 9.6."
                                                                       "PostgreSQL 11."
                                                                       "PostgreSQL 10."
@@ -1607,6 +1620,7 @@
                                                           "MYSQL_8_0_33"
                                                           "MYSQL_8_0_34"
                                                           "MYSQL_8_0_35"
+                                                          "MYSQL_8_0_36"
                                                           "POSTGRES_9_6"
                                                           "POSTGRES_11"
                                                           "POSTGRES_10"

@@ -1,7 +1,7 @@
 (ns happygapi.transcoder.projects
   "Transcoder API: projects.
   This API converts video files into formats suitable for consumer distribution. For more information, see the Transcoder API overview. 
-  See: https://cloud.google.com/transcoder/docs/api/reference/rest/v1/projects"
+  See: https://cloud.google.com/transcoder/docs/docs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

@@ -1,7 +1,7 @@
 (ns happygapi.bigqueryconnection.projects
   "BigQuery Connection API: projects.
   Allows users to manage BigQuery connections to external data sources.
-  See: https://cloud.google.com/bigquery/docs/connections-api-introapi/reference/rest/v1/projects"
+  See: https://cloud.google.com/bigquery/docs/connections-api-introdocs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -39,7 +39,9 @@
            :identity string},
    :configuration {:connectorId string,
                    :endpoint ConnectorConfigurationEndpoint,
-                   :authentication ConnectorConfigurationAuthentication},
+                   :authentication ConnectorConfigurationAuthentication,
+                   :network ConnectorConfigurationNetwork,
+                   :asset ConnectorConfigurationAsset},
    :salesforceDataCloud {:instanceUri string,
                          :identity string,
                          :tenantId string},
@@ -161,7 +163,9 @@
            :identity string},
    :configuration {:connectorId string,
                    :endpoint ConnectorConfigurationEndpoint,
-                   :authentication ConnectorConfigurationAuthentication},
+                   :authentication ConnectorConfigurationAuthentication,
+                   :network ConnectorConfigurationNetwork,
+                   :asset ConnectorConfigurationAsset},
    :salesforceDataCloud {:instanceUri string,
                          :identity string,
                          :tenantId string},

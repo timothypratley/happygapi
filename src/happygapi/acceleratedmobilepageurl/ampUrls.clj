@@ -1,7 +1,7 @@
 (ns happygapi.acceleratedmobilepageurl.ampUrls
   "Accelerated Mobile Pages (AMP) URL API: ampUrls.
   Retrieves the list of AMP URLs (and equivalent AMP Cache URLs) for a given list of public URL(s). 
-  See: https://developers.google.com/amp/cache/api/reference/rest/v1/ampUrls"
+  See: https://developers.google.com/amp/cache/docs/reference/rest/v1/ampUrls"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

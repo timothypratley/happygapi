@@ -1,7 +1,7 @@
 (ns happygapi.storagetransfer.transferOperations
   "Storage Transfer API: transferOperations.
   Transfers data from external data sources to a Google Cloud Storage bucket or between Google Cloud Storage buckets. 
-  See: https://cloud.google.com/storage-transfer/docsapi/reference/rest/v1/transferOperations"
+  See: https://cloud.google.com/storage-transfer/docsdocs/reference/rest/v1/transferOperations"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

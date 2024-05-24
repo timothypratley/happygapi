@@ -1,7 +1,7 @@
 (ns happygapi.script.processes
   "Apps Script API: processes.
   Manages and executes Google Apps Script projects. 
-  See: https://developers.google.com/apps-script/api/api/reference/rest/v1/processes"
+  See: https://developers.google.com/apps-script/api/docs/reference/rest/v1/processes"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

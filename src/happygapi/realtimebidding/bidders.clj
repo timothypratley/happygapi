@@ -1,7 +1,7 @@
 (ns happygapi.realtimebidding.bidders
   "Real-time Bidding API: bidders.
   Allows external bidders to manage their RTB integration with Google. This includes managing bidder endpoints, QPS quotas, configuring what ad inventory to receive via pretargeting, submitting creatives for verification, and accessing creative metadata such as approval status.
-  See: https://developers.google.com/authorized-buyers/apis/realtimebidding/reference/rest/api/reference/rest/v1/bidders"
+  See: https://developers.google.com/authorized-buyers/apis/realtimebidding/reference/rest/docs/reference/rest/v1/bidders"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

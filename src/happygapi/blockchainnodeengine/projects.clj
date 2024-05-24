@@ -1,7 +1,7 @@
 (ns happygapi.blockchainnodeengine.projects
   "Blockchain Node Engine API: projects.
   
-  See: https://cloud.google.com/blockchain-node-engineapi/reference/rest/v1/projects"
+  See: https://cloud.google.com/blockchain-node-enginedocs/reference/rest/v1/projects"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))

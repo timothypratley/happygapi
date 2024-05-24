@@ -1,7 +1,7 @@
 (ns happygapi.youtube.youtube
   "YouTube Data API v3: youtube.
   The YouTube Data API v3 is an API that provides access to YouTube data, such as videos, playlists, and channels.
-  See: https://developers.google.com/youtube/api/reference/rest/v3/youtube"
+  See: https://developers.google.com/youtube/docs/reference/rest/v3/youtube"
   (:require [cheshire.core :as json]
             [clj-http.client :as http]
             [happy.util :as util]))
@@ -15,16 +15,16 @@
   
   Body: 
   
-  {:replies {:comments [Comment]},
-   :kind string,
-   :snippet {:channelId string,
+  {:kind string,
+   :snippet {:videoId string,
              :topLevelComment Comment,
-             :videoId string,
              :totalReplyCount integer,
              :canReply boolean,
+             :channelId string,
              :isPublic boolean},
-   :id string,
-   :etag string}
+   :replies {:comments [Comment]},
+   :etag string,
+   :id string}
   
   Updates an existing resource."
   {:scopes nil}
